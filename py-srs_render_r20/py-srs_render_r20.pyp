@@ -48,8 +48,8 @@ CUSTOMFRAMERANGE = "CUSTOMFRAMERANGE"
 FROM = "FROM"
 TO = "TO"
 
-config = None
-debug = False
+config = srs_functions.get_config_values()
+debug = bool(config.get(srs_functions.CONFIG_SECTION, 'debug'))
 
 class RenderDlg(c4d.gui.GeDialog):
     
@@ -59,10 +59,7 @@ class RenderDlg(c4d.gui.GeDialog):
     rangeTo = 0
              
     def CreateLayout(self):
-        """ Called when Cinema 4D creates the dialog """ 
-        config = srs_functions.get_config_values()
-        debug = config.get(srs_functions.CONFIG_SECTION, 'debug')
-        
+        """ Called when Cinema 4D creates the dialog """         
         # Get the currently active render settings
         renderData = srs_functions.get_render_settings()
 
@@ -304,7 +301,7 @@ if __name__ == "__main__":
 
     # Init the BaseBitmap with the icon
     if bmp.InitWith(fn)[0] != c4d.IMAGERESULT_OK:
-        raise MemoryError("Failed to initialize the BaseBitmap.")
+        raise MemoryError("Failed to initialise the BaseBitmap.")
 		
     # Registers the plugin
     c4d.plugins.RegisterCommandPlugin(id=PLUGIN_ID,

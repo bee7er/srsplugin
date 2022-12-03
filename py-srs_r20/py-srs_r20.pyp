@@ -24,25 +24,22 @@ __res__.Init(__root__)
 # TODO Unique ID can be obtained from www.plugincafe.com
 PLUGIN_ID = 1047985
 
-NAME_TEXT = 100011
-EDIT_NAME_TEXT = 100012
-EMAIL_TEXT = 100013
-EDIT_EMAIL_TEXT = 100014
-IP_TEXT = 100015
-EDIT_IP_TEXT = 100016
-COMBO_TEXT = 100017
-SELCOMBO_BUTTON = 100018
+EMAIL_TEXT = 100011
+EDIT_EMAIL_TEXT = 100012
+IP_TEXT = 100013
+EDIT_IP_TEXT = 100014
+COMBO_TEXT = 100015
+SELCOMBO_BUTTON = 100016
 
 PLEASE_SELECT = 0
 AVAILABLE = 1
 UNAVAILABLE = 2
 
-config = None
-debug = False
+config = srs_functions.get_config_values()
+debug = bool(config.get(srs_functions.CONFIG_SECTION, 'debug'))
 
 class RegistrationDlg(c4d.gui.GeDialog):
 
-    userName = ""
     email = ""
     ipAddress = ""
     availability = 0
@@ -50,22 +47,13 @@ class RegistrationDlg(c4d.gui.GeDialog):
     def CreateLayout(self):
         """ Called when Cinema 4D creates the dialog """ 
         # Initialise the form fields from the config file
-        config = srs_functions.get_config_values()
-        debug = config.get(srs_functions.CONFIG_SECTION, 'debug')
-        
-        self.userName = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'userName')
         self.email = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'email')
         self.ipAddress = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'ipAddress')
         self.availability = int(config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'availability'))
         
         self.SetTitle("Register with SRS")
 		
-        self.GroupBegin(id=100000, flags=c4d.BFH_SCALEFIT, cols=2, rows=4)
-        """ UserName field """
-        self.AddStaticText(id=NAME_TEXT, flags=c4d.BFV_MASK, initw=145, name="User Name: ", borderstyle=c4d.BORDER_NONE)
-        self.AddEditText(EDIT_NAME_TEXT, c4d.BFV_MASK, initw=240, inith=16, editflags=0)
-        self.SetString(EDIT_NAME_TEXT, self.userName)
-        
+        self.GroupBegin(id=100000, flags=c4d.BFH_SCALEFIT, cols=2, rows=4)        
         """ Email field """
         self.AddStaticText(id=EMAIL_TEXT, flags=c4d.BFV_MASK, initw=145, name="Email: ", borderstyle=c4d.BORDER_NONE)
         self.AddEditText(EDIT_EMAIL_TEXT, c4d.BFV_MASK, initw=240, inith=16, editflags=0)
@@ -99,20 +87,18 @@ class RegistrationDlg(c4d.gui.GeDialog):
         Returns:
             bool: False on error else True.
         """
-        
         # User click on Ok button
         if messageId == c4d.DLG_OK:
             if True == debug: 
                 print("User clicked Ok")
-			
+            
             validationResult = self.validate()
             if True == validationResult:
-                self.userName = self.GetString(EDIT_NAME_TEXT)
                 self.email = self.GetString(EDIT_EMAIL_TEXT)
                 self.ipAddress = self.GetString(EDIT_IP_TEXT)
                 self.availability = self.GetInt32(SELCOMBO_BUTTON)
                 # Save to the config file
-                srs_functions.update_config_values(srs_functions.CONFIG_REGISTRATION_SECTION, [('userName', self.userName), ('email', self.email), ('ipAddress', self.ipAddress), ('availability',  str(self.availability))])
+                srs_functions.update_config_values(srs_functions.CONFIG_REGISTRATION_SECTION, [('email', self.email), ('ipAddress', self.ipAddress), ('availability',  str(self.availability))])
                 if True == debug: 
                     print("Form data passed validation")
  
@@ -120,6 +106,9 @@ class RegistrationDlg(c4d.gui.GeDialog):
                 if True == self.submitRegistrationRequest():
                     # Dialog needs to stay open to handle communications
                     gui.MessageDialog("Registered OK. Leave the dialog open for background operations.")
+                    
+                    # Kick off the heartbeat Timer function
+                    ##############self.SetTimer(2000)
 
                 else:
                     gui.MessageDialog("ERROR: Unknown error encountered trying to submit request")
@@ -128,6 +117,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
             else:
                 if True == debug: 
                     print("Form data failed validation")
+                    
                 errorMessages = sep = ""
                 for error in validationResult:
                     errorMessages += sep + error
@@ -156,8 +146,6 @@ class RegistrationDlg(c4d.gui.GeDialog):
             bool: True else aan array of error messages.
         """
         validationResult = []
-        if "" == self.GetString(EDIT_NAME_TEXT).strip():
-            validationResult.append("The User Name field is required")
             
         if "" == self.GetString(EDIT_EMAIL_TEXT).strip():
             validationResult.append("The Email field is required")
@@ -197,7 +185,6 @@ class RegistrationDlg(c4d.gui.GeDialog):
         #registerApi = "https://3n3.477.mywebsitetransfer.com/api1/register"       
         
         sendData = {
-            "userName": self.userName,
             "email": self.email,
             "ipAddress": self.ipAddress,
             "availability": self.availability,
@@ -211,19 +198,9 @@ class RegistrationDlg(c4d.gui.GeDialog):
         
         return True
 
-    def InitValues(self):
-        """Called after CreateLayout being called to define the values in the UI.
-        
-        Returns:
-            True if successful, or False for an error.
-        """
-        # Defines the timing for Timer message to be called
-        self.SetTimer(2000)
-        
-        return True
-
     def Timer(self, msg):
-        """This method is called automatically by Cinema 4D according to the timer set with GeDialog.SetTimer method.
+        """
+            This method is called automatically by Cinema 4D according to the timer set with GeDialog.SetTimer method.
 
         Args:
             msg (c4d.BaseContainer): The timer message
@@ -331,7 +308,7 @@ if __name__ == "__main__":
 
     # Init the BaseBitmap with the icon
     if bmp.InitWith(fn)[0] != c4d.IMAGERESULT_OK:
-        raise MemoryError("Failed to initialize the BaseBitmap.")
+        raise MemoryError("Failed to initialise the BaseBitmap.")
 		
     # Registers the plugin
     c4d.plugins.RegisterCommandPlugin(id=PLUGIN_ID,
