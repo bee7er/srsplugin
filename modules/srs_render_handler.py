@@ -5,7 +5,7 @@ Author: Brian Etheridge
 Description:
 
 """
-import c4d, os
+import c4d, os, time
 import subprocess
 import srs_functions
 
@@ -23,10 +23,8 @@ def handle_render():
     """
     if True == debug:
         print "Submitting render script: " + HANDLER
-    
-    code = subprocess.call([HANDLER, 'param'],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE)
+
+    code = subprocess.Popen(HANDLER)
 
     if True == debug:
         print "Submission result code: ", code

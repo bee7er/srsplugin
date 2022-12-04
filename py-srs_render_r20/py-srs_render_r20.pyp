@@ -212,9 +212,9 @@ class RenderDlg(c4d.gui.GeDialog):
             FROM:self.rangeFrom, 
             TO:self.rangeTo
         }
-        error = srs_connections.submitRequest(self, renderApi, sendData)
-		
-        if True == error:
+        responseData = srs_connections.submitRequest(self, renderApi, sendData)
+        if 'Error' == responseData['result']:
+            gui.MessageDialog("Error:\n" + responseData['message'])
             return False
             
         gui.MessageDialog("Range submitted for render: " + "\nFrom frame: " + str(self.rangeFrom) + "\nTo frame:" + str(self.rangeTo))
@@ -227,7 +227,7 @@ class RenderDlg(c4d.gui.GeDialog):
         Args: 
 
         Returns:
-            bool: True else aan array of error messages.
+            bool: True else an array of error messages.
         """
         validationResult = []
         

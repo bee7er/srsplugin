@@ -17,11 +17,7 @@ debug = bool(config.get(srs_functions.CONFIG_SECTION, 'debug'))
 def submitRequest(self, endPoint, sendData):
     """ 
         Submit a POST request to the master node
-
-        Returns:
-            bool: False on error else True.
-    """     
-    # Submmit the POST request       
+    """
     sendData = urllib.urlencode(sendData)
     
     if True == debug:
@@ -34,9 +30,10 @@ def submitRequest(self, endPoint, sendData):
         if True == debug:
             print "Submitted OK to end point: ", endPoint
     else:
-        # Alwayas print the error message
-        print "Unexpected response code from end point: ", endPoint, " with response code: ", response.code
-        error = True
+        # Always print the error message
+        error = "Unexpected response code from end point: ", endPoint, " with response code: ", response.code
+        print error
+        return {'result': 'Error', 'message': error}
 
     responseData = json.loads(response.read())
     response.close()
@@ -44,12 +41,7 @@ def submitRequest(self, endPoint, sendData):
     if True == debug:
         print "Returned data: ", responseData
     
-    if ERROR == responseData['result']:
-        error = True
-        # Alwayas print the error message
-        print "Error in request: ", responseData['message']
-    
-    return error
+    return responseData
     
     
     
