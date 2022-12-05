@@ -43,13 +43,18 @@ PLEASE_SELECT = 0
 OVERRIDE = 1
 USESETTINGS = 2
 
-OVERRIDESETTINGS = "OVERRIDESETTINGS"
-CUSTOMFRAMERANGE = "CUSTOMFRAMERANGE"
-FROM = "FROM"
-TO = "TO"
+# Parameters
+CUSTOMFRAMERANGE = "custom_frame_range"
+EMAIL = "email"
+FROM = "from"
+OVERRIDESETTINGS = "override_settings"
+RENDERDETAILID = "render_detail_id"
+RENDERID = "render_id"
+TO = "to"
 
 config = srs_functions.get_config_values()
 debug = bool(config.get(srs_functions.CONFIG_SECTION, 'debug'))
+srsApi = config.get(srs_functions.CONFIG_SECTION, 'srsApi')
 
 class RenderDlg(c4d.gui.GeDialog):
     
@@ -59,7 +64,10 @@ class RenderDlg(c4d.gui.GeDialog):
     rangeTo = 0
              
     def CreateLayout(self):
-        """ Called when Cinema 4D creates the dialog """         
+        """ Called when Cinema 4D creates the dialog """
+
+        # TODO Submissions aren't allowed if registration dialog is not open
+
         # Get the currently active render settings
         renderData = srs_functions.get_render_settings()
 
@@ -197,26 +205,30 @@ class RenderDlg(c4d.gui.GeDialog):
         
         Testing with curl on the command line:
 		        curl -X POST -H "Content-Type: application/json" -d '{"sequence": "poipoi", "from": 8, "to": 88}' http://srsapi.test/api1/renders/request
-        """ 
-        # Submmit the POST request
-        renderApi = "http://srsapi.test/api1/render"
-        #renderApi = "https://3n3.477.mywebsitetransfer.com/api1/render"
+        """
 
-        # TODO Continue developing this
+        # TODO Analyse and validate frame ranges
         ######ranges = srs_functions.analyse_frame_ranges("1 - 3,5-7,8, 10-7, a-5, 3.5 - 9, 155-88")
         ######print ranges        
-        
+
+        if True == debug:
+            print("Render request going to: ", srsApi)
+
         sendData = {
+            EMAIL:config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'email'),
             OVERRIDESETTINGS:self.overrideSettings,
-            CUSTOMFRAMERANGE:self.customFrameRanges, 
+            CUSTOMFRAMERANGE:self.customFrameRanges,
             FROM:self.rangeFrom, 
             TO:self.rangeTo
         }
-        responseData = srs_connections.submitRequest(self, renderApi, sendData)
+        responseData = srs_connections.submitRequest(self, (srsApi + "render"), sendData)
         if 'Error' == responseData['result']:
             gui.MessageDialog("Error:\n" + responseData['message'])
             return False
-            
+
+        if True == debug:
+            print("Render request record id: ", responseData[RENDERID])
+
         gui.MessageDialog("Range submitted for render: " + "\nFrom frame: " + str(self.rangeFrom) + "\nTo frame:" + str(self.rangeTo))
         
         return True
@@ -241,14 +253,7 @@ class RenderDlg(c4d.gui.GeDialog):
             return True
 
         return validationResult
-                    
-    def update_system_values(file, section, system, value):
-        config.read(file)
-        cfgfile = open(file, 'w')
-        config.set(section, system, value)
-        config.write(cfgfile)
-        cfgfile.close()
-    
+
 class RenderDlgCommand(c4d.plugins.CommandData):
     """Command Data class that holds the RenderDlg instance."""
     dialog = None

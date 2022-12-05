@@ -2,8 +2,6 @@
 Copyright: Etheridge Family Nov 2022
 Author: Brian Etheridge
 
-Description:
-
 """
 import c4d, os, time
 import subprocess

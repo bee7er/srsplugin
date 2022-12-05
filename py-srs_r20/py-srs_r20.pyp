@@ -43,12 +43,21 @@ AI_DO_RENDER = "render"
 
 config = srs_functions.get_config_values()
 debug = bool(config.get(srs_functions.CONFIG_SECTION, 'debug'))
-srsApi = "http://srsapi.test/api1/"
-#####srsApi = "https://3n3.477.mywebsitetransfer.com/api1/"
+srsApi = config.get(srs_functions.CONFIG_SECTION, 'srsApi')
+
+# Config settings
+AVAILABILITY = "availability"
+EMAIL = "email"
+IPADDRESS = "ipAddress"
+
+# Parameters
+ACTIONINSTRUCTION = "action_instruction"
+RENDERDETAILID = "render_detail_id"
 
 class RegistrationDlg(c4d.gui.GeDialog):
 
     actionStatus = AS_READY
+    renderDetailId = 0
     email = ""
     ipAddress = ""
     availability = 0
@@ -58,9 +67,9 @@ class RegistrationDlg(c4d.gui.GeDialog):
             Called when Cinema 4D creates the dialog
         """
         # Initialise the form fields from the config file
-        self.email = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'email')
-        self.ipAddress = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'ipAddress')
-        self.availability = int(config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'availability'))
+        self.email = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, EMAIL)
+        self.ipAddress = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, IPADDRESS)
+        self.availability = int(config.get(srs_functions.CONFIG_REGISTRATION_SECTION, AVAILABILITY))
         
         self.SetTitle("Register with SRS")
 		
@@ -110,7 +119,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
                 self.availability = self.GetInt32(SELCOMBO_BUTTON)
                 # Save to the config file
                 srs_functions.update_config_values(
-                    srs_functions.CONFIG_REGISTRATION_SECTION, [('email', self.email), ('ipAddress', self.ipAddress), ('availability',  str(self.availability))]
+                    srs_functions.CONFIG_REGISTRATION_SECTION, [(EMAIL, self.email), (IPADDRESS, self.ipAddress), (AVAILABILITY,  str(self.availability))]
                     )
                 if True == debug: 
                     print("Form data passed validation")
@@ -141,8 +150,9 @@ class RegistrationDlg(c4d.gui.GeDialog):
 
         # User click on Cancel button
         elif messageId == c4d.DLG_CANCEL:
+            # TODO We still need to process completed renders
             if True == debug: 
-                print("User clicked Cancel")
+                print("Cancelling activity")
 
             # Close the Dialog
             self.Close()
@@ -213,15 +223,16 @@ class RegistrationDlg(c4d.gui.GeDialog):
             if AVAILABLE == self.availability:
                 if True == debug:
                     print "Available for team render instructions"
-                responseData = srs_connections.submitRequest(self, (srsApi + "available"), { "email":"contact_bee@yahoo.com" })
-                if AI_DO_RENDER == responseData['actionInstruction']:
+                responseData = srs_connections.submitRequest(self, (srsApi + "available"), {EMAIL:self.email})
+                if AI_DO_RENDER == responseData[ACTIONINSTRUCTION]:
+                    self.renderDetailId = responseData[RENDERDETAILID]
                     self.actionStatus = AS_RENDERING
                     # Kick off the render job
                     srs_render_handler.handle_render()
             else:
                 if True == debug:
                     print "Awake but not available"
-                responseData = srs_connections.submitRequest(self, (srsApi + "awake"), { "email":"contact_bee@yahoo.com" })
+                responseData = srs_connections.submitRequest(self, (srsApi + "awake"), {EMAIL:self.email})
 
             if 'Error' == responseData['result']:
                 gui.MessageDialog("Error:\n" + responseData['message'])
@@ -229,7 +240,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
         elif AS_RENDERING == self.actionStatus:
             if True == debug: 
                 print "Rendering"
-            responseData = srs_connections.submitRequest(self, (srsApi + "rendering"), {"email":"contact_bee@yahoo.com"})
+            responseData = srs_connections.submitRequest(self, (srsApi + "rendering"), {EMAIL:self.email})
             if 'Error' == responseData['result']:
                 gui.MessageDialog("Error:\n" + responseData['message'])
 
@@ -240,7 +251,9 @@ class RegistrationDlg(c4d.gui.GeDialog):
                     print "TODO send the results to master"
                 # Back to ready for this slave
                 self.actionStatus = AS_READY
-                responseData = srs_connections.submitRequest(self, (srsApi + "complete"), {"email":"contact_bee@yahoo.com"})
+                responseData = srs_connections.submitRequest(self, (srsApi + "complete"),
+                    {EMAIL:self.email, RENDERDETAILID:self.renderDetailId}
+                    )
                 if 'Error' == responseData['result']:
                     gui.MessageDialog("Error:\n" + responseData['message'])
           
