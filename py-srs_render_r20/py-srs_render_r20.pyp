@@ -202,9 +202,22 @@ class RenderDlg(c4d.gui.GeDialog):
     def submitRenderRequest(self):
         """ 
         Submit the render request to the master node
+
+        NB Running these tests from srsplugin folder:
         
         Testing with curl on the command line:
 		        curl -X POST -H "Content-Type: application/json" -d '{"sequence": "poipoi", "from": 8, "to": 88}' http://srsapi.test/api1/renders/request
+
+        Testing upload to master:
+
+                # Uploading rendered frames to master
+                # NB we must use the vagrant directory sequence
+                    curl -v -F 'upload=@/home/vagrant/Code/srstest/srs/redshifttest/tars/RedshiftTestBePngs.tar.gz' -H "Content-Type: multipart/form-data" http://srsapi.test/results
+
+        Testing download from master:
+
+                curl --output ./projects/RedshiftTestBePngs.tar.gz http://srsapi.test/uploads/projects/RedshiftTestBe.c4d
+
         """
 
         # TODO Analyse and validate frame ranges

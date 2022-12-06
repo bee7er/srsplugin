@@ -44,6 +44,7 @@ AI_DO_RENDER = "render"
 config = srs_functions.get_config_values()
 debug = bool(config.get(srs_functions.CONFIG_SECTION, 'debug'))
 srsApi = config.get(srs_functions.CONFIG_SECTION, 'srsApi')
+c4dProjectDir = config.get(srs_functions.CONFIG_SECTION, 'c4dProjectDir')
 
 # Config settings
 AVAILABILITY = "availability"
@@ -245,7 +246,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
                 gui.MessageDialog("Error:\n" + responseData['message'])
 
             # Check if the render has completed OK
-            if True == os.path.exists("/Users/brianetheridge/Code/srstest/actionCompleted.txt"):
+            if True == os.path.exists(c4dProjectDir + "actionCompleted.txt"):
                 if True == debug:
                     print "Completed render"
                     print "TODO send the results to master"
