@@ -124,7 +124,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
                     )
                 if True == debug: 
                     print("Form data passed validation")
- 
+
                 # Register availability with the API
                 if True == self.submitRegistrationRequest():
                     # Dialog needs to stay open to handle communications
@@ -151,7 +151,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
 
         # User click on Cancel button
         elif messageId == c4d.DLG_CANCEL:
-            # TODO We still need to process completed renders
+            # TODO Even though cancelling we still need to process completed renders
             if True == debug: 
                 print("Cancelling activity")
 
@@ -225,18 +225,16 @@ class RegistrationDlg(c4d.gui.GeDialog):
                 if True == debug:
                     print "Available for team render instructions"
                 responseData = srs_connections.submitRequest(self, (srsApi + "available"), {EMAIL:self.email})
-                if AI_DO_RENDER == responseData[ACTIONINSTRUCTION]:
+
+                if 'Error' != responseData['result'] and AI_DO_RENDER == responseData[ACTIONINSTRUCTION]:
                     self.renderDetailId = responseData[RENDERDETAILID]
                     self.actionStatus = AS_RENDERING
                     # Kick off the render job
                     srs_render_handler.handle_render()
-            else:
-                if True == debug:
-                    print "Awake but not available"
-                responseData = srs_connections.submitRequest(self, (srsApi + "awake"), {EMAIL:self.email})
 
-            if 'Error' == responseData['result']:
-                gui.MessageDialog("Error:\n" + responseData['message'])
+                if 'Error' == responseData['result']:
+                    gui.MessageDialog("Error:\n" + responseData['message'])
+                    return
 
         elif AS_RENDERING == self.actionStatus:
             if True == debug: 
@@ -244,6 +242,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
             responseData = srs_connections.submitRequest(self, (srsApi + "rendering"), {EMAIL:self.email})
             if 'Error' == responseData['result']:
                 gui.MessageDialog("Error:\n" + responseData['message'])
+                return
 
             # Check if the render has completed OK
             if True == os.path.exists(c4dProjectDir + "actionCompleted.txt"):
@@ -257,6 +256,16 @@ class RegistrationDlg(c4d.gui.GeDialog):
                     )
                 if 'Error' == responseData['result']:
                     gui.MessageDialog("Error:\n" + responseData['message'])
+                    return
+
+        # We always send an AWAKE message to the master
+        if True == debug:
+            print "Awake message to master"
+        responseData = srs_connections.submitRequest(self, (srsApi + "awake"), {EMAIL:self.email})
+
+        if 'Error' == responseData['result']:
+            gui.MessageDialog("Error:\n" + responseData['message'])
+            return
           
 class RegistrationDlgCommand(c4d.plugins.CommandData):
     """Command Data class that holds the RegistrationDlg instance."""

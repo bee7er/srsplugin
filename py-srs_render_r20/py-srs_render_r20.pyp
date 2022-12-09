@@ -5,12 +5,6 @@ Author: Brian Etheridge
 Description:
     - Submit Render Request
 	- Shared Render Service
-
-Command line rendering:
-
-        /Applications/MAXON/Cinema\ 4D\ R20/Commandline.app/Contents/MacOS/Commandline -render ~/Code/c4d/srs/srs_functions.c4d -frame 0 5 -oimage ~/Code/c4d/srs/frames/srs -omultipass ~/Code/c4d/test_mp -oformat TIFF
-        /Applications/MAXON/Cinema\ 4D\ R20/Commandline.app/Contents/MacOS/Commandline -render ~/Code/c4d/srs/RedshiftTest.c4d -frame 0 5 -oimage ~/Code/c4d/srs/frames/srs -omultipass ~/Code/c4d/test_mp -oformat PNG
-        /Applications/MAXON/Cinema\ 4D\ R20/Commandline.app/Contents/MacOS/Commandline -render ~/Code/c4d/srs/RedshiftTest.c4d -oimage ~/Code/c4d/srs/redshifttest/frames/redshifttest -omultipass ~/Code/c4d/test_mp
 """
 
 import os, sys, time
@@ -21,7 +15,7 @@ if os.path.join(__root__, 'modules') not in sys.path: sys.path.insert(0, os.path
 import c4d
 from c4d import gui, bitmaps, utils
 # SRS module for various shared funcrtions
-import srs_functions, srs_render_handler, srs_connections
+import srs_functions, srs_project_handler, srs_connections
 
 __res__ = c4d.plugins.GeResource()
 __res__.Init(__root__)
@@ -47,6 +41,7 @@ USESETTINGS = 2
 CUSTOMFRAMERANGE = "custom_frame_range"
 EMAIL = "email"
 FROM = "from"
+C4DPROJECTWITHASSETS = "c4dProjectWithAssets"
 OVERRIDESETTINGS = "override_settings"
 RENDERDETAILID = "render_detail_id"
 RENDERID = "render_id"
@@ -143,7 +138,7 @@ class RenderDlg(c4d.gui.GeDialog):
                     self.Close()
 
                 else:
-                    gui.MessageDialog("ERROR: Unknown error encountered trying to submit request")
+                    print("Submission of render request cancelled")
                     return False
             
             else:
@@ -219,22 +214,35 @@ class RenderDlg(c4d.gui.GeDialog):
                 curl --output ./projects/RedshiftTestBePngs.tar.gz http://srsapi.test/uploads/projects/RedshiftTestBe.c4d
 
         """
+        # First of all we upload the project with assets file to the server
+        # TODO Check that the file exists
+        yesNo = gui.QuestionDialog("Are you sure the project with assets file is up to date?")
+        if False == yesNo:
+            return False;
+        # Go ahead and submit the render request, starting with the uploading of the project with assets file
+        srs_project_handler.handle_project()
 
         # TODO Analyse and validate frame ranges
         ######ranges = srs_functions.analyse_frame_ranges("1 - 3,5-7,8, 10-7, a-5, 3.5 - 9, 155-88")
         ######print ranges        
 
         if True == debug:
+            print("Submit project with assets to master")
+
+        if True == debug:
             print("Render request going to: ", srsApi)
 
         sendData = {
             EMAIL:config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'email'),
+            C4DPROJECTWITHASSETS:config.get(srs_functions.CONFIG_SECTION, 'c4dProjectWithAssets'),
             OVERRIDESETTINGS:self.overrideSettings,
             CUSTOMFRAMERANGE:self.customFrameRanges,
             FROM:self.rangeFrom, 
             TO:self.rangeTo
         }
-        responseData = srs_connections.submitRequest(self, (srsApi + "render"), sendData)
+        if True == debug:
+            print("Sending data: ", sendData)
+        responseData = srs_connections. submitRequest(self, (srsApi + "render"), sendData)
         if 'Error' == responseData['result']:
             gui.MessageDialog("Error:\n" + responseData['message'])
             return False
