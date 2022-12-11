@@ -49,16 +49,21 @@ TO = "to"
 
 config = srs_functions.get_config_values()
 debug = bool(config.get(srs_functions.CONFIG_SECTION, 'debug'))
+verbose = bool(config.get(srs_functions.CONFIG_SECTION, 'verbose'))
 srsApi = config.get(srs_functions.CONFIG_SECTION, 'srsApi')
 
+# ===================================================================
 class RenderDlg(c4d.gui.GeDialog):
+# ===================================================================
     
     overrideSettings = 0
     customFrameRanges = ''
     rangeFrom = 0
     rangeTo = 0
-             
+
+    # ===================================================================
     def CreateLayout(self):
+    # ===================================================================
         """ Called when Cinema 4D creates the dialog """
 
         # TODO Submissions aren't allowed if registration dialog is not open
@@ -104,7 +109,9 @@ class RenderDlg(c4d.gui.GeDialog):
         
         return True
 
+    # ===================================================================
     def Command(self, messageId, bc):
+    # ===================================================================
         """ Called when the user clicks on the dialog, clicks button, etc, or when a menu item selected.
 
         Args:
@@ -176,7 +183,9 @@ class RenderDlg(c4d.gui.GeDialog):
             
         return True
 
+    # ===================================================================
     def toggleEditableFields(self, overridingRenderSettings):
+    # ===================================================================
         """ Hides or shows the override fields
         """
         if True == overridingRenderSettings:
@@ -193,8 +202,10 @@ class RenderDlg(c4d.gui.GeDialog):
             self.HideElement(EDIT_FRAME_RANGE_FROM_TEXT, False)
             self.HideElement(FRAME_RANGE_TO_TEXT, False)
             self.HideElement(EDIT_FRAME_RANGE_TO_TEXT, False)
-        
+
+    # ===================================================================
     def submitRenderRequest(self):
+    # ===================================================================
         """ 
         Submit the render request to the master node
 
@@ -224,7 +235,7 @@ class RenderDlg(c4d.gui.GeDialog):
 
         # TODO Analyse and validate frame ranges
         ######ranges = srs_functions.analyse_frame_ranges("1 - 3,5-7,8, 10-7, a-5, 3.5 - 9, 155-88")
-        ######print ranges        
+        ######print ranges
 
         if True == debug:
             print("Submit project with assets to master")
@@ -237,7 +248,7 @@ class RenderDlg(c4d.gui.GeDialog):
             C4DPROJECTWITHASSETS:config.get(srs_functions.CONFIG_SECTION, 'c4dProjectWithAssets'),
             OVERRIDESETTINGS:self.overrideSettings,
             CUSTOMFRAMERANGE:self.customFrameRanges,
-            FROM:self.rangeFrom, 
+            FROM:self.rangeFrom,
             TO:self.rangeTo
         }
         if True == debug:
@@ -254,8 +265,9 @@ class RenderDlg(c4d.gui.GeDialog):
         
         return True
 
-
+    # ===================================================================
     def validate(self):
+    # ===================================================================
         """ Validate the submitted form
         Args: 
 
@@ -275,11 +287,15 @@ class RenderDlg(c4d.gui.GeDialog):
 
         return validationResult
 
+# ===================================================================
 class RenderDlgCommand(c4d.plugins.CommandData):
+# ===================================================================
     """Command Data class that holds the RenderDlg instance."""
     dialog = None
-    
+
+    # ===================================================================
     def Execute(self, doc):
+    # ===================================================================
         """Called when the user executes a command via either CallCommand() or a click on the Command from the extension menu.
 
         Args:
@@ -295,7 +311,9 @@ class RenderDlgCommand(c4d.plugins.CommandData):
         # Opens the dialog
         return self.dialog.Open(dlgtype=c4d.DLG_TYPE_ASYNC, pluginid=PLUGIN_ID, defaultw=400, defaulth=32)
 
+    # ===================================================================
     def RestoreLayout(self, sec_ref):
+    # ===================================================================
         """Used to restore an asynchronous dialog that has been placed in the users layout.
 
         Args:
@@ -311,8 +329,9 @@ class RenderDlgCommand(c4d.plugins.CommandData):
         # Restores the layout
         return self.dialog.Restore(pluginid=PLUGIN_ID, secret=sec_ref)
 
-
+# ===================================================================
 # main
+# ===================================================================
 if __name__ == "__main__":
     if True == debug: 
         print "Submit Trendman Render request plugin"

@@ -43,6 +43,7 @@ AI_DO_RENDER = "render"
 
 config = srs_functions.get_config_values()
 debug = bool(config.get(srs_functions.CONFIG_SECTION, 'debug'))
+verbose = bool(config.get(srs_functions.CONFIG_SECTION, 'verbose'))
 srsApi = config.get(srs_functions.CONFIG_SECTION, 'srsApi')
 c4dProjectDir = config.get(srs_functions.CONFIG_SECTION, 'c4dProjectDir')
 
@@ -55,15 +56,19 @@ IPADDRESS = "ipAddress"
 ACTIONINSTRUCTION = "action_instruction"
 RENDERDETAILID = "render_detail_id"
 
+# ===================================================================
 class RegistrationDlg(c4d.gui.GeDialog):
+# ===================================================================
 
     actionStatus = AS_READY
     renderDetailId = 0
     email = ""
     ipAddress = ""
     availability = 0
-    
+
+    # ===================================================================
     def CreateLayout(self):
+    # ===================================================================
         """
             Called when Cinema 4D creates the dialog
         """
@@ -98,7 +103,9 @@ class RegistrationDlg(c4d.gui.GeDialog):
 		
         return True
 
+    # ===================================================================
     def Command(self, messageId, bc):
+    # ===================================================================
         """ Called when the user clicks on the dialog, clicks button, etc, or when a menu item selected.
 
         Args:
@@ -151,7 +158,13 @@ class RegistrationDlg(c4d.gui.GeDialog):
 
         # User click on Cancel button
         elif messageId == c4d.DLG_CANCEL:
-            # TODO Even though cancelling we still need to process completed renders
+            if AS_RENDERING == self.actionStatus:
+                yesNo = gui.QuestionDialog("You are currently rendering in the background.\nAre you sure you want to exit?")
+                if False == yesNo:
+                    if True == debug:
+                        print("Not cancelling after all")
+                    return False;
+
             if True == debug: 
                 print("Cancelling activity")
 
@@ -161,7 +174,9 @@ class RegistrationDlg(c4d.gui.GeDialog):
 
         return True
 
+    # ===================================================================
     def validate(self):
+    # ===================================================================
         """
             Validate the submitted form
         """
@@ -184,7 +199,9 @@ class RegistrationDlg(c4d.gui.GeDialog):
 
         return validationResult
 
+    # ===================================================================
     def is_valid_ip(self, ip):
+    # ===================================================================
         # TODO needs a better way to validate IP, and support IPv6
         elements = ip.split('.')
         if 4 != len(elements):
@@ -198,8 +215,10 @@ class RegistrationDlg(c4d.gui.GeDialog):
                 return False
                 
         return True
-        
+
+    # ===================================================================
     def submitRegistrationRequest(self):
+    # ===================================================================
         
         sendData = {
             "email": self.email,
@@ -213,7 +232,9 @@ class RegistrationDlg(c4d.gui.GeDialog):
         
         return True
 
+    # ===================================================================
     def Timer(self, msg):
+    # ===================================================================
         """
             This method is called automatically by Cinema 4D according to the timer set with GeDialog.SetTimer method.
 
@@ -223,7 +244,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
         if AS_READY == self.actionStatus:
             if AVAILABLE == self.availability:
                 if True == debug:
-                    print "Available for team render instructions"
+                    print "*** Available for team render instructions"
                 responseData = srs_connections.submitRequest(self, (srsApi + "available"), {EMAIL:self.email})
 
                 if 'Error' != responseData['result'] and AI_DO_RENDER == responseData[ACTIONINSTRUCTION]:
@@ -252,7 +273,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
                 # Back to ready for this slave
                 self.actionStatus = AS_READY
                 responseData = srs_connections.submitRequest(self, (srsApi + "complete"),
-                    {EMAIL:self.email, RENDERDETAILID:self.renderDetailId}
+                        {EMAIL:self.email, RENDERDETAILID:self.renderDetailId}
                     )
                 if 'Error' == responseData['result']:
                     gui.MessageDialog("Error:\n" + responseData['message'])
@@ -266,12 +287,16 @@ class RegistrationDlg(c4d.gui.GeDialog):
         if 'Error' == responseData['result']:
             gui.MessageDialog("Error:\n" + responseData['message'])
             return
-          
+
+# ===================================================================
 class RegistrationDlgCommand(c4d.plugins.CommandData):
+# ===================================================================
     """Command Data class that holds the RegistrationDlg instance."""
     dialog = None
-    
+
+    # ===================================================================
     def Execute(self, doc):
+    # ===================================================================
         """Called when the user executes a command via either CallCommand() or a click on the Command from the extension menu.
 
         Args:
@@ -287,7 +312,9 @@ class RegistrationDlgCommand(c4d.plugins.CommandData):
         # Opens the dialog
         return self.dialog.Open(dlgtype=c4d.DLG_TYPE_ASYNC, pluginid=PLUGIN_ID, defaultw=400, defaulth=32)
 
+    # ===================================================================
     def RestoreLayout(self, sec_ref):
+    # ===================================================================
         """Used to restore an asynchronous dialog that has been placed in the users layout.
 
         Args:
@@ -303,8 +330,9 @@ class RegistrationDlgCommand(c4d.plugins.CommandData):
         # Restores the layout
         return self.dialog.Restore(pluginid=PLUGIN_ID, secret=sec_ref)
 
-
+# ===================================================================
 # main
+# ===================================================================
 if __name__ == "__main__":
     if True == debug: 
         print "Registering SRS plugin"

@@ -14,11 +14,14 @@ OK = "OK"
 
 config = srs_functions.get_config_values()
 debug = bool(config.get(srs_functions.CONFIG_SECTION, 'debug'))
-    
+verbose = bool(config.get(srs_functions.CONFIG_SECTION, 'verbose'))
+
+# ===================================================================
 def submitRequest(self, endPoint, sendData):
-    """ 
-        Submit a POST request to the master node
-    """
+# ===================================================================
+    # Submit a POST request to the master node
+    # .....................................................
+
     sendData = urllib.urlencode(sendData)
     
     if True == debug:

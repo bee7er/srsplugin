@@ -1,9 +1,6 @@
 """
 Copyright: Etheridge Family Nov 2022
 Author: Brian Etheridge
-
-Description:
-
 """
 import c4d, os
 import ConfigParser
@@ -21,8 +18,12 @@ RANGE_TO = "RANGE_TO"
 RANGE_STEP = "RANGE_STEP"
 FRAME_RATE = "FRAME_RATE"
 
-# Returns entries in the config file
+# ===================================================================
 def get_config_values():
+# ===================================================================
+    # Returns entries in the config file
+    # .....................................................
+
     config = SafeConfigParser()
     # Replace the translate function with 'str', which will stop ini field names from being lower cased
     config.optionxform = str
@@ -30,8 +31,12 @@ def get_config_values():
       
     return config;   
 
-# Updates a list of tuples of config field name and values          
+# ===================================================================
 def update_config_values(section, configFields):
+# ===================================================================
+    # Updates a list of tuples of config field name and values
+    # .....................................................
+
     config = get_config_values()
     debug = config.get(CONFIG_SECTION, 'debug')
     
@@ -48,8 +53,12 @@ def update_config_values(section, configFields):
         
     return config 
 
-# Analyses a string of frame ranges, validates them and returns a list of them
+# ===================================================================
 def analyse_frame_ranges(frameRangeStr):
+# ===================================================================
+    # Analyses a string of frame ranges, validates them and returns a list of them
+    # .....................................................
+
     config = get_config_values()
     debug = config.get(CONFIG_SECTION, 'debug')
     
@@ -77,9 +86,13 @@ def analyse_frame_ranges(frameRangeStr):
         returnStr += str(rangeLet)
         
     return returnStr
-    
-# Gets render settings from the current active set         
+
+# ===================================================================
 def get_render_settings():
+# ===================================================================
+    # Gets render settings from the current active set
+    # .....................................................
+
     activeDocument = c4d.documents.GetActiveDocument()
     renderData = activeDocument.GetActiveRenderData()
     

@@ -22,13 +22,14 @@ HANDLER = __root__ + '/render.sh'
 
 config = srs_functions.get_config_values()
 debug = bool(config.get(srs_functions.CONFIG_SECTION, 'debug'))
+verbose = bool(config.get(srs_functions.CONFIG_SECTION, 'verbose'))
 c4dCommandLine = config.get(srs_functions.CONFIG_SECTION, 'c4dCommandLine')
 
-# Submits a background job to render one or more frames
+# ===================================================================
 def handle_render():
-    """
-        Submit a render process to a background job on this slave
-    """
+# ===================================================================
+    # Submits a background job to render one or more frames
+    # .....................................................
 
     if True == debug:
         print "Submitting render script: ", HANDLER, ", with ", c4dCommandLine
