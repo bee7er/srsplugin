@@ -17,6 +17,7 @@ RANGE_FROM = "RANGE_FROM"
 RANGE_TO = "RANGE_TO"
 RANGE_STEP = "RANGE_STEP"
 FRAME_RATE = "FRAME_RATE"
+OUTPUT_FORMAT = "OUTPUT_FORMAT"
 
 # ===================================================================
 def get_config_values():
@@ -38,13 +39,13 @@ def update_config_values(section, configFields):
     # .....................................................
 
     config = get_config_values()
-    debug = config.get(CONFIG_SECTION, 'debug')
+    verbose = config.get(CONFIG_SECTION, 'verbose')
     
     # configfields is a list of tuples:
     #    [('field name', 'field value'), ('field name', 'field value'), ...]
     #
     for field in configFields:
-        if True == debug: 
+        if True == verbose:
             print "Config out: ", field[0], field[1]
         config.set(section, field[0], field[1])
         
@@ -60,7 +61,7 @@ def analyse_frame_ranges(frameRangeStr):
     # .....................................................
 
     config = get_config_values()
-    debug = config.get(CONFIG_SECTION, 'debug')
+    verbose = config.get(CONFIG_SECTION, 'verbose')
     
     # Remove all spaces
     frameRangeLst = frameRangeStr.replace(' ', '').split(',')
@@ -68,14 +69,14 @@ def analyse_frame_ranges(frameRangeStr):
     for entry in frameRangeLst:
         # Range should be number-number
         rangelet = entry.split('-')
-        if True == debug: 
+        if True == verbose:
             print "Ranglet: ", rangeLet
         if 2 != len(rangeLet):
-            if True == debug: 
+            if True == verbose:
                 print "Error: Ignoring invalid rangelet: ", str(rangeLet)
             continue
         elif True != str(rangeLet[0]).isdigit() or True != str(rangeLet[1]).isdigit():
-            if True == debug: 
+            if True == verbose:
                 print "Error: Ignoring non-integer rangelet: ", str(rangeLet)
             continue
         elif int(rangeLet[1]) < int(rangeLet[0]):
@@ -100,5 +101,29 @@ def get_render_settings():
         RANGE_FROM: int(renderData[c4d.RDATA_FRAMEFROM].Get() * renderData[c4d.RDATA_FRAMERATE]),
         RANGE_TO: int(renderData[c4d.RDATA_FRAMETO].Get() * renderData[c4d.RDATA_FRAMERATE]),
         RANGE_STEP: renderData[c4d.RDATA_FRAMESTEP],
-        FRAME_RATE: int(renderData[c4d.RDATA_FRAMERATE])
+        FRAME_RATE: int(renderData[c4d.RDATA_FRAMERATE]),
+        OUTPUT_FORMAT: int(renderData[c4d.RDATA_FORMAT]),
     }
+
+# ===================================================================
+def get_projectWithAssets():
+# ===================================================================
+    # Gets projectWithAssets path and name from the currently loaded project
+    # .....................................................
+
+    config = get_config_values()
+    debug = config.get(CONFIG_SECTION, 'debug')
+    verbose = config.get(CONFIG_SECTION, 'verbose')
+
+    md = c4d.documents.GetActiveDocument()
+    fp = c4d.documents.BaseDocument.GetDocumentPath(md)
+    c4dProjectWithAssets = ''
+    if '' == fp:
+        if True == debug:
+            print("*** A project has not been opened")
+    else:
+        c4dProjectWithAssets = fp + '/' + c4d.documents.BaseDocument.GetDocumentName(md)
+        if True == verbose:
+            print("Project opened is: ", c4dProjectWithAssets)
+
+    return c4dProjectWithAssets

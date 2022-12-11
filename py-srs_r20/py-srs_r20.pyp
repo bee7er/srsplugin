@@ -42,8 +42,8 @@ AS_RENDERING = "rendering"
 AI_DO_RENDER = "render"
 
 config = srs_functions.get_config_values()
-debug = bool(config.get(srs_functions.CONFIG_SECTION, 'debug'))
-verbose = bool(config.get(srs_functions.CONFIG_SECTION, 'verbose'))
+debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
+verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
 srsApi = config.get(srs_functions.CONFIG_SECTION, 'srsApi')
 c4dProjectDir = config.get(srs_functions.CONFIG_SECTION, 'c4dProjectDir')
 
@@ -53,8 +53,8 @@ EMAIL = "email"
 IPADDRESS = "ipAddress"
 
 # Parameters
-ACTIONINSTRUCTION = "action_instruction"
-RENDERDETAILID = "render_detail_id"
+ACTIONINSTRUCTION = "actionInstruction"
+RENDERDETAILID = "renderDetailId"
 
 # ===================================================================
 class RegistrationDlg(c4d.gui.GeDialog):
@@ -117,7 +117,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
         """
         # User click on Ok button
         if messageId == c4d.DLG_OK:
-            if True == debug: 
+            if True == verbose:
                 print("User clicked Ok")
             
             validationResult = self.validate()
@@ -129,7 +129,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
                 srs_functions.update_config_values(
                     srs_functions.CONFIG_REGISTRATION_SECTION, [(EMAIL, self.email), (IPADDRESS, self.ipAddress), (AVAILABILITY,  str(self.availability))]
                     )
-                if True == debug: 
+                if True == verbose:
                     print("Form data passed validation")
 
                 # Register availability with the API
@@ -144,7 +144,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
                     return False
             
             else:
-                if True == debug: 
+                if True == verbose:
                     print("Form data failed validation")
                     
                 errorMessages = sep = ""
@@ -161,12 +161,12 @@ class RegistrationDlg(c4d.gui.GeDialog):
             if AS_RENDERING == self.actionStatus:
                 yesNo = gui.QuestionDialog("You are currently rendering in the background.\nAre you sure you want to exit?")
                 if False == yesNo:
-                    if True == debug:
+                    if True == verbose:
                         print("Not cancelling after all")
                     return False;
 
             if True == debug: 
-                print("Cancelling activity")
+                print("*** Cancelling registration")
 
             # Close the Dialog
             self.Close()
@@ -259,7 +259,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
 
         elif AS_RENDERING == self.actionStatus:
             if True == debug: 
-                print "Rendering"
+                print "*** Rendering"
             responseData = srs_connections.submitRequest(self, (srsApi + "rendering"), {EMAIL:self.email})
             if 'Error' == responseData['result']:
                 gui.MessageDialog("Error:\n" + responseData['message'])
@@ -268,7 +268,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
             # Check if the render has completed OK
             if True == os.path.exists(c4dProjectDir + "actionCompleted.txt"):
                 if True == debug:
-                    print "Completed render"
+                    print "*** Completed render"
                     print "TODO send the results to master"
                 # Back to ready for this slave
                 self.actionStatus = AS_READY
@@ -281,7 +281,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
 
         # We always send an AWAKE message to the master
         if True == debug:
-            print "Awake message to master"
+            print "*** Awake message to master"
         responseData = srs_connections.submitRequest(self, (srsApi + "awake"), {EMAIL:self.email})
 
         if 'Error' == responseData['result']:
@@ -334,8 +334,8 @@ class RegistrationDlgCommand(c4d.plugins.CommandData):
 # main
 # ===================================================================
 if __name__ == "__main__":
-    if True == debug: 
-        print "Registering SRS plugin"
+    if True == verbose:
+        print "Registering SRS Plugin"
     # Retrieves the icon path
     directory, _ = os.path.split(__file__)
     fn = os.path.join(directory, "res", "Icon.tif")
@@ -357,4 +357,4 @@ if __name__ == "__main__":
                                       dat=RegistrationDlgCommand(),
                                       icon=bmp)
     if True == debug: 
-        print "SRS registered ok"
+        print "*** SRS registered ok"

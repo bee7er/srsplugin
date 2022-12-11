@@ -32,30 +32,39 @@ COMBO_TEXT = 100015
 SELCOMBO_BUTTON = 100016
 FRAME_RANGES_TEXT = 100017
 EDIT_FRAME_RANGES_TEXT = 100018
+OUTPUT_FORMAT_TEXT = 100019
+OUTPUT_FORMAT = 100020
 
 PLEASE_SELECT = 0
 OVERRIDE = 1
 USESETTINGS = 2
 
 # Parameters
-CUSTOMFRAMERANGE = "custom_frame_range"
+CUSTOMFRAMERANGE = "customFrameRange"
 EMAIL = "email"
 FROM = "from"
 C4DPROJECTWITHASSETS = "c4dProjectWithAssets"
-OVERRIDESETTINGS = "override_settings"
-RENDERDETAILID = "render_detail_id"
-RENDERID = "render_id"
+OVERRIDESETTINGS = "overrideSettings"
+RENDERDETAILID = "renderDetailId"
+RENDERID = "renderId"
 TO = "to"
+OUTPUTFORMAT = "outputFormat"
 
 config = srs_functions.get_config_values()
-debug = bool(config.get(srs_functions.CONFIG_SECTION, 'debug'))
-verbose = bool(config.get(srs_functions.CONFIG_SECTION, 'verbose'))
+debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
+verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
 srsApi = config.get(srs_functions.CONFIG_SECTION, 'srsApi')
 
 # ===================================================================
 class RenderDlg(c4d.gui.GeDialog):
 # ===================================================================
-    
+
+    c4dProjectWithAssets = ''
+    # Get the currently active render settings
+    #renderData = srs_functions.get_render_settings()
+    #outputFormat = renderData[srs_functions.OUTPUT_FORMAT]
+    #if '' == outputFormat:
+    outputFormat = 'PNG'
     overrideSettings = 0
     customFrameRanges = ''
     rangeFrom = 0
@@ -68,16 +77,17 @@ class RenderDlg(c4d.gui.GeDialog):
 
         # TODO Submissions aren't allowed if registration dialog is not open
 
-        # Get the currently active render settings
+        # Get the project path and name
+        self.c4dProjectWithAssets = srs_functions.get_projectWithAssets()
         renderData = srs_functions.get_render_settings()
-
         self.rangeFrom = renderData[srs_functions.RANGE_FROM]
         self.rangeTo = renderData[srs_functions.RANGE_TO]
         
         # Initialise the form fields from the config file
         self.overrideSettings = int(config.get(srs_functions.CONFIG_RENDER_SECTION, 'overrideSettings'))
-        
-        self.SetTitle("Submit Trendman Render request")
+        self.outputFormat = config.get(srs_functions.CONFIG_RENDER_SECTION, 'outputFormat')
+
+        self.SetTitle("Submit Render Request")
 		
         self.GroupBegin(id=GROUP_ID, flags=c4d.BFH_SCALEFIT, cols=2, rows=4)
         """ Use active render settings field """
@@ -98,6 +108,10 @@ class RenderDlg(c4d.gui.GeDialog):
         self.AddStaticText(id=FRAME_RANGE_TO_TEXT, flags=c4d.BFV_MASK, initw=145, name="to: ", borderstyle=c4d.BORDER_NONE)
         self.AddEditNumber(EDIT_FRAME_RANGE_TO_TEXT, c4d.BFV_MASK, initw=80, inith=16)
         self.SetInt32(EDIT_FRAME_RANGE_TO_TEXT, self.rangeTo)
+        """ Output Format field """
+        self.AddStaticText(id=OUTPUT_FORMAT_TEXT, flags=c4d.BFV_MASK, initw=145, name="Output format: ", borderstyle=c4d.BORDER_NONE)
+        self.AddStaticText(id=OUTPUT_FORMAT, flags=c4d.BFV_MASK, initw=145, name=self.outputFormat, borderstyle=c4d.BORDER_NONE)
+
 		# Check if we are overriding render settings
         if OVERRIDE == self.overrideSettings:
             self.toggleEditableFields(True)
@@ -121,21 +135,31 @@ class RenderDlg(c4d.gui.GeDialog):
         Returns:
             bool: False on error else True.
         """
+        if '' == self.c4dProjectWithAssets:
+            self.c4dProjectWithAssets = srs_functions.get_projectWithAssets()
+
         # User click on Ok button
         if messageId == c4d.DLG_OK:
-            
+
+            if '' == self.c4dProjectWithAssets:
+                gui.MessageDialog("Please open your project file and ensure your project with assets file is up to date.")
+                return True
+
             validationResult = self.validate()
             if True == validationResult:
                 self.overrideSettings = self.GetInt32(SELCOMBO_BUTTON)
                 self.customFrameRanges = self.GetString(EDIT_FRAME_RANGES_TEXT)
                 self.rangeFrom = self.GetInt32(EDIT_FRAME_RANGE_FROM_TEXT)
                 self.rangeTo = self.GetInt32(EDIT_FRAME_RANGE_TO_TEXT)
-                
-                if True == debug: 
-                    print("Form data passed validation")
-                    print("Submitting render request")
+
+                if True == verbose:
+                    print "Form data passed validation"
+                if True == debug:
+                    print "*** Render request"
                 # Save to the config file
-                srs_functions.update_config_values(srs_functions.CONFIG_RENDER_SECTION, [('overrideSettings', str(self.overrideSettings))])
+                srs_functions.update_config_values(srs_functions.CONFIG_RENDER_SECTION, [
+                    ('overrideSettings', str(self.overrideSettings)), ('outputFormat', self.outputFormat)
+                    ])
                 
                 if True == self.submitRenderRequest():
                     # Reset the range for the next submission
@@ -145,12 +169,12 @@ class RenderDlg(c4d.gui.GeDialog):
                     self.Close()
 
                 else:
-                    print("Submission of render request cancelled")
+                    print "Submission of render request cancelled"
                     return False
             
             else:
                 if True == debug: 
-                    print("Form data failed validation")
+                    print "*** Form data failed validation"
                 errorMessages = sep = ""
                 for error in validationResult:
                     errorMessages += sep + error
@@ -162,8 +186,8 @@ class RenderDlg(c4d.gui.GeDialog):
 
         # User click on Cancel button
         elif messageId == c4d.DLG_CANCEL:
-            if True == debug: 
-                print("User clicked Cancel")
+            if True == verbose:
+                print "User clicked Cancel"
 
             # Close the Dialog
             self.Close()
@@ -238,10 +262,10 @@ class RenderDlg(c4d.gui.GeDialog):
         ######print ranges
 
         if True == debug:
-            print("Submit project with assets to master")
+            print "*** Submit project with assets to master"
 
-        if True == debug:
-            print("Render request going to: ", srsApi)
+        if True == verbose:
+            print "Render request going to: ", srsApi
 
         sendData = {
             EMAIL:config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'email'),
@@ -249,17 +273,19 @@ class RenderDlg(c4d.gui.GeDialog):
             OVERRIDESETTINGS:self.overrideSettings,
             CUSTOMFRAMERANGE:self.customFrameRanges,
             FROM:self.rangeFrom,
-            TO:self.rangeTo
+            TO:self.rangeTo,
+            C4DPROJECTWITHASSETS:self.c4dProjectWithAssets,
+            OUTPUTFORMAT:self.outputFormat,
         }
-        if True == debug:
-            print("Sending data: ", sendData)
+        if True == verbose:
+            print "Sending data: ", sendData
         responseData = srs_connections. submitRequest(self, (srsApi + "render"), sendData)
         if 'Error' == responseData['result']:
             gui.MessageDialog("Error:\n" + responseData['message'])
             return False
 
-        if True == debug:
-            print("Render request record id: ", responseData[RENDERID])
+        if True == verbose:
+            print "Render request record id: ", responseData[RENDERID]
 
         gui.MessageDialog("Range submitted for render: " + "\nFrom frame: " + str(self.rangeFrom) + "\nTo frame:" + str(self.rangeTo))
         
@@ -333,8 +359,8 @@ class RenderDlgCommand(c4d.plugins.CommandData):
 # main
 # ===================================================================
 if __name__ == "__main__":
-    if True == debug: 
-        print "Submit Trendman Render request plugin"
+    if True == verbose:
+        print "Submit Render Request Plugin"
     # Retrieves the icon path
     directory, _ = os.path.split(__file__)
     fn = os.path.join(directory, "res", "Icon.tif")
@@ -357,5 +383,5 @@ if __name__ == "__main__":
                                       icon=bmp)
     
     if True == debug: 
-        print "SRS Submit Render request registered ok"
+        print "*** SRS Submit Render request registered ok"
 

@@ -12,8 +12,8 @@ __root__ = os.path.dirname(os.path.dirname(__file__))
 HANDLER = __root__ + '/uploadProject.sh'
 
 config = srs_functions.get_config_values()
-debug = bool(config.get(srs_functions.CONFIG_SECTION, 'debug'))
-verbose = bool(config.get(srs_functions.CONFIG_SECTION, 'verbose'))
+debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
+verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
 c4dProjectWithAssets = config.get(srs_functions.CONFIG_SECTION, 'c4dProjectWithAssets')
 c4dProjectWithAssetsDir = config.get(srs_functions.CONFIG_SECTION, 'c4dProjectWithAssetsDir')
 
@@ -24,9 +24,9 @@ def handle_project():
     # .....................................................
 
     if True == debug:
-        print "Submitting project with assets upload script: ", HANDLER, ", with ", c4dProjectWithAssets, ", in ", c4dProjectWithAssetsDir
+        print "*** Submitting project with assets upload script: ", HANDLER, ", with ", c4dProjectWithAssets, ", in ", c4dProjectWithAssetsDir
 
     code = subprocess.Popen([HANDLER, c4dProjectWithAssets, c4dProjectWithAssetsDir])
 
-    if True == debug:
+    if True == verbose:
         print "Submission of project with assets file with result code: ", code

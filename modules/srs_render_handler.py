@@ -21,9 +21,15 @@ __root__ = os.path.dirname(os.path.dirname(__file__))
 HANDLER = __root__ + '/render.sh'
 
 config = srs_functions.get_config_values()
-debug = bool(config.get(srs_functions.CONFIG_SECTION, 'debug'))
-verbose = bool(config.get(srs_functions.CONFIG_SECTION, 'verbose'))
+debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
+verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
+# Params
 c4dCommandLine = config.get(srs_functions.CONFIG_SECTION, 'c4dCommandLine')
+c4dProjectWithAssets = 'internal data'
+frameRange = 'submitted data'
+outputType = 'submitted data'
+outputFrames = 'ini'
+outputPsds = 'ini'
 
 # ===================================================================
 def handle_render():
@@ -32,9 +38,9 @@ def handle_render():
     # .....................................................
 
     if True == debug:
-        print "Submitting render script: ", HANDLER, ", with ", c4dCommandLine
+        print "*** Submitting render script: ", HANDLER, ", with ", c4dCommandLine
 
     code = subprocess.Popen([HANDLER, c4dCommandLine])
 
-    if True == debug:
+    if True == verbose:
         print "Submission result code: ", code

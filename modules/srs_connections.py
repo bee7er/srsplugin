@@ -13,8 +13,8 @@ ERROR = "Error"
 OK = "OK"
 
 config = srs_functions.get_config_values()
-debug = bool(config.get(srs_functions.CONFIG_SECTION, 'debug'))
-verbose = bool(config.get(srs_functions.CONFIG_SECTION, 'verbose'))
+debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
+verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
 
 # ===================================================================
 def submitRequest(self, endPoint, sendData):
@@ -25,7 +25,7 @@ def submitRequest(self, endPoint, sendData):
     sendData = urllib.urlencode(sendData)
     
     if True == debug:
-        print "Submitting to ", endPoint, ", details: ", sendData
+        print "*** Submitting to ", endPoint, ", details: ", sendData
 
     try:
         request = urllib2.Request(endPoint, sendData)
@@ -33,7 +33,7 @@ def submitRequest(self, endPoint, sendData):
 
         error = False
         if 200 == response.code:
-            if True == debug:
+            if True == verbose:
                 print "Submitted OK to end point: ", endPoint
         else:
             # Always print the error message
@@ -50,7 +50,7 @@ def submitRequest(self, endPoint, sendData):
         return {'result': 'Error', 'message': message}
     
     if True == debug:
-        print "Returned data: ", responseData
+        print "*** Returned data: ", responseData
     
     return responseData
     
