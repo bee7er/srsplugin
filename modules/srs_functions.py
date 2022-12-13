@@ -62,30 +62,35 @@ def analyse_frame_ranges(frameRangeStr):
 
     config = get_config_values()
     verbose = config.get(CONFIG_SECTION, 'verbose')
-    
+
+    verbose = True
+
     # Remove all spaces
     frameRangeLst = frameRangeStr.replace(' ', '').split(',')
     returnStr = ''
+    sep = ''
     for entry in frameRangeLst:
         # Range should be number-number
         rangelet = entry.split('-')
         if True == verbose:
-            print "Ranglet: ", rangeLet
-        if 2 != len(rangeLet):
+            print "Ranglet: ", rangelet
+        if 2 != len(rangelet):
             if True == verbose:
-                print "Error: Ignoring invalid rangelet: ", str(rangeLet)
+                print "Error: Ignoring invalid rangelet: ", str(rangelet)
             continue
-        elif True != str(rangeLet[0]).isdigit() or True != str(rangeLet[1]).isdigit():
+        elif True != str(rangelet[0]).isdigit() or True != str(rangelet[1]).isdigit():
             if True == verbose:
-                print "Error: Ignoring non-integer rangelet: ", str(rangeLet)
+                print "Error: Ignoring non-integer rangelet: ", str(rangelet)
             continue
-        elif int(rangeLet[1]) < int(rangeLet[0]):
-            el = rangeLet[0]
-            rangeLet[0] = rangeLet[1]
-            rangeLet[1] = el
+        elif int(rangelet[1]) < int(rangelet[0]):
+            el = rangelet[0]
+            rangelet[0] = rangelet[1]
+            rangelet[1] = el
             
-        returnStr += str(rangeLet)
-        
+        returnStr += sep + str(rangelet[0]) + '-' + str(rangelet[1])
+        sep = ','
+
+    print 'returnStr=', returnStr
     return returnStr
 
 # ===================================================================
@@ -106,9 +111,9 @@ def get_render_settings():
     }
 
 # ===================================================================
-def get_projectWithAssets():
+def get_project():
 # ===================================================================
-    # Gets projectWithAssets path and name from the currently loaded project
+    # Gets project path and name from the currently loaded project
     # .....................................................
 
     config = get_config_values()
@@ -117,13 +122,13 @@ def get_projectWithAssets():
 
     md = c4d.documents.GetActiveDocument()
     fp = c4d.documents.BaseDocument.GetDocumentPath(md)
-    c4dProjectWithAssets = ''
+    c4dProject = ''
     if '' == fp:
         if True == debug:
             print("*** A project has not been opened")
     else:
-        c4dProjectWithAssets = fp + '/' + c4d.documents.BaseDocument.GetDocumentName(md)
+        c4dProject = fp + '/' + c4d.documents.BaseDocument.GetDocumentName(md)
         if True == verbose:
-            print("Project opened is: ", c4dProjectWithAssets)
+            print("Project opened is: ", c4dProject)
 
-    return c4dProjectWithAssets
+    return c4dProject

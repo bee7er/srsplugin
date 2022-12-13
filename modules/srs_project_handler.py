@@ -18,11 +18,12 @@ c4dProjectWithAssets = config.get(srs_functions.CONFIG_SECTION, 'c4dProjectWithA
 c4dProjectWithAssetsDir = config.get(srs_functions.CONFIG_SECTION, 'c4dProjectWithAssetsDir')
 
 # ===================================================================
-def handle_project():
+def handle_project_upload():
 # ===================================================================
     # Posting the project with assets file to master
     # .....................................................
 
+    # TODO A unique name is needed for the project with assets name
     if True == debug:
         print "*** Submitting project with assets upload script: ", HANDLER, ", with ", c4dProjectWithAssets, ", in ", c4dProjectWithAssetsDir
 

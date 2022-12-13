@@ -77,7 +77,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
         self.ipAddress = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, IPADDRESS)
         self.availability = int(config.get(srs_functions.CONFIG_REGISTRATION_SECTION, AVAILABILITY))
         
-        self.SetTitle("Register with SRS")
+        self.SetTitle("SRS Register Render Availability")
 		
         self.GroupBegin(id=100000, flags=c4d.BFH_SCALEFIT, cols=2, rows=4)        
         """ Email field """
@@ -225,7 +225,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
             "ipAddress": self.ipAddress,
             "availability": self.availability,
         }
-        responseData = srs_connections.submitRequest(self, (srsApi + "register"), sendData)
+        responseData = srs_connections.submitRequest(self, (srsApi + "/register"), sendData)
         if 'Error' == responseData['result']:
             gui.MessageDialog("Error:\n" + responseData['message'])
             return False
@@ -245,13 +245,20 @@ class RegistrationDlg(c4d.gui.GeDialog):
             if AVAILABLE == self.availability:
                 if True == debug:
                     print "*** Available for team render instructions"
-                responseData = srs_connections.submitRequest(self, (srsApi + "available"), {EMAIL:self.email})
+                responseData = srs_connections.submitRequest(self, (srsApi + "/available"), {EMAIL:self.email})
 
                 if 'Error' != responseData['result'] and AI_DO_RENDER == responseData[ACTIONINSTRUCTION]:
+                    # Do render in the background
                     self.renderDetailId = responseData[RENDERDETAILID]
                     self.actionStatus = AS_RENDERING
                     # Kick off the render job
-                    srs_render_handler.handle_render()
+                    srs_render_handler.handle_render(
+                        c4dProjectDir,
+                        responseData['c4dProjectWithAssets'],
+                        responseData['from'],
+                        responseData['to'],
+                        responseData['outputFormat'],
+                        )
 
                 if 'Error' == responseData['result']:
                     gui.MessageDialog("Error:\n" + responseData['message'])
@@ -260,19 +267,21 @@ class RegistrationDlg(c4d.gui.GeDialog):
         elif AS_RENDERING == self.actionStatus:
             if True == debug: 
                 print "*** Rendering"
-            responseData = srs_connections.submitRequest(self, (srsApi + "rendering"), {EMAIL:self.email})
+
+            responseData = srs_connections.submitRequest(self, (srsApi + "/rendering"), {EMAIL:self.email})
             if 'Error' == responseData['result']:
                 gui.MessageDialog("Error:\n" + responseData['message'])
                 return
 
             # Check if the render has completed OK
-            if True == os.path.exists(c4dProjectDir + "actionCompleted.txt"):
+            if True == os.path.exists(c4dProjectDir + "/actionCompleted.txt"):
                 if True == debug:
                     print "*** Completed render"
                     print "TODO send the results to master"
                 # Back to ready for this slave
                 self.actionStatus = AS_READY
-                responseData = srs_connections.submitRequest(self, (srsApi + "complete"),
+
+                responseData = srs_connections.submitRequest(self, (srsApi + "/complete"),
                         {EMAIL:self.email, RENDERDETAILID:self.renderDetailId}
                     )
                 if 'Error' == responseData['result']:
@@ -282,7 +291,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
         # We always send an AWAKE message to the master
         if True == debug:
             print "*** Awake message to master"
-        responseData = srs_connections.submitRequest(self, (srsApi + "awake"), {EMAIL:self.email})
+        responseData = srs_connections.submitRequest(self, (srsApi + "/awake"), {EMAIL:self.email})
 
         if 'Error' == responseData['result']:
             gui.MessageDialog("Error:\n" + responseData['message'])
@@ -351,7 +360,7 @@ if __name__ == "__main__":
 		
     # Registers the plugin
     c4d.plugins.RegisterCommandPlugin(id=PLUGIN_ID,
-                                      str="Shared Render Service",
+                                      str="SRS Register Availability for Renders",
                                       info=0,
                                       help="Register your availability with SRS",
                                       dat=RegistrationDlgCommand(),

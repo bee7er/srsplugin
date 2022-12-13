@@ -32,23 +32,28 @@ COMBO_TEXT = 100015
 SELCOMBO_BUTTON = 100016
 FRAME_RANGES_TEXT = 100017
 EDIT_FRAME_RANGES_TEXT = 100018
-OUTPUT_FORMAT_TEXT = 100019
-OUTPUT_FORMAT = 100020
+OUTPUT_C4D_PROJECT_TEXT = 100019
+OUTPUT_C4D_PROJECT = 100020
+OUTPUT_FORMAT_TEXT = 100021
+OUTPUT_FORMAT = 100022
 
 PLEASE_SELECT = 0
 OVERRIDE = 1
 USESETTINGS = 2
 
 # Parameters
-CUSTOMFRAMERANGE = "customFrameRange"
+CUSTOMFRAMERANGES = "customFrameRanges"
 EMAIL = "email"
 FROM = "from"
+C4DPROJECTWITHASSETSDIR = "c4dProjectWithAssetsDir"
 C4DPROJECTWITHASSETS = "c4dProjectWithAssets"
 OVERRIDESETTINGS = "overrideSettings"
 RENDERDETAILID = "renderDetailId"
 RENDERID = "renderId"
 TO = "to"
 OUTPUTFORMAT = "outputFormat"
+OUTPUTFRAMES = "outputFrames"
+OUTPUTPSDS = "outputPsds"
 
 config = srs_functions.get_config_values()
 debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
@@ -59,16 +64,25 @@ srsApi = config.get(srs_functions.CONFIG_SECTION, 'srsApi')
 class RenderDlg(c4d.gui.GeDialog):
 # ===================================================================
 
+    c4dProjectWithAssetsDir = ''
     c4dProjectWithAssets = ''
-    # Get the currently active render settings
+
+    # The problem with the next bit which tries to get output format is that it returns an ID with no way to convert to the string
     #renderData = srs_functions.get_render_settings()
     #outputFormat = renderData[srs_functions.OUTPUT_FORMAT]
     #if '' == outputFormat:
+
+    promptForUpToDate = True
+
     outputFormat = 'PNG'
     overrideSettings = 0
     customFrameRanges = ''
     rangeFrom = 0
     rangeTo = 0
+
+    overrideSettings = int(config.get(srs_functions.CONFIG_RENDER_SECTION, 'overrideSettings'))
+    outputFormat = config.get(srs_functions.CONFIG_RENDER_SECTION, 'outputFormat')
+    customFrameRanges = config.get(srs_functions.CONFIG_RENDER_SECTION, 'customFrameRanges')
 
     # ===================================================================
     def CreateLayout(self):
@@ -77,17 +91,20 @@ class RenderDlg(c4d.gui.GeDialog):
 
         # TODO Submissions aren't allowed if registration dialog is not open
 
-        # Get the project path and name
-        self.c4dProjectWithAssets = srs_functions.get_projectWithAssets()
+        # Get the project with assets path and name
+        self.c4dProjectWithAssetsDir = config.get(srs_functions.CONFIG_SECTION, 'c4dProjectWithAssetsDir')
+        self.c4dProjectWithAssets = config.get(srs_functions.CONFIG_SECTION, 'c4dProjectWithAssets')
+
         renderData = srs_functions.get_render_settings()
         self.rangeFrom = renderData[srs_functions.RANGE_FROM]
         self.rangeTo = renderData[srs_functions.RANGE_TO]
-        
-        # Initialise the form fields from the config file
-        self.overrideSettings = int(config.get(srs_functions.CONFIG_RENDER_SECTION, 'overrideSettings'))
-        self.outputFormat = config.get(srs_functions.CONFIG_RENDER_SECTION, 'outputFormat')
 
-        self.SetTitle("Submit Render Request")
+        # Initialise the form fields from the config file
+        #self.overrideSettings = int(config.get(srs_functions.CONFIG_RENDER_SECTION, 'overrideSettings'))
+        #self.outputFormat = config.get(srs_functions.CONFIG_RENDER_SECTION, 'outputFormat')
+        #self.customFrameRanges = config.get(srs_functions.CONFIG_RENDER_SECTION, 'customFrameRanges')
+
+        self.SetTitle("SRS Submit Render Request")
 		
         self.GroupBegin(id=GROUP_ID, flags=c4d.BFH_SCALEFIT, cols=2, rows=4)
         """ Use active render settings field """
@@ -108,6 +125,9 @@ class RenderDlg(c4d.gui.GeDialog):
         self.AddStaticText(id=FRAME_RANGE_TO_TEXT, flags=c4d.BFV_MASK, initw=145, name="to: ", borderstyle=c4d.BORDER_NONE)
         self.AddEditNumber(EDIT_FRAME_RANGE_TO_TEXT, c4d.BFV_MASK, initw=80, inith=16)
         self.SetInt32(EDIT_FRAME_RANGE_TO_TEXT, self.rangeTo)
+        """ C4D Project with Assets field """
+        self.AddStaticText(id=OUTPUT_C4D_PROJECT_TEXT, flags=c4d.BFV_MASK, initw=145, name="Project with Assets: ", borderstyle=c4d.BORDER_NONE)
+        self.AddStaticText(id=OUTPUT_C4D_PROJECT, flags=c4d.BFV_MASK, initw=220, name=self.c4dProjectWithAssets, borderstyle=c4d.BORDER_NONE)
         """ Output Format field """
         self.AddStaticText(id=OUTPUT_FORMAT_TEXT, flags=c4d.BFV_MASK, initw=145, name="Output format: ", borderstyle=c4d.BORDER_NONE)
         self.AddStaticText(id=OUTPUT_FORMAT, flags=c4d.BFV_MASK, initw=145, name=self.outputFormat, borderstyle=c4d.BORDER_NONE)
@@ -135,13 +155,11 @@ class RenderDlg(c4d.gui.GeDialog):
         Returns:
             bool: False on error else True.
         """
-        if '' == self.c4dProjectWithAssets:
-            self.c4dProjectWithAssets = srs_functions.get_projectWithAssets()
 
         # User click on Ok button
         if messageId == c4d.DLG_OK:
 
-            if '' == self.c4dProjectWithAssets:
+            if '' == srs_functions.get_project():
                 gui.MessageDialog("Please open your project file and ensure your project with assets file is up to date.")
                 return True
 
@@ -158,7 +176,7 @@ class RenderDlg(c4d.gui.GeDialog):
                     print "*** Render request"
                 # Save to the config file
                 srs_functions.update_config_values(srs_functions.CONFIG_RENDER_SECTION, [
-                    ('overrideSettings', str(self.overrideSettings)), ('outputFormat', self.outputFormat)
+                    ('overrideSettings', str(self.overrideSettings)), ('outputFormat', self.outputFormat), ('customFrameRanges', self.customFrameRanges)
                     ])
                 
                 if True == self.submitRenderRequest():
@@ -232,34 +250,27 @@ class RenderDlg(c4d.gui.GeDialog):
     # ===================================================================
         """ 
         Submit the render request to the master node
-
-        NB Running these tests from srsplugin folder:
-        
-        Testing with curl on the command line:
-		        curl -X POST -H "Content-Type: application/json" -d '{"sequence": "poipoi", "from": 8, "to": 88}' http://srsapi.test/api1/renders/request
-
-        Testing upload to master:
-
-                # Uploading rendered frames to master
-                # NB we must use the vagrant directory sequence
-                    curl -v -F 'upload=@/home/vagrant/Code/srstest/srs/redshifttest/tars/RedshiftTestBePngs.tar.gz' -H "Content-Type: multipart/form-data" http://srsapi.test/results
-
-        Testing download from master:
-
-                curl --output ./projects/RedshiftTestBePngs.tar.gz http://srsapi.test/uploads/projects/RedshiftTestBe.c4d
-
         """
+        # Validate the custom ranges if we are overriding settings
+        if OVERRIDE == self.overrideSettings:
+            # Analyse the custom frange ranges
+            self.customFrameRanges = srs_functions.analyse_frame_ranges(self.customFrameRanges)
+            if '' == self.customFrameRanges:
+                if True == verbose:
+                    print 'customFrameRanges: ', self.customFrameRanges
+                gui.MessageDialog("Please enter at least one valid range, in the format 'm - m, n - n, etc'")
+                return False
+
         # First of all we upload the project with assets file to the server
         # TODO Check that the file exists
-        yesNo = gui.QuestionDialog("Are you sure the project with assets file is up to date?")
-        if False == yesNo:
-            return False;
-        # Go ahead and submit the render request, starting with the uploading of the project with assets file
-        srs_project_handler.handle_project()
+        if True == self.promptForUpToDate:
+            yesNo = gui.QuestionDialog("Are you sure the project with assets file is up to date?")
+            if False == yesNo:
+                return False
+            self.promptForUpToDate = False
 
-        # TODO Analyse and validate frame ranges
-        ######ranges = srs_functions.analyse_frame_ranges("1 - 3,5-7,8, 10-7, a-5, 3.5 - 9, 155-88")
-        ######print ranges
+        # Go ahead and submit the render request, starting with the uploading of the project with assets file
+        srs_project_handler.handle_project_upload()
 
         if True == debug:
             print "*** Submit project with assets to master"
@@ -269,9 +280,8 @@ class RenderDlg(c4d.gui.GeDialog):
 
         sendData = {
             EMAIL:config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'email'),
-            C4DPROJECTWITHASSETS:config.get(srs_functions.CONFIG_SECTION, 'c4dProjectWithAssets'),
             OVERRIDESETTINGS:self.overrideSettings,
-            CUSTOMFRAMERANGE:self.customFrameRanges,
+            CUSTOMFRAMERANGES:self.customFrameRanges,
             FROM:self.rangeFrom,
             TO:self.rangeTo,
             C4DPROJECTWITHASSETS:self.c4dProjectWithAssets,
@@ -279,7 +289,7 @@ class RenderDlg(c4d.gui.GeDialog):
         }
         if True == verbose:
             print "Sending data: ", sendData
-        responseData = srs_connections. submitRequest(self, (srsApi + "render"), sendData)
+        responseData = srs_connections. submitRequest(self, (srsApi + "/render"), sendData)
         if 'Error' == responseData['result']:
             gui.MessageDialog("Error:\n" + responseData['message'])
             return False
@@ -287,8 +297,11 @@ class RenderDlg(c4d.gui.GeDialog):
         if True == verbose:
             print "Render request record id: ", responseData[RENDERID]
 
-        gui.MessageDialog("Range submitted for render: " + "\nFrom frame: " + str(self.rangeFrom) + "\nTo frame:" + str(self.rangeTo))
-        
+        if OVERRIDE == self.overrideSettings:
+            gui.MessageDialog("Custom ranges submitted for render: " + self.customFrameRanges)
+        else:
+            gui.MessageDialog("Range submitted for render: " + "\nFrom frame: " + str(self.rangeFrom) + "\nTo frame:" + str(self.rangeTo))
+
         return True
 
     # ===================================================================
@@ -376,7 +389,7 @@ if __name__ == "__main__":
 		
     # Registers the plugin
     c4d.plugins.RegisterCommandPlugin(id=PLUGIN_ID,
-                                      str="Shared Render Service",
+                                      str="SRS Submit Render Request",
                                       info=0,
                                       help="Submit render request",
                                       dat=RenderDlgCommand(),

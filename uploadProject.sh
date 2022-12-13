@@ -4,7 +4,7 @@
 # $2: the location of that file
 
 echo "Uploading the project with assets file"
-echo "Project name: $1 and location: $2"
+echo "Project with assets name: $1 and location: $2"
 
 # Zip up the project file before uploading it
 tar -zcvf $2$1.tar.gz $2$1.c4d
