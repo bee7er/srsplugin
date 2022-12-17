@@ -12,7 +12,7 @@ import srs_functions
 
 __root__ = os.path.dirname(os.path.dirname(__file__))
 
-HANDLER = __root__ + '/render.sh'
+HANDLER = __root__ + '/srs_render.sh'
 
 config = srs_functions.get_config_values()
 debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))

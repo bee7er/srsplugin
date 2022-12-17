@@ -9,7 +9,7 @@ import srs_functions
 
 __root__ = os.path.dirname(os.path.dirname(__file__))
 
-HANDLER = __root__ + '/uploadProject.sh'
+HANDLER = __root__ + '/srs_uploadProject.sh'
 
 config = srs_functions.get_config_values()
 debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))

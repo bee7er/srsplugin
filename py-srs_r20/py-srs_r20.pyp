@@ -16,7 +16,7 @@ if os.path.join(__root__, 'modules') not in sys.path: sys.path.insert(0, os.path
 import c4d
 from c4d import gui, bitmaps, utils
 # SRS module for various shared funcrtions
-import srs_functions, srs_connections, srs_project_download_handler, srs_render_handler
+import srs_functions, srs_connections, srs_project_download_handler, srs_results_download_handler, srs_render_handler
 
 __res__ = c4d.plugins.GeResource()
 __res__.Init(__root__)
@@ -40,6 +40,7 @@ AS_READY = "ready"
 AS_RENDERING = "rendering"
 # Action instructions are given by the master
 AI_DO_RENDER = "render"
+AI_DO_DOWNLOAD = "download"
 
 config = srs_functions.get_config_values()
 debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
@@ -242,7 +243,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
         Args:
             msg (c4d.BaseContainer): The timer message
         """
-        if AS_READY == self.actionStatus:
+        if False and AS_READY == self.actionStatus:
             if AVAILABLE == self.availability:
                 if True == debug:
                     print "*** Available for team render instructions"
@@ -253,7 +254,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
                     result = srs_project_download_handler.handle_project_download(responseData['c4dProjectWithAssets'])
 
                     if 'Error' == result['result']:
-                        gui.MessageDialog("Error:\n" + responseData['message'])
+                        print "Error in project download: ", responseData['message']
                         return
 
                     # Do render in the background
@@ -270,16 +271,16 @@ class RegistrationDlg(c4d.gui.GeDialog):
                         )
 
                 if 'Error' == responseData['result']:
-                    gui.MessageDialog("Error:\n" + responseData['message'])
+                    print "Error in available: ", responseData['message']
                     return
 
-        elif AS_RENDERING == self.actionStatus:
+        elif False and AS_RENDERING == self.actionStatus:
             if True == debug: 
                 print "*** Rendering"
 
             responseData = srs_connections.submitRequest(self, (srsApi + "/rendering"), {EMAIL:self.email})
             if 'Error' == responseData['result']:
-                gui.MessageDialog("Error:\n" + responseData['message'])
+                print "Error in rendering: ", responseData['message']
                 return
 
             # Check if the render has completed OK
@@ -291,15 +292,11 @@ class RegistrationDlg(c4d.gui.GeDialog):
                 # Back to ready for this slave
                 self.actionStatus = AS_READY
 
-                # Upload the output from the render to master
-
-
-
                 responseData = srs_connections.submitRequest(self, (srsApi + "/complete"),
                         {EMAIL:self.email, RENDERDETAILID:self.renderDetailId}
                     )
                 if 'Error' == responseData['result']:
-                    gui.MessageDialog("Error:\n" + responseData['message'])
+                    print "Error in complete: ", responseData['message']
                     return
 
         # We always send an AWAKE message to the master
@@ -307,8 +304,14 @@ class RegistrationDlg(c4d.gui.GeDialog):
             print "*** Awake message to master"
         responseData = srs_connections.submitRequest(self, (srsApi + "/awake"), {EMAIL:self.email})
 
+        if 'Error' != responseData['result'] and AI_DO_DOWNLOAD == responseData[ACTIONINSTRUCTION]:
+            # Download the rendered frames/psds
+            result = srs_results_download_handler.handle_results_download(responseData['frameRanges'])
+
+            print '####### Result in awake: ', responseData['frameRanges']
+
         if 'Error' == responseData['result']:
-            gui.MessageDialog("Error:\n" + responseData['message'])
+            print "Error in timer: ", responseData['message']
             return
 
 # ===================================================================
