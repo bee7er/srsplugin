@@ -15,7 +15,7 @@ if os.path.join(__root__, 'modules') not in sys.path: sys.path.insert(0, os.path
 import c4d
 from c4d import gui, bitmaps, utils
 # SRS module for various shared funcrtions
-import srs_functions, srs_project_handler, srs_connections
+import srs_functions, srs_project_upload_handler, srs_connections
 
 __res__ = c4d.plugins.GeResource()
 __res__.Init(__root__)
@@ -270,7 +270,7 @@ class RenderDlg(c4d.gui.GeDialog):
             self.promptForUpToDate = False
 
         # Go ahead and submit the render request, starting with the uploading of the project with assets file
-        srs_project_handler.handle_project_upload()
+        srs_project_upload_handler.handle_project_upload()
 
         if True == debug:
             print "*** Submit project with assets to master"

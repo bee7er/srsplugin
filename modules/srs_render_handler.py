@@ -19,24 +19,24 @@ debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
 verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
 
 # Params
-c4dCommandLine = config.get(srs_functions.CONFIG_SECTION, 'c4dCommandLine')
+c4dCommandLineDir = config.get(srs_functions.CONFIG_SECTION, 'c4dCommandLineDir')
 outputToFramesDir = config.get(srs_functions.CONFIG_SECTION, 'outputToFramesDir')
 outputToPsdsDir = config.get(srs_functions.CONFIG_SECTION, 'outputToPsdsDir')
 
 # ===================================================================
-def handle_render(c4dProjectDir, c4dProjectWithAssets, rangeFrom, rangeTo, outputFormat):
+def handle_render(c4dProjectDir, downloadPWADir, c4dProjectWithAssets, rangeFrom, rangeTo, outputFormat):
 # ===================================================================
     # Submits a background job to render one or more frames
     # .....................................................
 
     if True == debug:
-        print "*** Submitting render script: ", HANDLER, ", with ", c4dCommandLine
+        print "*** Submitting render script: ", HANDLER, ", with ", c4dCommandLineDir
 
     if True == verbose:
-        print "Submitting c4dProjectWithAssets: ", c4dProjectWithAssets, ' from: ', rangeFrom, ' to: ', rangeTo, ' outputFormat: ', outputFormat
+        print "Submitting c4dProjectWithAssets: ", downloadPWADir, '/', c4dProjectWithAssets, ' from: ', rangeFrom, ' to: ', rangeTo, ' outputFormat: ', outputFormat
 
     code = subprocess.Popen([
-        HANDLER, c4dCommandLine, c4dProjectDir, c4dProjectWithAssets, str(rangeFrom), str(rangeTo), outputFormat, outputToFramesDir, outputToPsdsDir
+        HANDLER, c4dCommandLineDir, c4dProjectDir, downloadPWADir, c4dProjectWithAssets, str(rangeFrom), str(rangeTo), outputFormat, outputToFramesDir, outputToPsdsDir
         ])
 
     if True == verbose:

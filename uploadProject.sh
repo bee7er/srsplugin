@@ -6,10 +6,16 @@
 echo "Uploading the project with assets file"
 echo "Project with assets name: $1 and location: $2"
 
+# Change to the source directory
+cd "$2"
+
 # Zip up the project file before uploading it
-tar -zcvf $2$1.tar.gz $2$1.c4d
+gzip --best RedshiftTestBeWA.c4d
 
 # Now upload the zipped file to the master
-curl -v -F "upload=@$2$1.tar.gz" -H "Content-Type: multipart/form-data" http://srsapi.test/projects
+curl -v -F "upload=@$1.gz" -H "Content-Type: multipart/form-data" http://srsapi.test/projects
+
+# Go back to previous directory
+cd -
 
 exit

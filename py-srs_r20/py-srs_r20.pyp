@@ -16,7 +16,7 @@ if os.path.join(__root__, 'modules') not in sys.path: sys.path.insert(0, os.path
 import c4d
 from c4d import gui, bitmaps, utils
 # SRS module for various shared funcrtions
-import srs_functions, srs_connections, srs_render_handler
+import srs_functions, srs_connections, srs_project_download_handler, srs_render_handler
 
 __res__ = c4d.plugins.GeResource()
 __res__.Init(__root__)
@@ -46,6 +46,7 @@ debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
 verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
 srsApi = config.get(srs_functions.CONFIG_SECTION, 'srsApi')
 c4dProjectDir = config.get(srs_functions.CONFIG_SECTION, 'c4dProjectDir')
+downloadPWADir = config.get(srs_functions.CONFIG_SECTION, 'downloadPWADir')
 
 # Config settings
 AVAILABILITY = "availability"
@@ -248,12 +249,20 @@ class RegistrationDlg(c4d.gui.GeDialog):
                 responseData = srs_connections.submitRequest(self, (srsApi + "/available"), {EMAIL:self.email})
 
                 if 'Error' != responseData['result'] and AI_DO_RENDER == responseData[ACTIONINSTRUCTION]:
+                    # Download the project with assets file
+                    result = srs_project_download_handler.handle_project_download(responseData['c4dProjectWithAssets'])
+
+                    if 'Error' == result['result']:
+                        gui.MessageDialog("Error:\n" + responseData['message'])
+                        return
+
                     # Do render in the background
                     self.renderDetailId = responseData[RENDERDETAILID]
                     self.actionStatus = AS_RENDERING
                     # Kick off the render job
                     srs_render_handler.handle_render(
                         c4dProjectDir,
+                        downloadPWADir,
                         responseData['c4dProjectWithAssets'],
                         responseData['from'],
                         responseData['to'],
@@ -276,10 +285,15 @@ class RegistrationDlg(c4d.gui.GeDialog):
             # Check if the render has completed OK
             if True == os.path.exists(c4dProjectDir + "/actionCompleted.txt"):
                 if True == debug:
+                    print "*** ================"
                     print "*** Completed render"
-                    print "TODO send the results to master"
+                    print "*** ================"
                 # Back to ready for this slave
                 self.actionStatus = AS_READY
+
+                # Upload the output from the render to master
+
+
 
                 responseData = srs_connections.submitRequest(self, (srsApi + "/complete"),
                         {EMAIL:self.email, RENDERDETAILID:self.renderDetailId}
