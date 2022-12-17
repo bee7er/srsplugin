@@ -48,7 +48,7 @@ def update_config_values(section, configFields):
         if True == verbose:
             print "Config out: ", field[0], field[1]
         config.set(section, field[0], field[1])
-        
+
     with open(CONFIG_FILE, 'w') as configFile:
         config.write(configFile)
         

@@ -183,6 +183,10 @@ class RegistrationDlg(c4d.gui.GeDialog):
             Validate the submitted form
         """
         validationResult = []
+
+        # Preprocess form fields
+        self.SetString(EDIT_EMAIL_TEXT, self.GetString(EDIT_EMAIL_TEXT).replace("\\", ''))
+        self.SetString(EDIT_IP_TEXT, self.GetString(EDIT_IP_TEXT).replace("\\", ''))
             
         if "" == self.GetString(EDIT_EMAIL_TEXT).strip():
             validationResult.append("The Email field is required")
