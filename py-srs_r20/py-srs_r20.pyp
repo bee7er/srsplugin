@@ -247,7 +247,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
         Args:
             msg (c4d.BaseContainer): The timer message
         """
-        if False and AS_READY == self.actionStatus:
+        if AS_READY == self.actionStatus:
             if AVAILABLE == self.availability:
                 if True == debug:
                     print "*** Available for team render instructions"
@@ -278,7 +278,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
                     print "Error in available: ", responseData['message']
                     return
 
-        elif False and AS_RENDERING == self.actionStatus:
+        elif AS_RENDERING == self.actionStatus:
             if True == debug: 
                 print "*** Rendering"
 

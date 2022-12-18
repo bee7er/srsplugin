@@ -13,6 +13,8 @@ HANDLER = __root__ + '/srs_downloadResults.sh'
 config = srs_functions.get_config_values()
 debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
 verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
+c4dProjectWithAssets = config.get(srs_functions.CONFIG_SECTION, 'c4dProjectWithAssets')
+downloadPWADir = config.get(srs_functions.CONFIG_SECTION, 'downloadPWADir')
 
 # ===================================================================
 def handle_results_download(frameRanges):
@@ -25,15 +27,13 @@ def handle_results_download(frameRanges):
             print "*** Downloading frame ranges: ", frameRanges
 
 
+        for frameRange in frameRanges:
+            print frameRange, "\n"
 
-# TODO Iterate the frame ranges, build the name and call the download handler
-
-
-
-        code = subprocess.Popen([HANDLER, frameRanges])
+            code = subprocess.Popen([HANDLER, c4dProjectWithAssets, frameRange, downloadPWADir])
 
         if True == verbose:
-            print "Submission of results file with result code: ", code
+            print "Download of results file with result code: ", code
 
         return {'result': "OK", 'message': "Download of results with assets file completed"}
 

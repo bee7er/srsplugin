@@ -11,7 +11,7 @@
 # $8 - outputToFramesDir
 # $9 - outputToPsdsDir
 
-#render.sh "/Applications/MAXON/Cinema 4D R20/Commandline.app/Contents/MacOS" "/Users/brianetheridge/Library/Preferences/MAXON/Cinema 4D R20_7DE41E5A/plugins/projects" /Users/brianetheridge/Library/Preferences/MAXON/downloads RedshiftTestBeWA.c4d "0" "15" PNG "/Users/brianetheridge/Library/Preferences/MAXON/Cinema 4D R20_7DE41E5A/plugins/projects/frames" "/Users/brianetheridge/Library/Preferences/MAXON/Cinema 4D R20_7DE41E5A/plugins/projects/psds"
+#srs_render.sh "/Applications/MAXON/Cinema 4D R20/Commandline.app/Contents/MacOS" "/Users/brianetheridge/Library/Preferences/MAXON/Cinema 4D R20_7DE41E5A/plugins/projects" "/Users/brianetheridge/Library/Preferences/MAXON/Cinema 4D R20_7DE41E5A/plugins/projects/downloads" "RedshiftTestBeWA.c4d" "0" "8" PNG "/Users/brianetheridge/Library/Preferences/MAXON/Cinema 4D R20_7DE41E5A/plugins/projects/frames" "/Users/brianetheridge/Library/Preferences/MAXON/Cinema 4D R20_7DE41E5A/plugins/projects/psds"
 
 # Delete the completion file if it exists
 rm -f "$2/actionCompleted.txt"
@@ -23,11 +23,10 @@ rm -f "$2/actionCompleted.txt"
 nohup "$1/Commandline" -render "$3/$4" -frame "$5" "$6" -oimage "$8/$4" -omultipass "$9/$4" "$7"; touch "$2/actionCompleted.txt" &
 
 # Zip up the results
-tar -zcvf "$8/frames_$4.gz" "$8/frames"
-tar -zcvf "$9/psds_$4.gz" "$9/psds"
-
+tar -zcvf "$8/frames_$5-$6_$4.tar.gz" "$8"
+tar -zcvf "$9/psds_$5-$6_$4.tar.gz" "$9"
 # Upload the zipped files to master
-curl -v -F "upload=@$8/frames_$5_to_$6_$4.gz" -H "Content-Type: multipart/form-data" http://srsapi.test/results
-curl -v -F "upload=@$9/psds_$5_to_$6_$4.gz" -H "Content-Type: multipart/form-data" http://srsapi.test/results
+curl -F "upload=@$8/frames_$5-$6_$4.tar.gz" -H "Content-Type: multipart/form-data" http://srsapi.test/results
+curl -F "upload=@$9/psds_$5-$6_$4.tar.gz" -H "Content-Type: multipart/form-data" http://srsapi.test/results
 
 exit
