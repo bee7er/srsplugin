@@ -5,7 +5,7 @@
 # $3 - the location for the file that is downloaded
 # $4 - the location for the frames
 # $5 - the location for the psds
-# $6 - srs api url
+# $6 - srsDomain
 
 echo "Downloading the frame range result file"
 echo "Processing $1 frame range: $2 to location: $3"

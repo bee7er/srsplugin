@@ -17,7 +17,7 @@ c4dProjectWithAssets = config.get(srs_functions.CONFIG_SECTION, 'c4dProjectWithA
 downloadPWADir = config.get(srs_functions.CONFIG_SECTION, 'downloadPWADir')
 outputToFramesDir = config.get(srs_functions.CONFIG_SECTION, 'outputToFramesDir')
 outputToPsdsDir = config.get(srs_functions.CONFIG_SECTION, 'outputToPsdsDir')
-srsApi = config.get(srs_functions.CONFIG_SECTION, 'srsApi')
+srsDomain = config.get(srs_functions.CONFIG_SECTION, 'srsDomain')
 
 # ===================================================================
 def handle_results_download(frameRanges):
@@ -33,7 +33,7 @@ def handle_results_download(frameRanges):
         for frameRange in frameRanges:
             print frameRange, "\n"
 
-            code = subprocess.Popen([HANDLER, c4dProjectWithAssets, frameRange, downloadPWADir, outputToFramesDir, outputToPsdsDir, srsApi])
+            code = subprocess.Popen([HANDLER, c4dProjectWithAssets, frameRange, downloadPWADir, outputToFramesDir, outputToPsdsDir, srsDomain])
 
         if True == verbose:
             print "Download of results file with result code: ", code

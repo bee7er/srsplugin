@@ -2,7 +2,7 @@
 
 # $1: the file name of the project with assets file
 # $2: the download location for that file
-# $3: srs api url
+# $3: srsDomain
 
 echo "Downloading the project with assets file"
 echo "Project with assets name: $1 and location: $2"

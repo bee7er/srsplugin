@@ -282,10 +282,11 @@ class RegistrationDlg(c4d.gui.GeDialog):
             if True == debug: 
                 print "*** Rendering"
 
-            responseData = srs_connections.submitRequest(self, (srsApi + "/rendering"), {EMAIL:self.email})
-            if 'Error' == responseData['result']:
-                print "Error in rendering: ", responseData['message']
-                return
+            # We do not need to keep telling the master that we are rendering
+            ##responseData = srs_connections.submitRequest(self, (srsApi + "/rendering"), {EMAIL:self.email})
+            ##if 'Error' == responseData['result']:
+            ##    print "Error in rendering: ", responseData['message']
+            ##    return
 
             # Check if the render has completed OK
             if True == os.path.exists(c4dProjectDir + "/actionCompleted.txt"):
