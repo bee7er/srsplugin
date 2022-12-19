@@ -22,6 +22,7 @@ verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
 c4dCommandLineDir = config.get(srs_functions.CONFIG_SECTION, 'c4dCommandLineDir')
 outputToFramesDir = config.get(srs_functions.CONFIG_SECTION, 'outputToFramesDir')
 outputToPsdsDir = config.get(srs_functions.CONFIG_SECTION, 'outputToPsdsDir')
+srsApi = config.get(srs_functions.CONFIG_SECTION, 'srsApi')
 
 # ===================================================================
 def handle_render(c4dProjectDir, downloadPWADir, c4dProjectWithAssets, rangeFrom, rangeTo, outputFormat):
@@ -29,15 +30,13 @@ def handle_render(c4dProjectDir, downloadPWADir, c4dProjectWithAssets, rangeFrom
     # Submits a background job to render one or more frames
     # .....................................................
 
-    if True == debug:
+    if True == verbose:
         print "*** Submitting render script: ", HANDLER, ", with ", c4dCommandLineDir
 
     if True == verbose:
         print "Submitting c4dProjectWithAssets: ", downloadPWADir, '/', c4dProjectWithAssets, ' from: ', rangeFrom, ' to: ', rangeTo, ' outputFormat: ', outputFormat
 
-    code = subprocess.Popen([
-        HANDLER, c4dCommandLineDir, c4dProjectDir, downloadPWADir, c4dProjectWithAssets, str(rangeFrom), str(rangeTo), outputFormat, outputToFramesDir, outputToPsdsDir
-        ])
+    code = subprocess.Popen([HANDLER, c4dCommandLineDir, c4dProjectDir, downloadPWADir, c4dProjectWithAssets, str(rangeFrom), str(rangeTo), outputFormat, outputToFramesDir, outputToPsdsDir, srsApi])
 
     if True == verbose:
         print "Submission result code: ", code

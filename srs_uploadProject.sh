@@ -2,6 +2,7 @@
 
 # $1: the file name of the project with assets file
 # $2: the location of that file
+# $3: srs api url
 
 echo "Uploading the project with assets file"
 echo "Project with assets name: $1 and location: $2"
@@ -13,7 +14,7 @@ cd "$2"
 gzip --best RedshiftTestBeWA.c4d
 
 # Now upload the zipped file to the master
-curl -v -F "upload=@$1.gz" -H "Content-Type: multipart/form-data" http://srsapi.test/projects
+curl -v -F "upload=@$1.gz" -H "Content-Type: multipart/form-data" $3/projects
 
 # Go back to previous directory
 cd -

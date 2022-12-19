@@ -124,7 +124,7 @@ def get_project():
     fp = c4d.documents.BaseDocument.GetDocumentPath(md)
     c4dProject = ''
     if '' == fp:
-        if True == debug:
+        if True == verbose:
             print("*** A project has not been opened")
     else:
         c4dProject = fp + '/' + c4d.documents.BaseDocument.GetDocumentName(md)

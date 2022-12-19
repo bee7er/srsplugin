@@ -14,6 +14,7 @@ config = srs_functions.get_config_values()
 debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
 verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
 downloadPWADir = config.get(srs_functions.CONFIG_SECTION, 'downloadPWADir')
+srsApi = config.get(srs_functions.CONFIG_SECTION, 'srsApi')
 
 # ===================================================================
 def handle_project_download(c4dProjectWithAssets):
@@ -22,11 +23,11 @@ def handle_project_download(c4dProjectWithAssets):
     # .....................................................
     code = 'Init'
     try:
-        if True == debug:
+        if True == verbose:
             print "*** Downloading project with assets file to: ", downloadPWADir
             print "*** Downloading project with assets dir to: ", c4dProjectWithAssets
 
-        code = subprocess.Popen([HANDLER, c4dProjectWithAssets, downloadPWADir])
+        code = subprocess.Popen([HANDLER, c4dProjectWithAssets, downloadPWADir, srsApi])
 
         if True == verbose:
             print "Submission of project with assets file with result code: ", code

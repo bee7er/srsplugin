@@ -24,7 +24,7 @@ def submitRequest(self, endPoint, sendData):
 
     sendData = urllib.urlencode(sendData)
     
-    if True == debug:
+    if True == verbose:
         print "*** Submitting to ", endPoint, ", details: ", sendData
 
     try:
@@ -49,7 +49,7 @@ def submitRequest(self, endPoint, sendData):
         gui.MessageDialog(message)
         return {'result': 'Error', 'message': message}
     
-    if True == debug:
+    if True == verbose:
         print "*** Returned data: ", responseData
     
     return responseData

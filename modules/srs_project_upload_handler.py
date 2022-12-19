@@ -16,6 +16,7 @@ debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
 verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
 c4dProjectWithAssets = config.get(srs_functions.CONFIG_SECTION, 'c4dProjectWithAssets')
 c4dProjectWithAssetsDir = config.get(srs_functions.CONFIG_SECTION, 'c4dProjectWithAssetsDir')
+srsApi = config.get(srs_functions.CONFIG_SECTION, 'srsApi')
 
 # ===================================================================
 def handle_project_upload():
@@ -24,10 +25,10 @@ def handle_project_upload():
     # .....................................................
 
     # TODO A unique name is needed for the project with assets name
-    if True == debug:
+    if True == verbose:
         print "*** Submitting project with assets upload script: ", HANDLER, ", with ", c4dProjectWithAssets, ", in ", c4dProjectWithAssetsDir
 
-    code = subprocess.Popen([HANDLER, c4dProjectWithAssets, c4dProjectWithAssetsDir])
+    code = subprocess.Popen([HANDLER, c4dProjectWithAssets, c4dProjectWithAssetsDir, srsApi])
 
     if True == verbose:
         print "Submission of project with assets file with result code: ", code

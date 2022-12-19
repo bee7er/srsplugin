@@ -168,7 +168,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
                     return False;
 
             if True == debug: 
-                print("*** Cancelling registration")
+                print("*** Cancelled registration")
 
             # Close the Dialog
             self.Close()
@@ -250,7 +250,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
         if AS_READY == self.actionStatus:
             if AVAILABLE == self.availability:
                 if True == debug:
-                    print "*** Available for team render instructions"
+                    print "*** Available"
                 responseData = srs_connections.submitRequest(self, (srsApi + "/available"), {EMAIL:self.email})
 
                 if 'Error' != responseData['result'] and AI_DO_RENDER == responseData[ACTIONINSTRUCTION]:
@@ -305,14 +305,16 @@ class RegistrationDlg(c4d.gui.GeDialog):
 
         # We always send an AWAKE message to the master
         if True == debug:
-            print "*** Awake message to master"
+            print "*** Awake"
         responseData = srs_connections.submitRequest(self, (srsApi + "/awake"), {EMAIL:self.email})
 
         if 'Error' != responseData['result'] and AI_DO_DOWNLOAD == responseData[ACTIONINSTRUCTION]:
             # Download the rendered frames/psds
             result = srs_results_download_handler.handle_results_download(responseData['frameRanges'])
 
-            print '####### Result in awake: ', responseData['frameRanges']
+            if 'OK' == result['result']:
+                gui.MessageDialog("Render download completed successfully")
+                return
 
         if 'Error' == responseData['result']:
             print "Error in timer: ", responseData['message']

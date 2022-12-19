@@ -173,7 +173,7 @@ class RenderDlg(c4d.gui.GeDialog):
                 if True == verbose:
                     print "Form data passed validation"
                 if True == debug:
-                    print "*** Render request"
+                    print "*** Render requested"
                 # Save to the config file
                 srs_functions.update_config_values(srs_functions.CONFIG_RENDER_SECTION, [
                     ('overrideSettings', str(self.overrideSettings)), ('outputFormat', self.outputFormat), ('customFrameRanges', self.customFrameRanges)
@@ -183,6 +183,15 @@ class RenderDlg(c4d.gui.GeDialog):
                     # Reset the range for the next submission
                     self.rangeFrom = 0
                     self.rangeTo = 0
+                    # Get and log the current status for this slave
+                    if True == verbose:
+                        print "Sending data: ", sendData
+                    responseData = srs_connections.submitRequest(self, (srsApi + "/status"), {EMAIL:config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'email')})
+                    if 'Error' == responseData['result']:
+                        gui.MessageDialog("Error:\n" + responseData['message'])
+                        return False
+
+                    print "Current status: ", responseData['message']
                     # Close the Dialog
                     self.Close()
 
@@ -191,8 +200,8 @@ class RenderDlg(c4d.gui.GeDialog):
                     return False
             
             else:
-                if True == debug: 
-                    print "*** Form data failed validation"
+                if True == verbose:
+                    print "Form data failed validation"
                 errorMessages = sep = ""
                 for error in validationResult:
                     errorMessages += sep + error
@@ -272,8 +281,8 @@ class RenderDlg(c4d.gui.GeDialog):
         # Go ahead and submit the render request, starting with the uploading of the project with assets file
         srs_project_upload_handler.handle_project_upload()
 
-        if True == debug:
-            print "*** Submit project with assets to master"
+        if True == verbose:
+            print "Submit project with assets to master"
 
         if True == verbose:
             print "Render request going to: ", srsApi
@@ -289,7 +298,7 @@ class RenderDlg(c4d.gui.GeDialog):
         }
         if True == verbose:
             print "Sending data: ", sendData
-        responseData = srs_connections. submitRequest(self, (srsApi + "/render"), sendData)
+        responseData = srs_connections.submitRequest(self, (srsApi + "/render"), sendData)
         if 'Error' == responseData['result']:
             gui.MessageDialog("Error:\n" + responseData['message'])
             return False
@@ -395,6 +404,6 @@ if __name__ == "__main__":
                                       dat=RenderDlgCommand(),
                                       icon=bmp)
     
-    if True == debug: 
-        print "*** SRS Submit Render request registered ok"
+    if True == verbose:
+        print "SRS Submit Render request registered ok"
 

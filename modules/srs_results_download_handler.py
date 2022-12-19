@@ -15,6 +15,9 @@ debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
 verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
 c4dProjectWithAssets = config.get(srs_functions.CONFIG_SECTION, 'c4dProjectWithAssets')
 downloadPWADir = config.get(srs_functions.CONFIG_SECTION, 'downloadPWADir')
+outputToFramesDir = config.get(srs_functions.CONFIG_SECTION, 'outputToFramesDir')
+outputToPsdsDir = config.get(srs_functions.CONFIG_SECTION, 'outputToPsdsDir')
+srsApi = config.get(srs_functions.CONFIG_SECTION, 'srsApi')
 
 # ===================================================================
 def handle_results_download(frameRanges):
@@ -23,14 +26,14 @@ def handle_results_download(frameRanges):
     # ..........................................
     code = 'Init'
     try:
-        if True == debug:
+        if True == verbose:
             print "*** Downloading frame ranges: ", frameRanges
 
 
         for frameRange in frameRanges:
             print frameRange, "\n"
 
-            code = subprocess.Popen([HANDLER, c4dProjectWithAssets, frameRange, downloadPWADir])
+            code = subprocess.Popen([HANDLER, c4dProjectWithAssets, frameRange, downloadPWADir, outputToFramesDir, outputToPsdsDir, srsApi])
 
         if True == verbose:
             print "Download of results file with result code: ", code
