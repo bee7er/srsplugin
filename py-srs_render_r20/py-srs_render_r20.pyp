@@ -183,15 +183,15 @@ class RenderDlg(c4d.gui.GeDialog):
                     # Reset the range for the next submission
                     self.rangeFrom = 0
                     self.rangeTo = 0
-                    # Get and log the current status for this slave
                     if True == verbose:
-                        print "Sending data: ", sendData
-                    #responseData = srs_connections.submitRequest(self, (srsApi + "/status"), {EMAIL:config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'email')})
-                    #if 'Error' == responseData['result']:
-                    #    gui.MessageDialog("Error:\n" + responseData['message'])
-                    #    return False
+                        # Get and log the current status for this slave
+                        responseData = srs_connections.submitRequest(self, (srsApi + "/status"), {EMAIL:config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'email')})
+                        if 'Error' == responseData['result']:
+                            gui.MessageDialog("Error:\n" + responseData['message'])
+                            return False
 
-                    #print "Current status: ", responseData['message']
+                        print "Current status: ", responseData['message']
+
                     # Close the Dialog
                     self.Close()
 

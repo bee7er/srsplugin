@@ -26,10 +26,8 @@ PLUGIN_ID = 1047985
 
 EMAIL_TEXT = 100011
 EDIT_EMAIL_TEXT = 100012
-IP_TEXT = 100013
-EDIT_IP_TEXT = 100014
-COMBO_TEXT = 100015
-SELCOMBO_BUTTON = 100016
+COMBO_TEXT = 100013
+SELCOMBO_BUTTON = 100014
 
 PLEASE_SELECT = 0
 AVAILABLE = 1
@@ -52,7 +50,6 @@ downloadPWADir = config.get(srs_functions.CONFIG_SECTION, 'downloadPWADir')
 # Config settings
 AVAILABILITY = "availability"
 EMAIL = "email"
-IPADDRESS = "ipAddress"
 
 # Parameters
 ACTIONINSTRUCTION = "actionInstruction"
@@ -65,7 +62,6 @@ class RegistrationDlg(c4d.gui.GeDialog):
     actionStatus = AS_READY
     renderDetailId = 0
     email = ""
-    ipAddress = ""
     availability = 0
 
     # ===================================================================
@@ -76,7 +72,6 @@ class RegistrationDlg(c4d.gui.GeDialog):
         """
         # Initialise the form fields from the config file
         self.email = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, EMAIL)
-        self.ipAddress = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, IPADDRESS)
         self.availability = int(config.get(srs_functions.CONFIG_REGISTRATION_SECTION, AVAILABILITY))
         
         self.SetTitle("SRS Register Render Availability")
@@ -86,11 +81,6 @@ class RegistrationDlg(c4d.gui.GeDialog):
         self.AddStaticText(id=EMAIL_TEXT, flags=c4d.BFV_MASK, initw=145, name="Email: ", borderstyle=c4d.BORDER_NONE)
         self.AddEditText(EDIT_EMAIL_TEXT, c4d.BFV_MASK, initw=240, inith=16, editflags=0)
         self.SetString(EDIT_EMAIL_TEXT, self.email)
-
-        """ IP field """
-        self.AddStaticText(id=IP_TEXT, flags=c4d.BFV_MASK, initw=145, name="IP Address: ", borderstyle=c4d.BORDER_NONE)
-        self.AddEditText(EDIT_IP_TEXT, c4d.BFV_MASK, initw=240, inith=16, editflags=0)
-        self.SetString(EDIT_IP_TEXT, self.ipAddress)
 
         """ Availability field """
         self.AddStaticText(id=COMBO_TEXT, flags=c4d.BFV_MASK, initw=145, name="Availability: ", borderstyle=c4d.BORDER_NONE)
@@ -125,11 +115,10 @@ class RegistrationDlg(c4d.gui.GeDialog):
             validationResult = self.validate()
             if True == validationResult:
                 self.email = self.GetString(EDIT_EMAIL_TEXT)
-                self.ipAddress = self.GetString(EDIT_IP_TEXT)
                 self.availability = self.GetInt32(SELCOMBO_BUTTON)
                 # Save to the config file
                 srs_functions.update_config_values(
-                    srs_functions.CONFIG_REGISTRATION_SECTION, [(EMAIL, self.email), (IPADDRESS, self.ipAddress), (AVAILABILITY,  str(self.availability))]
+                    srs_functions.CONFIG_REGISTRATION_SECTION, [(EMAIL, self.email), (AVAILABILITY,  str(self.availability))]
                     )
                 if True == verbose:
                     print("Form data passed validation")
@@ -186,16 +175,9 @@ class RegistrationDlg(c4d.gui.GeDialog):
 
         # Preprocess form fields
         self.SetString(EDIT_EMAIL_TEXT, self.GetString(EDIT_EMAIL_TEXT).replace("\\", ''))
-        self.SetString(EDIT_IP_TEXT, self.GetString(EDIT_IP_TEXT).replace("\\", ''))
             
         if "" == self.GetString(EDIT_EMAIL_TEXT).strip():
             validationResult.append("The Email field is required")
-        
-        ip = self.GetString(EDIT_IP_TEXT).strip()
-        if "" == ip:
-            validationResult.append("The IP Address field is required")
-        elif True != self.is_valid_ip(ip):
-            validationResult.append("The IP Address is invalid")
             
         if 0 == self.GetInt32(SELCOMBO_BUTTON):
             validationResult.append("The Availability field is required")
@@ -206,29 +188,11 @@ class RegistrationDlg(c4d.gui.GeDialog):
         return validationResult
 
     # ===================================================================
-    def is_valid_ip(self, ip):
-    # ===================================================================
-        # TODO needs a better way to validate IP, and support IPv6
-        elements = ip.split('.')
-        if 4 != len(elements):
-            return False
-        
-        for elem in elements:
-            if True != elem.isdigit():
-                return False
-            
-            if 0 > int(elem) or 255 < int(elem):
-                return False
-                
-        return True
-
-    # ===================================================================
     def submitRegistrationRequest(self):
     # ===================================================================
         
         sendData = {
             "email": self.email,
-            "ipAddress": self.ipAddress,
             "availability": self.availability,
         }
         responseData = srs_connections.submitRequest(self, (srsApi + "/register"), sendData)
