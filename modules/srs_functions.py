@@ -74,7 +74,11 @@ def analyse_frame_ranges(frameRangeStr):
         rangelet = entry.split('-')
         if True == verbose:
             print "Ranglet: ", rangelet
-        if 2 != len(rangelet):
+        if 1 == len(rangelet):
+            # Build a rangelet from what we've been given, e.g. 12 -> 12-12
+            rangelet = [rangelet[0], rangelet[0]];
+        # Check what we've got
+        if 2 < len(rangelet):
             if True == verbose:
                 print "Error: Ignoring invalid rangelet: ", str(rangelet)
             continue
