@@ -39,6 +39,7 @@ AS_RENDERING = "rendering"
 # Action instructions are given by the master
 AI_DO_RENDER = "render"
 AI_DO_DOWNLOAD = "download"
+AI_DO_DISPLAY_OUTSTANDING = "outstanding"
 
 config = srs_functions.get_config_values()
 debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
@@ -273,13 +274,20 @@ class RegistrationDlg(c4d.gui.GeDialog):
             print "*** Awake"
         responseData = srs_connections.submitRequest(self, (srsApi + "/awake"), {EMAIL:self.email})
 
-        if 'Error' != responseData['result'] and AI_DO_DOWNLOAD == responseData[ACTIONINSTRUCTION]:
-            # Download the rendered frames/psds
-            result = srs_results_download_handler.handle_results_download(responseData['frameRanges'])
+        if 'Error' != responseData['result']:
+            if AI_DO_DOWNLOAD == responseData[ACTIONINSTRUCTION]:
+                # Download the rendered frames/psds
+                result = srs_results_download_handler.handle_results_download(responseData['frameRanges'])
 
-            if 'OK' == result['result']:
-                gui.MessageDialog("Render download completed successfully")
-                return
+                if 'OK' == result['result']:
+                    gui.MessageDialog("Render download completed successfully")
+                    return
+
+            elif AI_DO_DISPLAY_OUTSTANDING == responseData[ACTIONINSTRUCTION]:
+                # Details of outstanding renders have been returned
+                print "*********** Outstanding details"
+                print responseData
+                print "*******************************"
 
         if 'Error' == responseData['result']:
             print "Error in timer: ", responseData['message']
