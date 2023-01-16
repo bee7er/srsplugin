@@ -27,6 +27,7 @@ def submitRequest(self, endPoint, sendData):
     if True == verbose:
         print "*** Submitting to ", endPoint, ", details: ", sendData
 
+    responseData = 'None'
     try:
         request = urllib2.Request(endPoint, sendData)
         response = urllib2.urlopen(request)
@@ -42,6 +43,7 @@ def submitRequest(self, endPoint, sendData):
             return {'result': 'Error', 'message': error}
 
         responseData = json.loads(response.read())
+
         response.close()
     except:
         message = "Error trying to connect. Please check your internet connection."

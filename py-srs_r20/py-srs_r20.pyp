@@ -51,6 +51,7 @@ downloadPWADir = config.get(srs_functions.CONFIG_SECTION, 'downloadPWADir')
 # Config settings
 AVAILABILITY = "availability"
 EMAIL = "email"
+APITOKEN = "apiToken"
 
 # Parameters
 ACTIONINSTRUCTION = "actionInstruction"
@@ -63,6 +64,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
     actionStatus = AS_READY
     renderDetailId = 0
     email = ""
+    apiToken = ""
     availability = 0
 
     # ===================================================================
@@ -73,6 +75,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
         """
         # Initialise the form fields from the config file
         self.email = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, EMAIL)
+        self.apiToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, APITOKEN)
         self.availability = int(config.get(srs_functions.CONFIG_REGISTRATION_SECTION, AVAILABILITY))
         
         self.SetTitle("SRS Register Render Availability")
@@ -193,8 +196,9 @@ class RegistrationDlg(c4d.gui.GeDialog):
     # ===================================================================
         
         sendData = {
-            "email": self.email,
-            "availability": self.availability,
+            EMAIL: self.email,
+            APITOKEN: self.apiToken,
+            AVAILABILITY: self.availability,
         }
         responseData = srs_connections.submitRequest(self, (srsApi + "/register"), sendData)
         if 'Error' == responseData['result']:
@@ -216,7 +220,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
             if AVAILABLE == self.availability:
                 if True == debug:
                     print "*** Available"
-                responseData = srs_connections.submitRequest(self, (srsApi + "/available"), {EMAIL:self.email})
+                responseData = srs_connections.submitRequest(self, (srsApi + "/available"), {EMAIL:self.email, APITOKEN:self.apiToken})
 
                 if 'Error' != responseData['result'] and AI_DO_RENDER == responseData[ACTIONINSTRUCTION]:
                     # Download the project with assets file
@@ -248,7 +252,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
                 print "*** Rendering"
 
             # We do not need to keep telling the master that we are rendering
-            ##responseData = srs_connections.submitRequest(self, (srsApi + "/rendering"), {EMAIL:self.email})
+            ##responseData = srs_connections.submitRequest(self, (srsApi + "/rendering"), {EMAIL:self.email, APITOKEN:self.apiToken})
             ##if 'Error' == responseData['result']:
             ##    print "Error in rendering: ", responseData['message']
             ##    return
@@ -263,7 +267,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
                 self.actionStatus = AS_READY
 
                 responseData = srs_connections.submitRequest(self, (srsApi + "/complete"),
-                        {EMAIL:self.email, RENDERDETAILID:self.renderDetailId}
+                        {EMAIL:self.email, RENDERDETAILID:self.renderDetailId, APITOKEN:self.apiToken}
                     )
                 if 'Error' == responseData['result']:
                     print "Error in complete: ", responseData['message']
@@ -272,7 +276,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
         # We always send an AWAKE message to the master
         if True == debug:
             print "*** Awake"
-        responseData = srs_connections.submitRequest(self, (srsApi + "/awake"), {EMAIL:self.email})
+        responseData = srs_connections.submitRequest(self, (srsApi + "/awake"), {EMAIL:self.email, APITOKEN:self.apiToken})
 
         if 'Error' != responseData['result']:
             if AI_DO_DOWNLOAD == responseData[ACTIONINSTRUCTION]:

@@ -44,6 +44,7 @@ USESETTINGS = 2
 # Parameters
 CUSTOMFRAMERANGES = "customFrameRanges"
 EMAIL = "email"
+APITOKEN = "apiToken"
 FROM = "from"
 C4DPROJECTWITHASSETSDIR = "c4dProjectWithAssetsDir"
 C4DPROJECTWITHASSETS = "c4dProjectWithAssets"
@@ -184,8 +185,14 @@ class RenderDlg(c4d.gui.GeDialog):
                     self.rangeFrom = 0
                     self.rangeTo = 0
                     if True == verbose:
+                        email = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, EMAIL)
+                        apiToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, APITOKEN)
+
                         # Get and log the current status for this slave
-                        responseData = srs_connections.submitRequest(self, (srsApi + "/status"), {EMAIL:config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'email')})
+                        responseData = srs_connections.submitRequest(
+                            self,
+                            (srsApi + "/status"), {EMAIL:email, APITOKEN:apiToken}
+                            )
                         if 'Error' == responseData['result']:
                             gui.MessageDialog("Error:\n" + responseData['message'])
                             return False
@@ -288,7 +295,8 @@ class RenderDlg(c4d.gui.GeDialog):
             print "Render request going to: ", srsApi
 
         sendData = {
-            EMAIL:config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'email'),
+            EMAIL:config.get(srs_functions.CONFIG_REGISTRATION_SECTION, EMAIL),
+            APITOKEN:config.get(srs_functions.CONFIG_REGISTRATION_SECTION, APITOKEN),
             OVERRIDESETTINGS:self.overrideSettings,
             CUSTOMFRAMERANGES:self.customFrameRanges,
             FROM:self.rangeFrom,
