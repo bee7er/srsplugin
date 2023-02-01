@@ -66,6 +66,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
     email = ""
     apiToken = ""
     availability = 0
+    statusBlock = None
 
     # ===================================================================
     def CreateLayout(self):
@@ -80,7 +81,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
         
         self.SetTitle("SRS Register Render Availability")
 		
-        self.GroupBegin(id=100000, flags=c4d.BFH_SCALEFIT, cols=2, rows=4)        
+        self.GroupBegin(id=110000, flags=c4d.BFH_SCALEFIT, cols=2, rows=4)
         """ Email field """
         self.AddStaticText(id=EMAIL_TEXT, flags=c4d.BFV_MASK, initw=145, name="Email: ", borderstyle=c4d.BORDER_NONE)
         self.AddEditText(EDIT_EMAIL_TEXT, c4d.BFV_MASK, initw=240, inith=16, editflags=0)
@@ -93,10 +94,15 @@ class RegistrationDlg(c4d.gui.GeDialog):
         self.AddChild(SELCOMBO_BUTTON, AVAILABLE, 'Available for renders')
         self.AddChild(SELCOMBO_BUTTON, UNAVAILABLE, 'Unavailable for renders')
         self.SetInt32(SELCOMBO_BUTTON, self.availability)
-		
+
         self.AddDlgGroup(c4d.DLG_OK | c4d.DLG_CANCEL)
         self.GroupEnd()
-		
+
+        self.GroupBegin(id=120000, flags=c4d.BFH_SCALEFIT, cols=1, rows=1)
+        self.statusBlock=self.AddCustomGui(1000099, c4d.CUSTOMGUI_HTMLVIEWER, "", c4d.BFH_SCALEFIT|c4d.BFV_SCALEFIT, 300, 300, c4d.BaseContainer())
+        self.statusBlock.SetText('<div style="width:100%;height=:100%;background-color:gray;">Render Status Details</div>')
+        self.GroupEnd()
+
         return True
 
     # ===================================================================
@@ -260,9 +266,9 @@ class RegistrationDlg(c4d.gui.GeDialog):
             # Check if the render has completed OK
             if True == os.path.exists(c4dProjectDir + "/actionCompleted.txt"):
                 if True == debug:
-                    print "*** ================"
+                    print "xxxxxxxxxxxxxxxxxxxx"
                     print "*** Completed render"
-                    print "*** ================"
+                    print "xxxxxxxxxxxxxxxxxxxx"
                 # Back to ready for this slave
                 self.actionStatus = AS_READY
 
@@ -289,12 +295,10 @@ class RegistrationDlg(c4d.gui.GeDialog):
 
             elif AI_DO_DISPLAY_OUTSTANDING == responseData[ACTIONINSTRUCTION]:
                 # Details of outstanding renders have been returned
-                print "*********** Outstanding details"
-                print responseData
-                print "*******************************"
+                self.statusBlock.SetText(responseData['submissionsAndRenders']);
 
         if 'Error' == responseData['result']:
-            print "Error in timer: ", responseData['message']
+            print "Error in timer from API call: ", responseData['message']
             return
 
 # ===================================================================

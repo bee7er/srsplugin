@@ -108,6 +108,9 @@ class RenderDlg(c4d.gui.GeDialog):
         self.SetTitle("SRS Submit Render Request")
 		
         self.GroupBegin(id=GROUP_ID, flags=c4d.BFH_SCALEFIT, cols=2, rows=4)
+        """ C4D Project with Assets field """
+        self.AddStaticText(id=OUTPUT_C4D_PROJECT_TEXT, flags=c4d.BFV_MASK, initw=145, name="Project with Assets: ", borderstyle=c4d.BORDER_NONE)
+        self.AddStaticText(id=OUTPUT_C4D_PROJECT, flags=c4d.BFV_MASK, initw=220, name=self.c4dProjectWithAssets, borderstyle=c4d.BORDER_NONE)
         """ Use active render settings field """
         self.AddStaticText(id=COMBO_TEXT, flags=c4d.BFV_MASK, initw=145, name="Override active render settings: ", borderstyle=c4d.BORDER_NONE)
         self.AddComboBox(SELCOMBO_BUTTON, flags=c4d.BFH_LEFT, initw=160)
@@ -126,9 +129,6 @@ class RenderDlg(c4d.gui.GeDialog):
         self.AddStaticText(id=FRAME_RANGE_TO_TEXT, flags=c4d.BFV_MASK, initw=145, name="to: ", borderstyle=c4d.BORDER_NONE)
         self.AddEditNumber(EDIT_FRAME_RANGE_TO_TEXT, c4d.BFV_MASK, initw=80, inith=16)
         self.SetInt32(EDIT_FRAME_RANGE_TO_TEXT, self.rangeTo)
-        """ C4D Project with Assets field """
-        self.AddStaticText(id=OUTPUT_C4D_PROJECT_TEXT, flags=c4d.BFV_MASK, initw=145, name="Project with Assets: ", borderstyle=c4d.BORDER_NONE)
-        self.AddStaticText(id=OUTPUT_C4D_PROJECT, flags=c4d.BFV_MASK, initw=220, name=self.c4dProjectWithAssets, borderstyle=c4d.BORDER_NONE)
         """ Output Format field """
         self.AddStaticText(id=OUTPUT_FORMAT_TEXT, flags=c4d.BFV_MASK, initw=145, name="Output format: ", borderstyle=c4d.BORDER_NONE)
         self.AddStaticText(id=OUTPUT_FORMAT, flags=c4d.BFV_MASK, initw=145, name=self.outputFormat, borderstyle=c4d.BORDER_NONE)
