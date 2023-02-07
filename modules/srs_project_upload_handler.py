@@ -9,7 +9,10 @@ import srs_functions
 
 __root__ = os.path.dirname(os.path.dirname(__file__))
 
-HANDLER = __root__ + '/srs_uploadProject.sh'
+if srs_functions.OS_MAC == srs_functions.get_platform():
+    HANDLER = __root__ + '/srs_uploadProject.sh'
+else:
+    HANDLER = __root__ + '\srs_uploadProject.cmd'
 
 config = srs_functions.get_config_values()
 debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))

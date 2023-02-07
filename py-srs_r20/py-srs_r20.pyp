@@ -78,7 +78,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
         self.email = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, EMAIL)
         self.apiToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, APITOKEN)
         self.availability = int(config.get(srs_functions.CONFIG_REGISTRATION_SECTION, AVAILABILITY))
-        
+
         self.SetTitle("SRS Register Render Availability")
 		
         self.GroupBegin(id=110000, flags=c4d.BFH_SCALEFIT, cols=2, rows=4)
@@ -100,7 +100,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
 
         self.GroupBegin(id=120000, flags=c4d.BFH_SCALEFIT, cols=1, rows=1)
         self.statusBlock=self.AddCustomGui(1000099, c4d.CUSTOMGUI_HTMLVIEWER, "", c4d.BFH_SCALEFIT|c4d.BFV_SCALEFIT, 300, 300, c4d.BaseContainer())
-        self.statusBlock.SetText('<div style="width:100%;height=:100%;background-color:gray;">Render Status Details</div>')
+        self.statusBlock.SetText('<div style="width:100%;height=:100%;">Running system: ' + srs_functions.get_platform() + '</div>')
         self.GroupEnd()
 
         return True

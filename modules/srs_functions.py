@@ -2,7 +2,7 @@
 Copyright: Etheridge Family Nov 2022
 Author: Brian Etheridge
 """
-import c4d, os
+import c4d, os, platform
 import ConfigParser
 from ConfigParser import SafeConfigParser
 
@@ -18,6 +18,10 @@ RANGE_TO = "RANGE_TO"
 RANGE_STEP = "RANGE_STEP"
 FRAME_RATE = "FRAME_RATE"
 OUTPUT_FORMAT = "OUTPUT_FORMAT"
+
+OS_MAC = 'mac'
+OS_UNKNOWN = 'unknown'
+OS_WINDOWS = 'windows'
 
 # ===================================================================
 def get_config_values():
@@ -136,3 +140,24 @@ def get_project():
             print("Project opened is: ", c4dProject)
 
     return c4dProject
+
+# ===================================================================
+def get_platform():
+# ===================================================================
+    # Works out the current platform and returns it
+    # .....................................................
+    # Which OS is running?
+    os_platform = platform.system().lower()
+    osName = OS_UNKNOWN
+    if "linux" in os_platform:
+        # Treat linux as if it is a MAC
+        osName = OS_MAC
+    elif "darwin" in os_platform:
+        osName = OS_MAC
+    elif "win" in os_platform:
+        osName = OS_WINDOWS
+    else:
+        # Unsupported platform
+        osName = OS_UNKNOWN
+
+    return osName
