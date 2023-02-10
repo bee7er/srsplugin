@@ -278,9 +278,16 @@ class RenderDlg(c4d.gui.GeDialog):
                 return False
 
         # First of all we upload the project with assets file to the server
-        # TODO Check that the file exists
+        framesToBeSubmitted = self.customFrameRanges
+        if USESETTINGS == self.overrideSettings:
+            framesToBeSubmitted = str(self.rangeFrom) + ' - ' + str(self.rangeTo)
+
         if True == self.promptForUpToDate:
-            yesNo = gui.QuestionDialog("Are you sure the project with assets file is up to date?")
+            yesNo = gui.QuestionDialog(
+                "Submitting frames: \n" + framesToBeSubmitted + "\n\n" +
+                "Click Yes to submit the render request.\n\n" +
+                "NB Is the project with assets file is up to date?\n"
+                )
             if False == yesNo:
                 return False
             self.promptForUpToDate = False

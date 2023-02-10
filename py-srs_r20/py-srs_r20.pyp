@@ -67,6 +67,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
     apiToken = ""
     availability = 0
     statusBlock = None
+    counter = 0
 
     # ===================================================================
     def CreateLayout(self):
@@ -74,11 +75,14 @@ class RegistrationDlg(c4d.gui.GeDialog):
         """
             Called when Cinema 4D creates the dialog
         """
+
+        # Refresh the config values
+        config = srs_functions.get_config_values()
+
         # Initialise the form fields from the config file
         self.email = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, EMAIL)
         self.apiToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, APITOKEN)
         self.availability = int(config.get(srs_functions.CONFIG_REGISTRATION_SECTION, AVAILABILITY))
-
         self.SetTitle("SRS Register Render Availability")
 		
         self.GroupBegin(id=110000, flags=c4d.BFH_SCALEFIT, cols=2, rows=4)
@@ -295,7 +299,8 @@ class RegistrationDlg(c4d.gui.GeDialog):
 
             elif AI_DO_DISPLAY_OUTSTANDING == responseData[ACTIONINSTRUCTION]:
                 # Details of outstanding renders have been returned
-                self.statusBlock.SetText(responseData['submissionsAndRenders']);
+                self.counter = self.counter + 1
+                self.statusBlock.SetText('<div style="text-align: right;margin-right: 15px;">Refresh count: ' + str(self.counter) + "</div>" + responseData['submissionsAndRenders']);
 
         if 'Error' == responseData['result']:
             print "Error in timer from API call: ", responseData['message']
