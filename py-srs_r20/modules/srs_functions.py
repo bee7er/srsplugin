@@ -6,7 +6,7 @@ import c4d, os, platform
 import ConfigParser
 from ConfigParser import SafeConfigParser
 
-__root__ = os.path.dirname(__file__)
+__root__ = os.path.dirname(os.path.dirname(__file__))
 
 CONFIG_FILE = __root__ + '/config/properties.ini'
 CONFIG_SECTION = 'CONFIG'

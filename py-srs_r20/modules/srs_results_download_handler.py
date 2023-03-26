@@ -6,7 +6,7 @@ Author: Brian Etheridge
 import c4d, os, time, subprocess
 import srs_functions
 
-__root__ = os.path.dirname(__file__)
+__root__ = os.path.dirname(os.path.dirname(__file__))
 
 if srs_functions.OS_MAC == srs_functions.get_platform():
     HANDLER = __root__ + '/srs_downloadResults.sh'

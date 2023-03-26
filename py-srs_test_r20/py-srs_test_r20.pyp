@@ -10,13 +10,14 @@ Description:
 
 import os, sys, time
 
-__root__ = os.path.dirname(os.path.dirname(__file__))
+__root__ = os.path.dirname(__file__)
 if os.path.join(__root__, 'modules') not in sys.path: sys.path.insert(0, os.path.join(__root__, 'modules'))
 
 import c4d
 from c4d import gui, bitmaps, utils
-# SRS module for various shared funcrtions
-import srs_functions, srs_connections, srs_project_download_handler, srs_results_download_handler, srs_render_handler
+
+# SRS module for various shared functions
+# import srs_functions, srs_connections, srs_project_download_handler, srs_results_download_handler, srs_render_handler
 
 __res__ = c4d.plugins.GeResource()
 __res__.Init(__root__)
@@ -106,8 +107,8 @@ if __name__ == "__main__":
 
     # Registers the plugin
     c4d.plugins.RegisterCommandPlugin(id=PLUGIN_ID,
-                                      str="SRS Register Availability for Renders",
+                                      str="SRS Test Plugin",
                                       info=0,
-                                      help="Register your availability with SRS",
+                                      help="SRS Testing",
                                       dat=RegistrationDlgCommand(),
                                       icon=bmp)
