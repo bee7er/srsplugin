@@ -3,7 +3,7 @@ Copyright: Etheridge Family Nov 2022
 Author: Brian Etheridge
 
 Description:
-    - Register as a slave node
+    - Register as a slave node for group renders
 	- Shared Render Service
 
 """
