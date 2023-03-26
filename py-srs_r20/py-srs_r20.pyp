@@ -10,7 +10,7 @@ Description:
 
 import os, sys, time
 
-__root__ = os.path.dirname(os.path.dirname(__file__))
+__root__ = os.path.dirname(__file__)
 if os.path.join(__root__, 'modules') not in sys.path: sys.path.insert(0, os.path.join(__root__, 'modules'))
 
 import c4d
