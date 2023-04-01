@@ -8,11 +8,6 @@ from ConfigParser import SafeConfigParser
 
 __root__ = os.path.dirname(os.path.dirname(__file__))
 
-CONFIG_FILE = __root__ + '/config/properties.ini'
-CONFIG_SECTION = 'CONFIG'
-CONFIG_REGISTRATION_SECTION = 'REGISTRATION'
-CONFIG_RENDER_SECTION = 'RENDER'
-
 RANGE_FROM = "RANGE_FROM"
 RANGE_TO = "RANGE_TO"
 RANGE_STEP = "RANGE_STEP"
@@ -22,6 +17,8 @@ OUTPUT_FORMAT = "OUTPUT_FORMAT"
 OS_MAC = 'mac'
 OS_UNKNOWN = 'unknown'
 OS_WINDOWS = 'windows'
+
+# NB CONFIG file and sections are defined below
 
 # ===================================================================
 def get_config_values():
@@ -141,6 +138,11 @@ def get_project():
 
     return c4dProject
 
+# Now define the config symbolic constants and access the appropriate .ini file
+CONFIG_SECTION = 'CONFIG'
+CONFIG_REGISTRATION_SECTION = 'REGISTRATION'
+CONFIG_RENDER_SECTION = 'RENDER'
+
 # ===================================================================
 def get_platform():
 # ===================================================================
@@ -163,7 +165,10 @@ def get_platform():
         # Unsupported platform
         osName = OS_UNKNOWN
 
-    #if True == verbose:
-    print "Platform is: ", osName
-
     return osName
+
+CONFIG_FILE = __root__ + '/config/properties.ini'
+if OS_MAC == get_platform():
+    CONFIG_FILE = __root__ + '/config/properties.ini'
+else:
+    CONFIG_FILE = __root__ + '/config/properties.ini.win'
