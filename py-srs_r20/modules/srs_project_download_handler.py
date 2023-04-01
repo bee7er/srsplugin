@@ -27,6 +27,7 @@ def handle_project_download(c4dProjectWithAssets):
     code = 'Init'
     try:
         if True == verbose:
+            print "*** Downloading handler: ", HANDLER
             print "*** Downloading project with assets file to: ", downloadPWADir
             print "*** Downloading project with assets dir to: ", c4dProjectWithAssets
 

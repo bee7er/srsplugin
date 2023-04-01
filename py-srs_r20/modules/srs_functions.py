@@ -146,6 +146,9 @@ def get_platform():
 # ===================================================================
     # Works out the current platform and returns it
     # .....................................................
+    config = get_config_values()
+    verbose = config.get(CONFIG_SECTION, 'verbose')
+
     # Which OS is running?
     os_platform = platform.system().lower()
     osName = OS_UNKNOWN
@@ -159,5 +162,8 @@ def get_platform():
     else:
         # Unsupported platform
         osName = OS_UNKNOWN
+
+    #if True == verbose:
+    print "Platform is: ", osName
 
     return osName

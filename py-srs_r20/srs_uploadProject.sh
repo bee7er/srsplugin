@@ -11,7 +11,7 @@ echo "Project with assets name: $1 and location: $2"
 cd "$2"
 
 # Zip up the project file before uploading it
-gzip --best RedshiftTestBeWA.c4d
+gzip --best $1
 
 # Now upload the zipped file to the master
 curl -v -F "upload=@$1.gz" -H "Content-Type: multipart/form-data" $3/projects
