@@ -9,10 +9,12 @@
 :: %7 - outputFormat
 :: %8 - outputToFramesDir
 :: %9 - outputToPsdsDir
-:: %10 - srs api url
+:: %10 - srs domain url
+:: %11 - email
+:: %12 - apiToken
 
 :: Testing:
-:: srs_render.cmd "C:\Program Files\Maxon Cinema 4D R21" "C:\Users\Russ\AppData\Roaming\MAXON\Maxon Cinema 4D R21_64C2B3BD\plugins\projects" "C:\Users\Russ\AppData\Roaming\MAXON\Maxon Cinema 4D R21_64C2B3BD\plugins\projects\downloads" "RedshiftTestBeWA.c4d" "0" "8" PNG "C:\Users\Russ\AppData\Roaming\MAXON\Maxon Cinema 4D R21_64C2B3BD\plugins\projects\frames" "C:\Users\Russ\AppData\Roaming\MAXON\Maxon Cinema 4D R21_64C2B3BD\plugins\projects\psds"
+:: srs_render.cmd "C:\Program Files\Maxon Cinema 4D R21" "C:\Users\Russ\AppData\Roaming\MAXON\Maxon Cinema 4D R21_64C2B3BD\plugins\projects" "C:\Users\Russ\AppData\Roaming\MAXON\Maxon Cinema 4D R21_64C2B3BD\plugins\projects\downloads" "RedshiftTestBeWA.c4d" "0" "8" PNG "C:\Users\Russ\AppData\Roaming\MAXON\Maxon Cinema 4D R21_64C2B3BD\plugins\projects\frames" "C:\Users\Russ\AppData\Roaming\MAXON\Maxon Cinema 4D R21_64C2B3BD\plugins\projects\psds" http://3n3.477.mywebsitetransfer.com
 
 :: Delete the completion file if it exists
 @del /Q "%2\actionCompleted.txt"
@@ -30,5 +32,8 @@ tar -zcvf "%9\psds_%5-%6_%4.tar.gz" "%9"
 :: Upload the zipped files to master
 curl -F "upload=@%8\frames_%5-%6_%4.tar.gz" -H "Content-Type: multipart/form-data" %10/results
 curl -F "upload=@%9\psds_%5-%6_%4.tar.gz" -H "Content-Type: multipart/form-data" %10/results
+
+:: NB WIndows may need to use escaped double quotes, like this:
+::      curl -v -F 'upload=@\"C:/myfile.txt\"' URL
 
 @exit

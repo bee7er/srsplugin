@@ -234,7 +234,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
 
                 if 'Error' != responseData['result'] and AI_DO_RENDER == responseData[ACTIONINSTRUCTION]:
                     # Download the project with assets file
-                    result = srs_project_download_handler.handle_project_download(responseData['c4dProjectWithAssets'])
+                    result = srs_project_download_handler.handle_project_download(responseData['c4dProjectWithAssets'], responseData['submittedByUserApiToken'])
 
                     if 'Error' == result['result']:
                         print "Error in project download: ", responseData['message']

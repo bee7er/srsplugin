@@ -14,12 +14,18 @@ if srs_functions.OS_MAC == srs_functions.get_platform():
 else:
     HANDLER = __root__ + '\srs_uploadProject.cmd'
 
+# Config settings
+EMAIL = "email"
+APITOKEN = "apiToken"
+
 config = srs_functions.get_config_values()
 debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
 verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
 c4dProjectWithAssets = config.get(srs_functions.CONFIG_SECTION, 'c4dProjectWithAssets')
 c4dProjectWithAssetsDir = config.get(srs_functions.CONFIG_SECTION, 'c4dProjectWithAssetsDir')
 srsDomain = config.get(srs_functions.CONFIG_SECTION, 'srsDomain')
+email = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, EMAIL)
+apiToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, APITOKEN)
 
 # ===================================================================
 def handle_project_upload():
@@ -27,11 +33,10 @@ def handle_project_upload():
     # Posting the project with assets file to master
     # .....................................................
 
-    # TODO A unique name is needed for the project with assets name
     if True == verbose:
         print "*** Submitting project with assets upload script: ", HANDLER, ", with ", c4dProjectWithAssets, ", in ", c4dProjectWithAssetsDir
 
-    code = subprocess.Popen([HANDLER, c4dProjectWithAssets, c4dProjectWithAssetsDir, srsDomain])
+    code = subprocess.Popen([HANDLER, c4dProjectWithAssets, c4dProjectWithAssetsDir, srsDomain, email, apiToken])
 
     if True == verbose:
         print "Submission of project with assets file with result code: ", code

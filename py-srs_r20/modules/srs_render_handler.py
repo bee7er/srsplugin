@@ -22,10 +22,12 @@ debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
 verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
 
 # Params
+email = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'email')
+apiToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'apiToken')
 c4dCommandLineDir = config.get(srs_functions.CONFIG_SECTION, 'c4dCommandLineDir')
 outputToFramesDir = config.get(srs_functions.CONFIG_SECTION, 'outputToFramesDir')
 outputToPsdsDir = config.get(srs_functions.CONFIG_SECTION, 'outputToPsdsDir')
-srsApi = config.get(srs_functions.CONFIG_SECTION, 'srsApi')
+srsDomain = config.get(srs_functions.CONFIG_SECTION, 'srsDomain')
 
 # ===================================================================
 def handle_render(c4dProjectDir, downloadPWADir, c4dProjectWithAssets, rangeFrom, rangeTo, outputFormat):
@@ -39,7 +41,8 @@ def handle_render(c4dProjectDir, downloadPWADir, c4dProjectWithAssets, rangeFrom
     if True == verbose:
         print "Submitting c4dProjectWithAssets: ", downloadPWADir, '/', c4dProjectWithAssets, ' from: ', rangeFrom, ' to: ', rangeTo, ' outputFormat: ', outputFormat
 
-    code = subprocess.Popen([HANDLER, c4dCommandLineDir, c4dProjectDir, downloadPWADir, c4dProjectWithAssets, str(rangeFrom), str(rangeTo), outputFormat, outputToFramesDir, outputToPsdsDir, srsApi])
+    # We send the current user email address for validation and to find out which render id is being processed
+    code = subprocess.Popen([HANDLER, c4dCommandLineDir, c4dProjectDir, downloadPWADir, c4dProjectWithAssets, str(rangeFrom), str(rangeTo), outputFormat, outputToFramesDir, outputToPsdsDir, srsDomain, email, apiToken])
 
     if True == verbose:
         print "Submission result code: ", code

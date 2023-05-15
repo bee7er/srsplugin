@@ -20,7 +20,7 @@ downloadPWADir = config.get(srs_functions.CONFIG_SECTION, 'downloadPWADir')
 srsDomain = config.get(srs_functions.CONFIG_SECTION, 'srsDomain')
 
 # ===================================================================
-def handle_project_download(c4dProjectWithAssets):
+def handle_project_download(c4dProjectWithAssets, submittedByUserApiToken):
 # ===================================================================
     # Downloading the project with assets file from master
     # .....................................................
@@ -30,8 +30,9 @@ def handle_project_download(c4dProjectWithAssets):
             print "*** Downloading handler: ", HANDLER
             print "*** Downloading project with assets file to: ", downloadPWADir
             print "*** Downloading project with assets dir to: ", c4dProjectWithAssets
+            print "*** Downloading project from user api token: ", submittedByUserApiToken
 
-        code = subprocess.Popen([HANDLER, c4dProjectWithAssets, downloadPWADir, srsDomain])
+        code = subprocess.Popen([HANDLER, c4dProjectWithAssets, downloadPWADir, srsDomain, submittedByUserApiToken])
 
         if True == verbose:
             print "Submission of project with assets file with result code: ", code
