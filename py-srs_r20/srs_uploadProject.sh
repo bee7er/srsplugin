@@ -13,7 +13,6 @@ echo "Project with assets name: $1 and location: $2"
 cd "$2"
 
 # Zip up the project file before uploading it
-# Not using this: gzip --best $1
 # The -C option changes the working directory, so that we don't tar up the entire directory structure
 
 tar -zcvf $1.gz "$2/$1" -C "$2" .

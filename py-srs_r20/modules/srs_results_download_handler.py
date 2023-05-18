@@ -25,25 +25,25 @@ email = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'email')
 apiToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'apiToken')
 
 # ===================================================================
-def handle_results_download(frameRanges):
+def handle_results_download(frameDetails):
 # ===================================================================
     # Downloading the results files from master
     # ..........................................
     code = 'Init'
     try:
         if True == verbose:
-            print "*** Downloading frame ranges: ", frameRanges
+            print "*** Downloading frame ranges: ", frameDetails
 
 
-        for frameRange in frameRanges:
-            print frameRange, "\n"
+        for frameDetail in frameDetails:
+            print frameDetail, "\n"
 
-            code = subprocess.Popen([HANDLER, c4dProjectWithAssets, frameRange, downloadPWADir, outputToFramesDir, outputToPsdsDir, srsDomain, apiToken])
+            code = subprocess.Popen([HANDLER, c4dProjectWithAssets, frameDetail, downloadPWADir, outputToFramesDir, outputToPsdsDir, srsDomain, apiToken])
 
         if True == verbose:
             print "Download of results file with result code: ", code
 
-        return {'result': "OK", 'message': "Download of results with assets file completed"}
+        return {'result': "OK", 'message': "Download of results completed"}
 
     except:
         message = "Error trying to download results. Please check your internet connection. Code = " + code

@@ -291,7 +291,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
         if 'Error' != responseData['result']:
             if AI_DO_DOWNLOAD == responseData[ACTIONINSTRUCTION]:
                 # Download the rendered frames/psds
-                result = srs_results_download_handler.handle_results_download(responseData['frameRanges'])
+                result = srs_results_download_handler.handle_results_download(responseData['frameDetails'])
 
                 if 'OK' == result['result']:
                     gui.MessageDialog("Render download completed successfully")

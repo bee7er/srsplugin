@@ -21,7 +21,7 @@ rm -f "$2/actionCompleted.txt"
 #       Commandline.exe g_licenseUsername=<your_user_name> g_licensePassword=<your_password>
 
 # Render the frames, and note how we create the completion file afterwards
-"$1/Commandline" -render "$3/$4" -frame "$5" "$6" -oimage "$8/$4" -omultipass "$9/$4" "$7"; touch "$2/actionCompleted.txt" &
+nohup "$1/Commandline" -render "$3/$4" -frame "$5" "$6" -oimage "$8/$4" -omultipass "$9/$4" "$7"; touch "$2/actionCompleted.txt" &
 
 # We need access to parameters 10, 11 and 12.  Use shift to discard the first 3 and get access to them.
 shift

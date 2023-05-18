@@ -148,8 +148,6 @@ def get_platform():
 # ===================================================================
     # Works out the current platform and returns it
     # .....................................................
-    config = get_config_values()
-    verbose = config.get(CONFIG_SECTION, 'verbose')
 
     # Which OS is running?
     os_platform = platform.system().lower()
