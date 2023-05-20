@@ -47,6 +47,7 @@ verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
 srsApi = config.get(srs_functions.CONFIG_SECTION, 'srsApi')
 c4dProjectDir = config.get(srs_functions.CONFIG_SECTION, 'c4dProjectDir')
 downloadPWADir = config.get(srs_functions.CONFIG_SECTION, 'downloadPWADir')
+srsDomain = config.get(srs_functions.CONFIG_SECTION, 'srsDomain')
 
 # Config settings
 AVAILABILITY = "availability"
@@ -67,6 +68,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
     apiToken = ""
     availability = 0
     statusBlock = None
+    serverBlock = None
     counter = 0
 
     # ===================================================================
@@ -104,7 +106,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
 
         self.GroupBegin(id=120000, flags=c4d.BFH_SCALEFIT, cols=1, rows=1)
         self.statusBlock=self.AddCustomGui(1000099, c4d.CUSTOMGUI_HTMLVIEWER, "", c4d.BFH_SCALEFIT|c4d.BFV_SCALEFIT, 300, 300, c4d.BaseContainer())
-        self.statusBlock.SetText('<div style="width:100%;height=:100%;">Running system: ' + srs_functions.get_platform() + '</div>')
+        self.statusBlock.SetText('<div style="width:100%;height=:100%;">Local platform: <b>' + srs_functions.get_platform() + '</b></div><div style="width:100%;height=:100%;">Remote server: <b>' + srsDomain + '</b></div>')
         self.GroupEnd()
 
         return True
