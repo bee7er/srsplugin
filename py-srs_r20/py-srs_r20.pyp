@@ -105,7 +105,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
         self.GroupEnd()
 
         self.GroupBegin(id=120000, flags=c4d.BFH_SCALEFIT, cols=1, rows=1)
-        self.statusBlock=self.AddCustomGui(1000099, c4d.CUSTOMGUI_HTMLVIEWER, "", c4d.BFH_SCALEFIT|c4d.BFV_SCALEFIT, 300, 300, c4d.BaseContainer())
+        self.statusBlock=self.AddCustomGui(1000100, c4d.CUSTOMGUI_HTMLVIEWER, "", c4d.BFH_SCALEFIT|c4d.BFV_SCALEFIT, 300, 300, c4d.BaseContainer())
         self.statusBlock.SetText('<div style="width:100%;height=:100%;">Local platform: <b>' + srs_functions.get_platform() + '</b></div><div style="width:100%;height=:100%;">Remote server: <b>' + srsDomain + '</b></div>')
         self.GroupEnd()
 
