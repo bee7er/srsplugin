@@ -31,7 +31,38 @@ def get_config_values():
     config.optionxform = str
     config.read(CONFIG_FILE)
       
-    return config;   
+    return config;
+
+# ===================================================================
+def validate_config_values(config):
+# ===================================================================
+    """
+        Validate the config values
+    """
+    validationResult = []
+
+    projectWithAssetsDir = config.get(CONFIG_SECTION, 'c4dProjectWithAssetsDir').strip()
+    if "" == projectWithAssetsDir:
+        validationResult.append("Property 'c4dProjectWithAssetsDir' has not been set")
+    projectWithAssets = config.get(CONFIG_SECTION, 'c4dProjectWithAssets').strip()
+    if "" == projectWithAssets:
+        validationResult.append("Property 'c4dProjectWithAssets' has not been set")
+    # If no error so far then check the project with assets file exists
+    if 0 == len(validationResult):
+        if True != os.path.exists(projectWithAssetsDir + "/" + projectWithAssets):
+            validationResult.append("Properties 'c4dProjectWithAssetsDir' and 'c4dProjectWithAssets' do not provide access to project with assets.  File not found.")
+
+    if "" == config.get(CONFIG_REGISTRATION_SECTION, 'email').strip():
+        validationResult.append("Property 'email' has not been set")
+    if "" == config.get(CONFIG_REGISTRATION_SECTION, 'apiToken').strip():
+        validationResult.append("Property 'apiToken' has not been set")
+    if "" == config.get(CONFIG_REGISTRATION_SECTION, 'availability').strip():
+        validationResult.append("Property 'availability' has not been set")
+
+    if 0 == len(validationResult):
+        return True
+
+    return validationResult
 
 # ===================================================================
 def update_config_values(section, configFields):

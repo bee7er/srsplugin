@@ -92,6 +92,22 @@ class RenderDlg(c4d.gui.GeDialog):
 
         # TODO Submissions aren't allowed if registration dialog is not open
 
+        # Validatde the configuration file
+        validationResult = srs_functions.validate_config_values(config)
+        if True == validationResult:
+            if True == verbose:
+                print("Config values passed validation")
+        else:
+            if True == verbose:
+                print("Config values failed validation")
+
+            errorMessages = sep = ""
+            for error in validationResult:
+                errorMessages += sep + error
+                sep = "\n"
+
+            gui.MessageDialog("ERRORS IN CONFIGURATION FILE: Please correct the following issues: \n" + errorMessages)
+
         # Get the project with assets path and name
         self.c4dProjectWithAssetsDir = config.get(srs_functions.CONFIG_SECTION, 'c4dProjectWithAssetsDir')
         self.c4dProjectWithAssets = config.get(srs_functions.CONFIG_SECTION, 'c4dProjectWithAssets')

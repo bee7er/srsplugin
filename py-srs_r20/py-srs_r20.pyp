@@ -80,6 +80,20 @@ class RegistrationDlg(c4d.gui.GeDialog):
 
         # Refresh the config values
         config = srs_functions.get_config_values()
+        validationResult = srs_functions.validate_config_values(config)
+        if True == validationResult:
+            if True == verbose:
+                print("Config values passed validation")
+        else:
+            if True == verbose:
+                print("Config values failed validation")
+
+            errorMessages = sep = ""
+            for error in validationResult:
+                errorMessages += sep + error
+                sep = "\n"
+
+            gui.MessageDialog("ERRORS IN CONFIGURATION FILE: Please correct the following issues: \n" + errorMessages)
 
         # Initialise the form fields from the config file
         self.email = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, EMAIL)

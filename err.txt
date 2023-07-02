@@ -1,5 +1,0 @@
-Downloading RedshiftTestBeWA.c4d to /Users/brianetheridge/Library/Preferences/MAXON/Cinema\ 4D\ R20_7DE41E5A/plugins/projects/downloads
-Doing it
-/Users/brianetheridge/Library/Preferences/MAXON/Cinema 4D R20_7DE41E5A/plugins
-That was pwd
-Done unzip
