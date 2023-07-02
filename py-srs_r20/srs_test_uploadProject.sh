@@ -9,10 +9,17 @@
 # Testing:
 echo "Testing project upload"
 
-srs_uploadProject.sh \
+#### srs_uploadProject.sh \
     RedshiftTestBe.c4d \
     "/Users/brianetheridge/Library/Preferences/MAXON/Cinema 4D R20_7DE41E5A/plugins/projects/with_assets/RedshiftTestBe.c4d" \
     http://srsapi.test \
+    contact_bee@yahoo.com \
+    fl9ltqesXqPi4EkSj8M498ZBYYq3WOcCCZ1A9fDYQlbeNEmdzyyf2rGFpNR0gDGB7IswfX3pRSLuoDBF
+
+srs_uploadProject.sh \
+    RedshiftTestBe.c4d \
+    "/Users/brianetheridge/Library/Preferences/MAXON/Cinema 4D R20_7DE41E5A/plugins/projects/with_assets/RedshiftTestBe.c4d" \
+    http://3n3.477.mywebsitetransfer.com \
     contact_bee@yahoo.com \
     fl9ltqesXqPi4EkSj8M498ZBYYq3WOcCCZ1A9fDYQlbeNEmdzyyf2rGFpNR0gDGB7IswfX3pRSLuoDBF
 

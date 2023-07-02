@@ -6,8 +6,8 @@
 # $4: email
 # $5: apiToken
 
-echo "Uploading the project with assets file"
-echo "Project with assets name: $1 and location: $2"
+echo "Uploading the project with assets file to $3">>out.txt
+echo "Project with assets name: $1 and location: $2">>out.txt
 
 # Change to the source directory
 cd "$2"

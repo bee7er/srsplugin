@@ -52,4 +52,4 @@ done
 
 cd -
 
-# exit
+exit

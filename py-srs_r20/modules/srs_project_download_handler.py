@@ -32,10 +32,11 @@ def handle_project_download(c4dProjectWithAssets, submittedByUserApiToken):
             print "*** Downloading project with assets dir to: ", c4dProjectWithAssets
             print "*** Downloading project from user api token: ", submittedByUserApiToken
 
-        code = subprocess.Popen([HANDLER, c4dProjectWithAssets, downloadPWADir, srsDomain, submittedByUserApiToken])
+        p = subprocess.Popen([HANDLER, c4dProjectWithAssets, downloadPWADir, srsDomain, submittedByUserApiToken])
+        p.communicate()
 
         if True == verbose:
-            print "Submission of project with assets file with result code: ", code
+            print "Download of project with assets file completed"
 
         return {'result': "OK", 'message': "Download of project with assets file completed"}
 
