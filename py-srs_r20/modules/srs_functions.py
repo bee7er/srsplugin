@@ -41,21 +41,63 @@ def validate_config_values(config):
     """
     validationResult = []
 
+    # Validate the CONFIG section
+    if "" == config.get(CONFIG_SECTION, 'srsDomain').strip():
+        validationResult.append("Property 'srsDomain' has not been set")
+
+    if "" == config.get(CONFIG_SECTION, 'c4dCommandLineDir').strip():
+        validationResult.append("Property 'c4dCommandLineDir' has not been set")
+    else:
+        if True != os.path.exists(config.get(CONFIG_SECTION, 'c4dCommandLineDir')):
+            validationResult.append("Property 'c4dCommandLineDir' is not a valid directory.")
+        else:
+            if True != os.path.exists(os.path.join(config.get(CONFIG_SECTION, 'c4dCommandLineDir'), "Commandline")):
+                validationResult.append("Property 'c4dCommandLineDir' is not the location of the Commandline Python executable. File not found.")
+
+    if "" == config.get(CONFIG_SECTION, 'c4dProjectDir').strip():
+        validationResult.append("Property 'c4dProjectDir' has not been set")
+    else:
+        if True != os.path.exists(config.get(CONFIG_SECTION, 'c4dProjectDir')):
+            validationResult.append("Property 'c4dProjectDir' is not a valid directory.")
+
+    if "" == config.get(CONFIG_SECTION, 'c4dProjectWithAssetsDir').strip():
+        validationResult.append("Property 'c4dProjectWithAssetsDir' has not been set")
+    else:
+        if True != os.path.exists(config.get(CONFIG_SECTION, 'c4dProjectWithAssetsDir')):
+            validationResult.append("Property 'c4dProjectWithAssetsDir' is not a valid directory.")
+
+    if "" == config.get(CONFIG_SECTION, 'outputToFramesDir').strip():
+        validationResult.append("Property 'outputToFramesDir' has not been set")
+    else:
+        if True != os.path.exists(config.get(CONFIG_SECTION, 'outputToFramesDir')):
+            validationResult.append("Property 'outputToFramesDir' is not a valid directory.")
+
+    if "" == config.get(CONFIG_SECTION, 'outputToPsdsDir').strip():
+        validationResult.append("Property 'outputToPsdsDir' has not been set")
+    else:
+        if True != os.path.exists(config.get(CONFIG_SECTION, 'outputToPsdsDir')):
+            validationResult.append("Property 'outputToPsdsDir' is not a valid directory.")
+
     projectWithAssetsDir = config.get(CONFIG_SECTION, 'c4dProjectWithAssetsDir').strip()
     if "" == projectWithAssetsDir:
         validationResult.append("Property 'c4dProjectWithAssetsDir' has not been set")
+
     projectWithAssets = config.get(CONFIG_SECTION, 'c4dProjectWithAssets').strip()
     if "" == projectWithAssets:
         validationResult.append("Property 'c4dProjectWithAssets' has not been set")
+
     # If no error so far then check the project with assets file exists
     if 0 == len(validationResult):
-        if True != os.path.exists(projectWithAssetsDir + "/" + projectWithAssets):
-            validationResult.append("Properties 'c4dProjectWithAssetsDir' and 'c4dProjectWithAssets' do not provide access to project with assets.  File not found.")
+        if True != os.path.exists(os.path.join(projectWithAssetsDir, projectWithAssets)):
+            validationResult.append("Properties 'c4dProjectWithAssetsDir' and 'c4dProjectWithAssets' is not the project with assets.  File not found.")
 
+    # Validate the REGISTRATION section
     if "" == config.get(CONFIG_REGISTRATION_SECTION, 'email').strip():
         validationResult.append("Property 'email' has not been set")
+
     if "" == config.get(CONFIG_REGISTRATION_SECTION, 'apiToken').strip():
         validationResult.append("Property 'apiToken' has not been set")
+
     if "" == config.get(CONFIG_REGISTRATION_SECTION, 'availability').strip():
         validationResult.append("Property 'availability' has not been set")
 
