@@ -20,5 +20,5 @@ availability = 1
 
 [RENDER]
 overrideSettings = 1
-customFrameRanges = 45-50, 15
+customFrameRanges = 1-6
 outputFormat = PNG

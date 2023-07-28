@@ -6,7 +6,7 @@
 # $4: email
 # $5: apiToken
 
-echo "Uploading the project with assets file to $3"
+echo "Uploading the project with assets file to $3/projects"
 echo "Project with assets name: $1 and location: $2"
 
 # Change to the source directory
@@ -16,8 +16,6 @@ cd "$2"
 # The -C option changes the working directory, so that we don't tar up the entire directory structure
 
 tar -zcvf $1.gz "$2/$1" -C "$2" .
-
-echo "Uploading to: $3/projects"
 
 # Now upload the zipped file to the master
 curl -F email=$4 -F apiToken=$5 -F "upload=@$1.gz" -H "Content-Type: multipart/form-data" $3/projects

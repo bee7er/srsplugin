@@ -12,7 +12,7 @@ echo "Downloading the frame result file"
 echo "Processing $1 frame: $2 to location: $4"
 
 # Change to the target directory
-cd "$3"
+cd "$4"
 
 # Now download the rendered files from the master one at a time, all to target directory
 echo "URL: $6/uploads/$7/renders/$2"

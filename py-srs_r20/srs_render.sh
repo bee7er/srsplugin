@@ -23,7 +23,9 @@ rm -f "$2/actionCompleted.txt"
 # Render the frames, and note how we create the completion file afterwards
 nohup "$1/Commandline" -render "$3/$4" -frame "$5" "$6" -oimage "$8/$4" -omultipass "$9/$4" "$7"; touch "$2/actionCompleted.txt" &
 
-# We need access to parameters 10, 11 and 12.  Use shift to discard the first 3 and get access to them.
+# We need access to parameters 10, 11 and 12 and we are finished with 1, 2 and 3.
+# We use shift to discard the first 3 and get access to them.
+
 shift
 shift
 shift
