@@ -13,6 +13,7 @@
 # ${10} - srs domain url
 # ${11} - email
 # ${12} - apiToken
+# ${13} - submittedByUserApiToken
 
 # Delete the completion file if it exists
 rm -f "$2/actionCompleted.txt"
@@ -23,9 +24,10 @@ rm -f "$2/actionCompleted.txt"
 # Render the frames, and note how we create the completion file afterwards
 nohup "$1/Commandline" -render "$3/$4" -frame "$5" "$6" -oimage "$8/$4" -omultipass "$9/$4" "$7"; touch "$2/actionCompleted.txt" &
 
-# We need access to parameters 10, 11 and 12 and we are finished with 1, 2 and 3.
-# We use shift to discard the first 3 and get access to them.
+# We need access to parameters 10, 11, 12 and 13 and we are finished with 1, 2, 3 and 4.
+# We use shift to discard the first 4 and get access to them.
 
+shift
 shift
 shift
 shift
@@ -34,21 +36,23 @@ shift
 # Should be something like the following to send this user email address and apiToken, too:
 #     curl -v -F key1=value1 -F upload=@localfilename URL
 
-cd "$5"
+# Change to frames directory
+cd "$4"
 # Send the rendered frames individually
 for FILE in *; do
     echo $FILE;
-    curl -F email=$8 -F apiToken=$9 -F "upload=@$FILE" -H "Content-Type: multipart/form-data" $7/results
+    curl -F email=$7 -F apiToken=$8 -F submittedByUserApiToken=$9 -F "upload=@$FILE" -H "Content-Type: multipart/form-data" $6/results
     echo "Uploaded $FILE"
 done
 
 cd -
 
-cd "$6"
+# Change to psds directory
+cd "$5"
 # Send the rendered PSDs individually
 for FILE in *; do
     echo $FILE;
-    curl -F email=$8 -F apiToken=$9 -F "upload=@$FILE" -H "Content-Type: multipart/form-data" $7/results
+    curl -F email=$7 -F apiToken=$8 -F submittedByUserApiToken=$9 -F "upload=@$FILE" -H "Content-Type: multipart/form-data" $6/results
     echo "Uploaded $FILE"
 done
 

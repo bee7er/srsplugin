@@ -12,6 +12,7 @@
 :: %10 - srs domain url - NB we have to SHIFT in order to access this parameter
 :: %11 - email - NB we have to SHIFT in order to access this parameter
 :: %12 - apiToken - NB we have to SHIFT in order to access this parameter
+:: %13 - submittedByUserApiToken - NB we have to SHIFT in order to access this parameter
 
 :: NB Here we are being passed 12 parameters.  We must shift them in order to be able to access those above 9, they are
 ::    then accessible as parameters 7, 8 and 9
@@ -32,32 +33,33 @@
 :: Save the current directory
 @pushd .
 
-:: We need access to parameters 10, 11 and 12 and we are finished with 1, 2 and 3.
-:: We use shift to discard the first 3 and get access to them.
+:: We need access to parameters 10, 11, 12 and 13 and we are finished with 1, 2, 3 and 4.
+:: We use shift to discard the first 4 and get access to them.
+shift
 shift
 shift
 shift
 
 :: Change to the frames directory
-@cd "%~5"
+@cd "%~4"
 :: Send the rendered frames individually
 for %%f in (.\*.*) do (
     set /p val=<%%f
     echo "fullname: %%f"
     echo "name: %%~nf"
-    curl -F email=$8 -F apiToken=$9 -F "upload=@%%f" -H "Content-Type: multipart/form-data" $7/results
+    curl -F email=%7 -F apiToken=%8 -F submittedByUserApiToken=%9 -F "upload=@%%f" -H "Content-Type: multipart/form-data" %6/results
     echo "Uploaded %%f"
 )
 
 
 :: Change to the frames directory
-@cd "%~6"
+@cd "%~5"
 :: Send the rendered psds individually
 for %%f in (.\*.*) do (
     set /p val=<%%f
     echo "fullname: %%f"
     echo "name: %%~nf"
-    curl -F email=$8 -F apiToken=$9 -F "upload=@%%f" -H "Content-Type: multipart/form-data" $7/results
+    curl -F email=%7 -F apiToken=%8 -F submittedByUserApiToken=%9 -F "upload=@%%f" -H "Content-Type: multipart/form-data" %6/results
     echo "Uploaded %%f"
 )
 

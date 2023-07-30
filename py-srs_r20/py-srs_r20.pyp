@@ -267,6 +267,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
                         responseData['from'],
                         responseData['to'],
                         responseData['outputFormat'],
+                        responseData['submittedByUserApiToken'],
                         )
 
                 if 'Error' == responseData['result']:
