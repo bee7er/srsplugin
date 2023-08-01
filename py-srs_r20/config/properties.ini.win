@@ -6,6 +6,7 @@ srsDomain = http://3n3.477.mywebsitetransfer.com
 srsApiXXX = http://srsapi.test/api1
 srsApi = http://3n3.477.mywebsitetransfer.com/api1
 c4dCommandLineDir = C:\Program Files\Maxon Cinema 4D R21
+c4dCommandLineExecutable = Commandline.exe
 c4dProjectDir = C:\Users\Russ\AppData\Roaming\MAXON\Maxon Cinema 4D R21_64C2B3BD\plugins\projects
 c4dProjectWithAssetsDir = C:\Users\Russ\AppData\Roaming\MAXON\Maxon Cinema 4D R21_64C2B3BD\plugins\projects\with_assets\RedshiftTestBeWA
 c4dProjectWithAssets = RedshiftTestBeWA.c4d

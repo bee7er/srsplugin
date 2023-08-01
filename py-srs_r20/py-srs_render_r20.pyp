@@ -188,9 +188,9 @@ class RenderDlg(c4d.gui.GeDialog):
                 self.rangeTo = self.GetInt32(EDIT_FRAME_RANGE_TO_TEXT)
 
                 if True == verbose:
-                    print "Form data passed validation"
+                    print("Form data passed validation")
                 if True == debug:
-                    print "*** Render requested"
+                    print("*** Render requested")
                 # Save to the config file
                 srs_functions.update_config_values(srs_functions.CONFIG_RENDER_SECTION, [
                     ('overrideSettings', str(self.overrideSettings)), ('outputFormat', self.outputFormat), ('customFrameRanges', self.customFrameRanges)
@@ -213,18 +213,18 @@ class RenderDlg(c4d.gui.GeDialog):
                             gui.MessageDialog("Error:\n" + responseData['message'])
                             return False
 
-                        print "Current status: ", responseData['message']
+                        print("Current status: ", responseData['message'])
 
                     # Close the Dialog
                     self.Close()
 
                 else:
-                    print "Submission of render request cancelled"
+                    print("Submission of render request cancelled")
                     return False
             
             else:
                 if True == verbose:
-                    print "Form data failed validation"
+                    print("Form data failed validation")
                 errorMessages = sep = ""
                 for error in validationResult:
                     errorMessages += sep + error
@@ -237,7 +237,7 @@ class RenderDlg(c4d.gui.GeDialog):
         # User click on Cancel button
         elif messageId == c4d.DLG_CANCEL:
             if True == verbose:
-                print "User clicked Cancel"
+                print("User clicked Cancel")
 
             # Close the Dialog
             self.Close()
@@ -289,7 +289,7 @@ class RenderDlg(c4d.gui.GeDialog):
             self.customFrameRanges = srs_functions.analyse_frame_ranges(self.customFrameRanges)
             if '' == self.customFrameRanges:
                 if True == verbose:
-                    print 'customFrameRanges: ', self.customFrameRanges
+                    print('customFrameRanges: ', self.customFrameRanges)
                 gui.MessageDialog("Please enter at least one valid range, in the format 'm - m, n - n, etc'")
                 return False
 
@@ -312,10 +312,10 @@ class RenderDlg(c4d.gui.GeDialog):
         srs_project_upload_handler.handle_project_upload()
 
         if True == verbose:
-            print "Submit project with assets to master"
+            print("Submit project with assets to master")
 
         if True == verbose:
-            print "Render request going to: ", srsApi
+            print("Render request going to: ", srsApi)
 
         sendData = {
             EMAIL:config.get(srs_functions.CONFIG_REGISTRATION_SECTION, EMAIL),
@@ -328,14 +328,14 @@ class RenderDlg(c4d.gui.GeDialog):
             OUTPUTFORMAT:self.outputFormat,
         }
         if True == verbose:
-            print "Sending data: ", sendData
+            print("Sending data: ", sendData)
         responseData = srs_connections.submitRequest(self, (srsApi + "/render"), sendData)
         if 'Error' == responseData['result']:
             gui.MessageDialog("Error:\n" + responseData['message'])
             return False
 
         if True == verbose:
-            print "Render request record id: ", responseData[RENDERID]
+            print("Render request record id: ", responseData[RENDERID])
 
         if OVERRIDE == self.overrideSettings:
             gui.MessageDialog("Custom ranges submitted for render: " + self.customFrameRanges)
@@ -413,7 +413,7 @@ class RenderDlgCommand(c4d.plugins.CommandData):
 # ===================================================================
 if __name__ == "__main__":
     if True == verbose:
-        print "Submit Render Request Plugin"
+        print("Submit Render Request Plugin")
     # Retrieves the icon path
     directory, _ = os.path.split(__file__)
     fn = os.path.join(directory, "res", "Icon.tif")
@@ -436,5 +436,5 @@ if __name__ == "__main__":
                                       icon=bmp)
     
     if True == verbose:
-        print "SRS Submit Render request registered ok"
+        print("SRS Submit Render request registered ok")
 

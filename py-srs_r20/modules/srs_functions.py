@@ -51,8 +51,8 @@ def validate_config_values(config):
         if True != os.path.exists(config.get(CONFIG_SECTION, 'c4dCommandLineDir')):
             validationResult.append("Property 'c4dCommandLineDir' is not a valid directory.")
         else:
-            if True != os.path.exists(os.path.join(config.get(CONFIG_SECTION, 'c4dCommandLineDir'), "Commandline")):
-                validationResult.append("Property 'c4dCommandLineDir' is not the location of the Commandline Python executable. File not found.")
+            if True != os.path.exists(os.path.join(config.get(CONFIG_SECTION, 'c4dCommandLineDir'), config.get(CONFIG_SECTION, 'c4dCommandLineExecutable').strip())):
+                validationResult.append("Property 'c4dCommandLineDir' is not the location of the Commandline Python executable. File 'c4dCommandLineExecutable' not found.")
 
     if "" == config.get(CONFIG_SECTION, 'c4dProjectDir').strip():
         validationResult.append("Property 'c4dProjectDir' has not been set")
@@ -120,7 +120,7 @@ def update_config_values(section, configFields):
     #
     for field in configFields:
         if True == verbose:
-            print "Config out: ", field[0], field[1]
+            print("Config out: ", field[0], field[1])
         config.set(section, field[0], field[1])
 
     with open(CONFIG_FILE, 'w') as configFile:
@@ -147,18 +147,18 @@ def analyse_frame_ranges(frameRangeStr):
         # Range should be number-number
         rangelet = entry.split('-')
         if True == verbose:
-            print "Ranglet: ", rangelet
+            print("Ranglet: ", rangelet)
         if 1 == len(rangelet):
             # Build a rangelet from what we've been given, e.g. 12 -> 12-12
             rangelet = [rangelet[0], rangelet[0]];
         # Check what we've got
         if 2 < len(rangelet):
             if True == verbose:
-                print "Error: Ignoring invalid rangelet: ", str(rangelet)
+                print("Error: Ignoring invalid rangelet: ", str(rangelet))
             continue
         elif True != str(rangelet[0]).isdigit() or True != str(rangelet[1]).isdigit():
             if True == verbose:
-                print "Error: Ignoring non-integer rangelet: ", str(rangelet)
+                print("Error: Ignoring non-integer rangelet: ", str(rangelet))
             continue
         elif int(rangelet[1]) < int(rangelet[0]):
             el = rangelet[0]
@@ -168,7 +168,7 @@ def analyse_frame_ranges(frameRangeStr):
         returnStr += sep + str(rangelet[0]) + '-' + str(rangelet[1])
         sep = ','
 
-    print 'returnStr=', returnStr
+    print('returnStr=', returnStr)
     return returnStr
 
 # ===================================================================

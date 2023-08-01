@@ -32,22 +32,22 @@ def handle_results_download(frameDetails):
     code = 'Init'
     try:
         if True == verbose:
-            print "*** Downloading frame ranges: ", frameDetails
+            print("*** Downloading frame ranges: ", frameDetails)
 
 
         for frameDetail in frameDetails:
             if True == verbose:
-                print frameDetail, "\n"
+                print(frameDetail, "\n")
 
             p = subprocess.Popen([HANDLER, c4dProjectWithAssets, frameDetail, downloadPWADir, outputToFramesDir, outputToPsdsDir, srsDomain, apiToken])
             p.communicate()
 
         if True == verbose:
-            print "Download of results file completed"
+            print("Download of results file completed")
 
         return {'result': "OK", 'message': "Download of results completed"}
 
     except:
         message = "Error trying to download results. Please check your internet connection."
-        print message
+        print(message)
         return {'result': 'Error', 'message': message}

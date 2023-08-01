@@ -27,20 +27,20 @@ def handle_project_download(c4dProjectWithAssets, submittedByUserApiToken):
     code = 'Init'
     try:
         if True == verbose:
-            print "*** Downloading handler: ", HANDLER
-            print "*** Downloading project with assets file to: ", downloadPWADir
-            print "*** Downloading project with assets dir to: ", c4dProjectWithAssets
-            print "*** Downloading project from user api token: ", submittedByUserApiToken
+            print("*** Downloading handler: ", HANDLER)
+            print("*** Downloading project with assets file to: ", downloadPWADir)
+            print("*** Downloading project with assets dir to: ", c4dProjectWithAssets)
+            print("*** Downloading project from user api token: ", submittedByUserApiToken)
 
         p = subprocess.Popen([HANDLER, c4dProjectWithAssets, downloadPWADir, srsDomain, submittedByUserApiToken])
         p.communicate()
 
         if True == verbose:
-            print "Download of project with assets file completed"
+            print("Download of project with assets file completed")
 
         return {'result': "OK", 'message': "Download of project with assets file completed"}
 
     except:
         message = "Error trying to download. Please check your internet connection. Code = " + code
-        print message
+        print(message)
         return {'result': 'Error', 'message': message}

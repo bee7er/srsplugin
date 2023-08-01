@@ -34,25 +34,25 @@ def handle_project_upload():
     # .....................................................
 
     if True == verbose:
-        print "*** Submitting project with assets upload script: ", HANDLER, ", with ", c4dProjectWithAssets, ", in ", c4dProjectWithAssetsDir
-        print "*** Email: ", email
-        print "*** Token: ", apiToken
-        print "*** Handler: ", HANDLER
+        print("*** Submitting project with assets upload script: ", HANDLER, ", with ", c4dProjectWithAssets, ", in ", c4dProjectWithAssetsDir)
+        print("*** Email: ", email)
+        print("*** Token: ", apiToken)
+        print("*** Handler: ", HANDLER)
 
     try:
 
         p = subprocess.Popen([HANDLER, c4dProjectWithAssets, c4dProjectWithAssetsDir, srsDomain, email, apiToken], stdin=sys.stdin, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-        print p.stderr.read()
-        print p.stdout.read()
+        print(p.stderr.read())
+        print(p.stdout.read())
         p.communicate()
 
-        print ('*********************** success')
+        print('*********************** success')
     except Exception as err:
-        print (err.args)
-        print ('*********************** problem')
+        print(err.args)
+        print('*********************** problem')
 
-    print ('*********************** done in upload handler')
+    print('*********************** done in upload handler')
 
     if True == verbose:
-        print "Submission of project with assets file completed"
+        print("Submission of project with assets file completed")

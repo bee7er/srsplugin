@@ -245,7 +245,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
         if AS_READY == self.actionStatus:
             if AVAILABLE == self.availability:
                 if True == debug:
-                    print "*** Available"
+                    print("*** Available")
                 responseData = srs_connections.submitRequest(self, (srsApi + "/available"), {EMAIL:self.email, APITOKEN:self.apiToken})
 
                 if 'Error' != responseData['result'] and AI_DO_RENDER == responseData[ACTIONINSTRUCTION]:
@@ -253,7 +253,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
                     result = srs_project_download_handler.handle_project_download(responseData['c4dProjectWithAssets'], responseData['submittedByUserApiToken'])
 
                     if 'Error' == result['result']:
-                        print "Error in project download: ", responseData['message']
+                        print("Error in project download: ", responseData['message'])
                         return
 
                     # Do render in the background
@@ -271,25 +271,25 @@ class RegistrationDlg(c4d.gui.GeDialog):
                         )
 
                 if 'Error' == responseData['result']:
-                    print "Error in available: ", responseData['message']
+                    print("Error in available: ", responseData['message'])
                     return
 
         elif AS_RENDERING == self.actionStatus:
             if True == debug: 
-                print "*** Rendering"
+                print("*** Rendering")
 
             # We do not need to keep telling the master that we are rendering
             ##responseData = srs_connections.submitRequest(self, (srsApi + "/rendering"), {EMAIL:self.email, APITOKEN:self.apiToken})
             ##if 'Error' == responseData['result']:
-            ##    print "Error in rendering: ", responseData['message']
+            ##    print("Error in rendering: ", responseData['message'])
             ##    return
 
             # Check if the render has completed OK
             if True == os.path.exists(c4dProjectDir + "/actionCompleted.txt"):
                 if True == debug:
-                    print "xxxxxxxxxxxxxxxxxxxx"
-                    print "*** Completed render"
-                    print "xxxxxxxxxxxxxxxxxxxx"
+                    print("xxxxxxxxxxxxxxxxxxxx")
+                    print("*** Completed render")
+                    print("xxxxxxxxxxxxxxxxxxxx")
                 # Back to ready for this slave
                 self.actionStatus = AS_READY
 
@@ -297,12 +297,12 @@ class RegistrationDlg(c4d.gui.GeDialog):
                         {EMAIL:self.email, RENDERDETAILID:self.renderDetailId, APITOKEN:self.apiToken}
                     )
                 if 'Error' == responseData['result']:
-                    print "Error in complete: ", responseData['message']
+                    print("Error in complete: ", responseData['message'])
                     return
 
         # We always send an AWAKE message to the master
         if True == debug:
-            print "*** Awake"
+            print("*** Awake")
         responseData = srs_connections.submitRequest(self, (srsApi + "/awake"), {EMAIL:self.email, APITOKEN:self.apiToken})
 
         if 'Error' != responseData['result']:
@@ -320,7 +320,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
                 self.statusBlock.SetText('<div style="text-align: right;margin-right: 15px;">Refresh count: ' + str(self.counter) + "</div>" + responseData['submissionsAndRenders']);
 
         if 'Error' == responseData['result']:
-            print "Error in timer from API call: ", responseData['message']
+            print("Error in timer from API call: ", responseData['message'])
             return
 
 # ===================================================================
@@ -370,7 +370,7 @@ class RegistrationDlgCommand(c4d.plugins.CommandData):
 # ===================================================================
 if __name__ == "__main__":
     if True == verbose:
-        print "Registering SRS Plugin"
+        print("Registering SRS Plugin")
     # Retrieves the icon path
     directory, _ = os.path.split(__file__)
     fn = os.path.join(directory, "res", "Icon.tif")
@@ -392,4 +392,4 @@ if __name__ == "__main__":
                                       dat=RegistrationDlgCommand(),
                                       icon=bmp)
     if True == debug: 
-        print "*** SRS registered ok"
+        print("*** SRS registered ok")

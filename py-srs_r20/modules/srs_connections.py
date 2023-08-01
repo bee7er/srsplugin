@@ -25,7 +25,7 @@ def submitRequest(self, endPoint, sendData):
     sendData = urllib.urlencode(sendData)
     
     if True == verbose:
-        print "*** Submitting to ", endPoint, ", details: ", sendData
+        print("*** Submitting to ", endPoint, ", details: ", sendData)
 
     responseData = 'None'
     try:
@@ -35,11 +35,11 @@ def submitRequest(self, endPoint, sendData):
         error = False
         if 200 == response.code:
             if True == verbose:
-                print "Submitted OK to end point: ", endPoint
+                print("Submitted OK to end point: ", endPoint)
         else:
             # Always print the error message
             error = "Unexpected response code from end point: ", endPoint, " with response code: ", response.code
-            print error
+            print(error)
             return {'result': 'Error', 'message': error}
 
         responseData = json.loads(response.read())
@@ -47,12 +47,12 @@ def submitRequest(self, endPoint, sendData):
         response.close()
     except:
         message = "Error trying to connect. Please check your internet connection."
-        print message
+        print(message)
         gui.MessageDialog(message)
         return {'result': 'Error', 'message': message}
     
     if True == verbose:
-        print "*** Returned data: ", responseData
+        print("*** Returned data: ", responseData)
     
     return responseData
     

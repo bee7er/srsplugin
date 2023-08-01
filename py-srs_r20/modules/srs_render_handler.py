@@ -36,14 +36,14 @@ def handle_render(c4dProjectDir, downloadPWADir, c4dProjectWithAssets, rangeFrom
     # .....................................................
 
     if True == verbose:
-        print "*** Submitting render script: ", HANDLER, ", with ", c4dCommandLineDir
+        print("*** Submitting render script: ", HANDLER, ", with ", c4dCommandLineDir)
 
     if True == verbose:
-        print "Submitting c4dProjectWithAssets: ", downloadPWADir, '/', c4dProjectWithAssets, ' from: ', rangeFrom, ' to: ', rangeTo, ' outputFormat: ', outputFormat
+        print("Submitting c4dProjectWithAssets: ", downloadPWADir, '/', c4dProjectWithAssets, ' from: ', rangeFrom, ' to: ', rangeTo, ' outputFormat: ', outputFormat)
 
     # We send the current user email address for validation and to find out which render id is being processed
     p = subprocess.Popen([HANDLER, c4dCommandLineDir, c4dProjectDir, downloadPWADir, c4dProjectWithAssets, str(rangeFrom), str(rangeTo), outputFormat, outputToFramesDir, outputToPsdsDir, srsDomain, email, apiToken, submittedByUserApiToken])
     p.communicate()
 
     if True == verbose:
-        print "Render completed"
+        print("Render completed")
