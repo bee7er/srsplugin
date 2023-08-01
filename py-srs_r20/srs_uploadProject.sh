@@ -15,7 +15,7 @@ cd "$2"
 # Zip up the project file before uploading it
 # The -C option changes the working directory, so that we don't tar up the entire directory structure
 
-tar -zcvf $1.gz "$2/$1" -C "$2" .
+tar -zcvf %~1.gz --exclude=%~1.gz . -C "%~2"
 
 # Now upload the zipped file to the master
 curl -F email=$4 -F apiToken=$5 -F "upload=@$1.gz" -H "Content-Type: multipart/form-data" $3/projects

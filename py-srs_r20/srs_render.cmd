@@ -14,11 +14,11 @@
 :: %12 - apiToken - NB we have to SHIFT in order to access this parameter
 :: %13 - submittedByUserApiToken - NB we have to SHIFT in order to access this parameter
 
-:: NB Here we are being passed 12 parameters.  We must shift them in order to be able to access those above 9, they are
-::    then accessible as parameters 7, 8 and 9
+:: NB Here we are being passed 13 parameters.  We must shift them in order to be able to access those above 9, they are
+::    then accessible as parameters 6, 7, 8 and 9
 :: NB Adding the tilde to the variable reference removes any surrounding quotes
 
-:: srs_render.cmd "C:\Program Files\Maxon Cinema 4D R21" "C:\Users\Russ\AppData\Roaming\MAXON\Maxon Cinema 4D R21_64C2B3BD\plugins\projects" "C:\Users\Russ\AppData\Roaming\MAXON\Maxon Cinema 4D R21_64C2B3BD\plugins\projects\downloads" "RedshiftTestBe.c4d" "0" "8" PNG "C:\Users\Russ\AppData\Roaming\MAXON\Maxon Cinema 4D R21_64C2B3BD\plugins\projects\frames" "C:\Users\Russ\AppData\Roaming\MAXON\Maxon Cinema 4D R21_64C2B3BD\plugins\projects\psds" https://3n3.477.mywebsitetransfer.com betheridge@gmail.com WxhtuADUQCA0LroDLF5OoFkPvXtQ9LEd8CosCnAvVcilB7ulxFqh5qiK1iMzmWrqCUwWzfSlNfSk1hRo
+:: srs_render.cmd "C:\Program Files\Maxon Cinema 4D R21" "C:\Users\Russ\AppData\Roaming\MAXON\Maxon Cinema 4D R21_64C2B3BD\plugins\projects" "C:\Users\Russ\AppData\Roaming\MAXON\Maxon Cinema 4D R21_64C2B3BD\plugins\projects\downloads" "RedshiftTestBe.c4d" "0" "8" PNG "C:\Users\Russ\AppData\Roaming\MAXON\Maxon Cinema 4D R21_64C2B3BD\plugins\projects\frames" "C:\Users\Russ\AppData\Roaming\MAXON\Maxon Cinema 4D R21_64C2B3BD\plugins\projects\psds" https://3n3.477.mywebsitetransfer.com betheridge@gmail.com WxhtuADUQCA0LroDLF5OoFkPvXtQ9LEd8CosCnAvVcilB7ulxFqh5qiK1iMzmWrqCUwWzfSlNfSk1hRo WxhtuADUQCA0LroDLF5OoFkPvXtQ9LEd8CosCnAvVcilB7ulxFqh5qiK1iMzmWrqCUwWzfSlNfSk1hRo
 
 :: Delete the completion file if it exists
 @del /Q "%~2\actionCompleted.txt"
@@ -66,4 +66,4 @@ for %%f in (.\*.*) do (
 :: Go back to original directory
 @popd
 
-:: @exit
+@exit

@@ -36,7 +36,8 @@ def handle_results_download(frameDetails):
 
 
         for frameDetail in frameDetails:
-            print frameDetail, "\n"
+            if True == verbose:
+                print frameDetail, "\n"
 
             p = subprocess.Popen([HANDLER, c4dProjectWithAssets, frameDetail, downloadPWADir, outputToFramesDir, outputToPsdsDir, srsDomain, apiToken])
             p.communicate()
