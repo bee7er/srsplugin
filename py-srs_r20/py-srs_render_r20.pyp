@@ -46,8 +46,6 @@ CUSTOMFRAMERANGES = "customFrameRanges"
 EMAIL = "email"
 APITOKEN = "apiToken"
 FROM = "from"
-C4DPROJECTWITHASSETSDIR = "c4dProjectWithAssetsDir"
-C4DPROJECTWITHASSETS = "c4dProjectWithAssets"
 OVERRIDESETTINGS = "overrideSettings"
 RENDERDETAILID = "renderDetailId"
 RENDERID = "renderId"
@@ -109,7 +107,9 @@ class RenderDlg(c4d.gui.GeDialog):
             gui.MessageDialog("ERRORS IN CONFIGURATION FILE: Please correct the following issues: \n" + errorMessages)
 
         # Get the project with assets path and name
-        self.c4dProjectWithAssetsDir = config.get(srs_functions.CONFIG_SECTION, 'c4dProjectWithAssetsDir')
+        self.c4dProjectWithAssetsDir = srs_functions.get_config_directory(
+            os.path.join('projects', 'with_assets', config.get(srs_functions.CONFIG_SECTION, 'c4dProjectWithAssetsDir'))
+            )
         self.c4dProjectWithAssets = config.get(srs_functions.CONFIG_SECTION, 'c4dProjectWithAssets')
 
         renderData = srs_functions.get_render_settings()
@@ -324,7 +324,7 @@ class RenderDlg(c4d.gui.GeDialog):
             CUSTOMFRAMERANGES:self.customFrameRanges,
             FROM:self.rangeFrom,
             TO:self.rangeTo,
-            C4DPROJECTWITHASSETS:self.c4dProjectWithAssets,
+            'c4dProjectWithAssets':self.c4dProjectWithAssets,
             OUTPUTFORMAT:self.outputFormat,
         }
         if True == verbose:

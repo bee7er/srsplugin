@@ -45,8 +45,8 @@ config = srs_functions.get_config_values()
 debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
 verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
 srsApi = config.get(srs_functions.CONFIG_SECTION, 'srsApi')
-c4dProjectDir = config.get(srs_functions.CONFIG_SECTION, 'c4dProjectDir')
-downloadPWADir = config.get(srs_functions.CONFIG_SECTION, 'downloadPWADir')
+c4dProjectDir = srs_functions.get_config_directory('projects')
+downloadPWADir = srs_functions.get_config_directory(os.path.join('projects', 'downloads'))
 srsDomain = config.get(srs_functions.CONFIG_SECTION, 'srsDomain')
 
 # Config settings

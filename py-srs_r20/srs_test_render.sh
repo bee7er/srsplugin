@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Run render in the background
-# $1 - c4dCommandLineDir
+# $1 - c4dCommandLineExecutable
 # $2 - c4dProjectDir
 # $3 - downloadPWADir
 # $4 - c4dProjectWithAssets

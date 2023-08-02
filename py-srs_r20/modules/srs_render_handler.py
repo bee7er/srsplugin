@@ -24,9 +24,9 @@ verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
 # Params
 email = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'email')
 apiToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'apiToken')
-c4dCommandLineDir = config.get(srs_functions.CONFIG_SECTION, 'c4dCommandLineDir')
-outputToFramesDir = config.get(srs_functions.CONFIG_SECTION, 'outputToFramesDir')
-outputToPsdsDir = config.get(srs_functions.CONFIG_SECTION, 'outputToPsdsDir')
+c4dCommandLineExecutable = config.get(srs_functions.CONFIG_SECTION, 'c4dCommandLineExecutable')
+outputToFramesDir = srs_functions.get_config_directory(os.path.join('projects', 'frames'))
+outputToPsdsDir = srs_functions.get_config_directory(os.path.join('projects', 'psds'))
 srsDomain = config.get(srs_functions.CONFIG_SECTION, 'srsDomain')
 
 # ===================================================================
@@ -36,13 +36,13 @@ def handle_render(c4dProjectDir, downloadPWADir, c4dProjectWithAssets, rangeFrom
     # .....................................................
 
     if True == verbose:
-        print("*** Submitting render script: ", HANDLER, ", with ", c4dCommandLineDir)
+        print("*** Submitting render script: ", HANDLER, ", with ", c4dCommandLineExecutable)
 
     if True == verbose:
         print("Submitting c4dProjectWithAssets: ", downloadPWADir, '/', c4dProjectWithAssets, ' from: ', rangeFrom, ' to: ', rangeTo, ' outputFormat: ', outputFormat)
 
     # We send the current user email address for validation and to find out which render id is being processed
-    p = subprocess.Popen([HANDLER, c4dCommandLineDir, c4dProjectDir, downloadPWADir, c4dProjectWithAssets, str(rangeFrom), str(rangeTo), outputFormat, outputToFramesDir, outputToPsdsDir, srsDomain, email, apiToken, submittedByUserApiToken])
+    p = subprocess.Popen([HANDLER, c4dCommandLineExecutable, c4dProjectDir, downloadPWADir, c4dProjectWithAssets, str(rangeFrom), str(rangeTo), outputFormat, outputToFramesDir, outputToPsdsDir, srsDomain, email, apiToken, submittedByUserApiToken])
     p.communicate()
 
     if True == verbose:

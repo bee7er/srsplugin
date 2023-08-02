@@ -16,7 +16,7 @@ else:
 config = srs_functions.get_config_values()
 debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
 verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
-downloadPWADir = config.get(srs_functions.CONFIG_SECTION, 'downloadPWADir')
+downloadPWADir = srs_functions.get_config_directory(os.path.join('projects', 'downloads'))
 srsDomain = config.get(srs_functions.CONFIG_SECTION, 'srsDomain')
 
 # ===================================================================

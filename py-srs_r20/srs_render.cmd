@@ -1,6 +1,6 @@
 
 :: Run render in the background
-:: %1 - c4dCommandLineDir
+:: %1 - c4dCommandLineExecutable
 :: %2 - c4dProjectDir
 :: %3 - downloadPWADir
 :: %4 - c4dProjectWithAssets
@@ -28,7 +28,7 @@
 
 :: Submit the render command to background, and note how we create the completion file afterwards
 :: I think this is unnecessary:  start /B
-"%~1\Commandline.exe" -render "%~3\%~4" -frame "%~5" "%~6" -oimage "%~8\%~4" -omultipass "%~9\%~4" "%~7" && dir > "%~2\actionCompleted.txt"
+"%~1" -render "%~3\%~4" -frame "%~5" "%~6" -oimage "%~8\%~4" -omultipass "%~9\%~4" "%~7" && dir > "%~2\actionCompleted.txt"
 
 :: Save the current directory
 @pushd .
