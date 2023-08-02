@@ -49,12 +49,10 @@ def handle_project_upload():
         print(p.stdout.read())
         p.communicate()
 
-        print('*********************** success')
+        print('Upload handler completed without error')
     except Exception as err:
         print(err.args)
-        print('*********************** problem')
-
-    print('*********************** done in upload handler')
+        print('*** Upload handler encountered an error')
 
     if True == verbose:
         print("Submission of project with assets file completed")

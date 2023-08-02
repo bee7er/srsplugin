@@ -1,6 +1,6 @@
 [CONFIG]
-debug = 1
-verbose = 1
+debug = 0
+verbose = 0
 srsDomain = http://3n3.477.mywebsitetransfer.com
 srsApi = http://3n3.477.mywebsitetransfer.com/api1
 c4dCommandLineExecutable = C:\Program Files\Maxon Cinema 4D R21\Commandline.exe

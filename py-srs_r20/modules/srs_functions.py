@@ -4,7 +4,6 @@ Author: Brian Etheridge
 """
 import c4d, os, platform
 import ConfigParser
-from ConfigParser import SafeConfigParser
 
 __root__ = os.path.dirname(os.path.dirname(__file__))
 
@@ -24,7 +23,7 @@ def get_config_values():
     # Returns entries in the config file
     # .....................................................
 
-    config = SafeConfigParser()
+    config = ConfigParser.ConfigParser()
     # Replace the translate function with 'str', which will stop ini field names from being lower cased
     config.optionxform = str
     config.read(CONFIG_FILE)
