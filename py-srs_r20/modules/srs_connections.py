@@ -5,10 +5,11 @@ Author: Brian Etheridge
 Description: Handle HTTP connections
 
 """
-import json, urllib, urllib2
+import json, urllib
 import srs_functions
 import c4d
 from c4d import gui
+
 ERROR = "Error"
 OK = "OK"
 
@@ -22,15 +23,27 @@ def submitRequest(self, endPoint, sendData):
     # Submit a POST request to the master node
     # .....................................................
 
-    sendData = urllib.urlencode(sendData)
+    try:
+        # R2023
+        sendData = urllib.parse.urlencode(sendData)
+    except:
+        # Prior to R2023
+        sendData = urllib.urlencode(sendData)
     
     if True == verbose:
         print("*** Submitting to ", endPoint, ", details: ", sendData)
 
     responseData = 'None'
     try:
-        request = urllib2.Request(endPoint, sendData)
-        response = urllib2.urlopen(request)
+        try:
+            # R2023
+            response = urllib.request.urlopen(endPoint, sendData)
+        except:
+            # Prior to R2023
+            import urllib2
+
+            request = urllib2.Request(endPoint, sendData)
+            response = urllib2.urlopen(request)
 
         error = False
         if 200 == response.code:

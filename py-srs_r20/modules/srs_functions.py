@@ -3,7 +3,13 @@ Copyright: Etheridge Family Nov 2022
 Author: Brian Etheridge
 """
 import c4d, os, platform
-import ConfigParser
+
+try:
+    # R2023
+    import configparser as configurator
+except:
+    # Prior to R2023
+    import ConfigParser as configurator
 
 __root__ = os.path.dirname(os.path.dirname(__file__))
 
@@ -23,12 +29,12 @@ def get_config_values():
     # Returns entries in the config file
     # .....................................................
 
-    config = ConfigParser.ConfigParser()
+    config = configurator.ConfigParser()
     # Replace the translate function with 'str', which will stop ini field names from being lower cased
     config.optionxform = str
     config.read(CONFIG_FILE)
       
-    return config;
+    return config
 
 # ===================================================================
 def get_config_directory(dir):
@@ -37,7 +43,7 @@ def get_config_directory(dir):
     # .....................................................
     config = get_config_values()
 
-    return os.path.join(config.get(CONFIG_SECTION, 'c4dPluginsDir'), dir);
+    return os.path.join(config.get(CONFIG_SECTION, 'c4dPluginsDir'), dir)
 
 # ===================================================================
 def validate_config_values(config):
@@ -155,7 +161,7 @@ def analyse_frame_ranges(frameRangeStr):
             print("Ranglet: ", rangelet)
         if 1 == len(rangelet):
             # Build a rangelet from what we've been given, e.g. 12 -> 12-12
-            rangelet = [rangelet[0], rangelet[0]];
+            rangelet = [rangelet[0], rangelet[0]]
         # Check what we've got
         if 2 < len(rangelet):
             if True == verbose:

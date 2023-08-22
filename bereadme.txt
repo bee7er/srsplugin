@@ -25,3 +25,18 @@ NB Running these tests from srsplugin folder:
         Testing download from master:
 
                 curl --output ./projects/RedshiftTestBePngs.tar.gz http://srsapi.test/uploads/projects/RedshiftTestBe.c4d
+
+Installing on Windows for release 2023:
+
+    urllib2 is not available
+    Had to install pip
+        see https://www.geeksforgeeks.org/how-to-install-pip-on-windows/
+        go to the python.exe folder, wherever that is:  c:\Program files\Maxon Cinema 4D 223\modules\python\libs\python310.win64.framework\
+        create the file get-pip.py, with contents from https://bootstrap.pypa.io/get-pip.py
+        add the ...\Scripts directory to the PATH
+        run 'python get-pip.py'
+
+    now install the 'requests' module
+        python -m pip install requests
+
+        Continue with the 'requests' example suggested by Chat GPT
