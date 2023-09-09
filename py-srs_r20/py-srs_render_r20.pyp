@@ -66,22 +66,19 @@ class RenderDlg(c4d.gui.GeDialog):
     c4dProjectWithAssetsDir = ''
     c4dProjectWithAssets = ''
 
-    # The problem with the next bit which tries to get output format is that it returns an ID with no way to convert to the string
-    #renderData = srs_functions.get_render_settings()
-    #outputFormat = renderData[srs_functions.OUTPUT_FORMAT]
-    #if '' == outputFormat:
-
     promptForUpToDate = True
 
-    outputFormat = 'PNG'
     overrideSettings = 0
     customFrameRanges = ''
     rangeFrom = 0
     rangeTo = 0
 
     overrideSettings = int(config.get(srs_functions.CONFIG_RENDER_SECTION, 'overrideSettings'))
-    outputFormat = config.get(srs_functions.CONFIG_RENDER_SECTION, 'outputFormat')
     customFrameRanges = config.get(srs_functions.CONFIG_RENDER_SECTION, 'customFrameRanges')
+
+    # TODO add more output formats in the render settings
+    renderData = srs_functions.get_render_settings()
+    outputFormat = renderData[srs_functions.OUTPUT_FORMAT]
 
     # ===================================================================
     def CreateLayout(self):
@@ -122,7 +119,7 @@ class RenderDlg(c4d.gui.GeDialog):
         #self.customFrameRanges = config.get(srs_functions.CONFIG_RENDER_SECTION, 'customFrameRanges')
 
         self.SetTitle("SRS Submit Render Request")
-		
+
         self.GroupBegin(id=GROUP_ID, flags=c4d.BFH_SCALEFIT, cols=2, rows=4)
         """ C4D Project with Assets field """
         self.AddStaticText(id=OUTPUT_C4D_PROJECT_TEXT, flags=c4d.BFV_MASK, initw=145, name="Project with Assets: ", borderstyle=c4d.BORDER_NONE)
@@ -137,7 +134,7 @@ class RenderDlg(c4d.gui.GeDialog):
         """ Custom ranges field """
         self.AddStaticText(id=FRAME_RANGES_TEXT, flags=c4d.BFV_MASK, initw=145, name="Custom frame ranges: ", borderstyle=c4d.BORDER_NONE)
         self.AddEditText(EDIT_FRAME_RANGES_TEXT, c4d.BFV_MASK, initw=240, inith=16, editflags=0)
-        self.SetString(EDIT_FRAME_RANGES_TEXT, self.customFrameRanges)        
+        self.SetString(EDIT_FRAME_RANGES_TEXT, self.customFrameRanges)
         """ Frame Range field """
         self.AddStaticText(id=FRAME_RANGE_FROM_TEXT, flags=c4d.BFV_MASK, initw=145, name="Frame range from: ", borderstyle=c4d.BORDER_NONE)
         self.AddEditNumber(EDIT_FRAME_RANGE_FROM_TEXT, c4d.BFV_MASK, initw=80, inith=16)
@@ -154,10 +151,10 @@ class RenderDlg(c4d.gui.GeDialog):
             self.toggleEditableFields(True)
         else:
             self.toggleEditableFields(False)
-            
+
         self.AddDlgGroup(c4d.DLG_OK | c4d.DLG_CANCEL)
         self.GroupEnd()
-        
+
         return True
 
     # ===================================================================
@@ -195,7 +192,7 @@ class RenderDlg(c4d.gui.GeDialog):
                 srs_functions.update_config_values(srs_functions.CONFIG_RENDER_SECTION, [
                     ('overrideSettings', str(self.overrideSettings)), ('outputFormat', self.outputFormat), ('customFrameRanges', self.customFrameRanges)
                     ])
-                
+
                 if True == self.submitRenderRequest():
                     # Reset the range for the next submission
                     self.rangeFrom = 0
@@ -221,7 +218,7 @@ class RenderDlg(c4d.gui.GeDialog):
                 else:
                     print("Submission of render request cancelled")
                     return False
-            
+
             else:
                 if True == verbose:
                     print("Form data failed validation")
@@ -229,7 +226,7 @@ class RenderDlg(c4d.gui.GeDialog):
                 for error in validationResult:
                     errorMessages += sep + error
                     sep = "\n"
-                
+
                 gui.MessageDialog("ERROR: Please correct the following issues: \n" + errorMessages)
 
             return True
@@ -248,13 +245,13 @@ class RenderDlg(c4d.gui.GeDialog):
             # Override option has changed
             if OVERRIDE == self.GetInt32(SELCOMBO_BUTTON):
                 self.toggleEditableFields(True)
-        
+
             else:
                 self.toggleEditableFields(False)
-            
+
             self.LayoutChanged(id=GROUP_ID)
             self.overrideSettings = self.GetInt32(SELCOMBO_BUTTON)
-            
+
         return True
 
     # ===================================================================
@@ -280,7 +277,7 @@ class RenderDlg(c4d.gui.GeDialog):
     # ===================================================================
     def submitRenderRequest(self):
     # ===================================================================
-        """ 
+        """
         Submit the render request to the master node
         """
         # Validate the custom ranges if we are overriding settings
@@ -348,20 +345,20 @@ class RenderDlg(c4d.gui.GeDialog):
     def validate(self):
     # ===================================================================
         """ Validate the submitted form
-        Args: 
+        Args:
 
         Returns:
             bool: True else an array of error messages.
         """
         validationResult = []
-        
+
         if 0 == self.GetInt32(SELCOMBO_BUTTON):
             validationResult.append("The Override render settings field is required")
-            
+
         if self.GetInt32(EDIT_FRAME_RANGE_TO_TEXT) < self.GetInt32(EDIT_FRAME_RANGE_FROM_TEXT):
             validationResult.append("The From Frame must be before the To Frame")
-        
-        if 0 == len(validationResult): 
+
+        if 0 == len(validationResult):
             return True
 
         return validationResult
@@ -383,7 +380,7 @@ class RenderDlgCommand(c4d.plugins.CommandData):
         Returns:
             bool: True if the command success.
         """
-        # Creates the dialog if its not already exists
+        # Creates the dialog if it does not already exists
         if self.dialog is None:
             self.dialog = RenderDlg()
 
@@ -413,7 +410,8 @@ class RenderDlgCommand(c4d.plugins.CommandData):
 # ===================================================================
 if __name__ == "__main__":
     if True == verbose:
-        print("Submit Render Request Plugin")
+        print("Setting up SRS Render Request Plugin")
+
     # Retrieves the icon path
     directory, _ = os.path.split(__file__)
     fn = os.path.join(directory, "res", "Icon.tif")
@@ -426,7 +424,7 @@ if __name__ == "__main__":
     # Init the BaseBitmap with the icon
     if bmp.InitWith(fn)[0] != c4d.IMAGERESULT_OK:
         raise MemoryError("Failed to initialise the BaseBitmap.")
-		
+
     # Registers the plugin
     c4d.plugins.RegisterCommandPlugin(id=PLUGIN_ID,
                                       str="SRS Submit Render Request",
@@ -434,7 +432,6 @@ if __name__ == "__main__":
                                       help="Submit render request",
                                       dat=RenderDlgCommand(),
                                       icon=bmp)
-    
-    if True == verbose:
-        print("SRS Submit Render request registered ok")
 
+    if True == verbose:
+        print("SRS Render Request Plugin set up ok")

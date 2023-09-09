@@ -100,7 +100,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
         self.apiToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, APITOKEN)
         self.availability = int(config.get(srs_functions.CONFIG_REGISTRATION_SECTION, AVAILABILITY))
         self.SetTitle("SRS Register Render Availability")
-		
+
         self.GroupBegin(id=110000, flags=c4d.BFH_SCALEFIT, cols=2, rows=4)
         """ Email field """
         self.AddStaticText(id=EMAIL_TEXT, flags=c4d.BFV_MASK, initw=145, name="Email: ", borderstyle=c4d.BORDER_NONE)
@@ -141,7 +141,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
         if messageId == c4d.DLG_OK:
             if True == verbose:
                 print("User clicked Ok")
-            
+
             validationResult = self.validate()
             if True == validationResult:
                 self.email = self.GetString(EDIT_EMAIL_TEXT)
@@ -157,24 +157,24 @@ class RegistrationDlg(c4d.gui.GeDialog):
                 if True == self.submitRegistrationRequest():
                     # Dialog needs to stay open to handle communications
                     gui.MessageDialog("Registered OK. Leave the dialog open for background operations.")
-                    
+
                     # Kick off the heartbeat Timer function
                     self.SetTimer(2000)
 
                 else:
                     return False
-            
+
             else:
                 if True == verbose:
                     print("Form data failed validation")
-                    
+
                 errorMessages = sep = ""
                 for error in validationResult:
                     errorMessages += sep + error
                     sep = "\n"
-                    
+
                 gui.MessageDialog("ERROR: Please correct the following issues: \n" + errorMessages)
-                
+
             return True
 
         # User click on Cancel button
@@ -186,7 +186,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
                         print("Not cancelling after all")
                     return False;
 
-            if True == debug: 
+            if True == debug:
                 print("*** Cancelled registration")
 
             # Close the Dialog
@@ -205,14 +205,14 @@ class RegistrationDlg(c4d.gui.GeDialog):
 
         # Preprocess form fields
         self.SetString(EDIT_EMAIL_TEXT, self.GetString(EDIT_EMAIL_TEXT).replace("\\", ''))
-            
+
         if "" == self.GetString(EDIT_EMAIL_TEXT).strip():
             validationResult.append("The Email field is required")
-            
+
         if 0 == self.GetInt32(SELCOMBO_BUTTON):
             validationResult.append("The Availability field is required")
-        
-        if 0 == len(validationResult): 
+
+        if 0 == len(validationResult):
             return True
 
         return validationResult
@@ -220,7 +220,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
     # ===================================================================
     def submitRegistrationRequest(self):
     # ===================================================================
-        
+
         sendData = {
             EMAIL: self.email,
             APITOKEN: self.apiToken,
@@ -230,7 +230,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
         if 'Error' == responseData['result']:
             gui.MessageDialog("Error:\n" + responseData['message'])
             return False
-        
+
         return True
 
     # ===================================================================
@@ -275,7 +275,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
                     return
 
         elif AS_RENDERING == self.actionStatus:
-            if True == debug: 
+            if True == debug:
                 print("*** Rendering")
 
             # We do not need to keep telling the master that we are rendering
@@ -358,7 +358,7 @@ class RegistrationDlgCommand(c4d.plugins.CommandData):
         Returns:
             bool: True if the restore success
         """
-        # Creates the dialog if its not already exists
+        # Creates the dialog if it does not already exists
         if self.dialog is None:
             self.dialog = RegistrationDlg()
 
@@ -370,7 +370,8 @@ class RegistrationDlgCommand(c4d.plugins.CommandData):
 # ===================================================================
 if __name__ == "__main__":
     if True == verbose:
-        print("Registering SRS Plugin")
+        print("Setting up SRS Register Plugin")
+
     # Retrieves the icon path
     directory, _ = os.path.split(__file__)
     fn = os.path.join(directory, "res", "Icon.tif")
@@ -383,7 +384,7 @@ if __name__ == "__main__":
     # Init the BaseBitmap with the icon
     if bmp.InitWith(fn)[0] != c4d.IMAGERESULT_OK:
         raise MemoryError("Failed to initialise the BaseBitmap.")
-		
+
     # Registers the plugin
     c4d.plugins.RegisterCommandPlugin(id=PLUGIN_ID,
                                       str="SRS Register Availability for Renders",
@@ -391,5 +392,6 @@ if __name__ == "__main__":
                                       help="Register your availability with SRS",
                                       dat=RegistrationDlgCommand(),
                                       icon=bmp)
-    if True == debug: 
-        print("*** SRS registered ok")
+
+    if True == debug:
+        print("SRS Register Plugin set up ok")

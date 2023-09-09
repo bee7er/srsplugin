@@ -5,10 +5,21 @@ Author: Brian Etheridge
 Description: Handle HTTP connections
 
 """
-import json, urllib
+
+VERSION = "R2023"
+try:
+    import urllib.parse as parser
+    import urllib.request as requester
+    print("Connecting with R2023")
+except:
+    import urllib, urllib2
+    print("Connecting with R20")
+    VERSION = "R20"
+
 import srs_functions
 import c4d
 from c4d import gui
+import json
 
 ERROR = "Error"
 OK = "OK"
@@ -23,25 +34,19 @@ def submitRequest(self, endPoint, sendData):
     # Submit a POST request to the master node
     # .....................................................
 
-    try:
-        # R2023
-        sendData = urllib.parse.urlencode(sendData)
-    except:
-        # Prior to R2023
+    if "R2023" == VERSION:
+        sendData = parser.urlencode(sendData)
+    else:
         sendData = urllib.urlencode(sendData)
-    
+
     if True == verbose:
         print("*** Submitting to ", endPoint, ", details: ", sendData)
 
     responseData = 'None'
     try:
-        try:
-            # R2023
-            response = urllib.request.urlopen(endPoint, sendData)
-        except:
-            # Prior to R2023
-            import urllib2
-
+        if "R2023" == VERSION:
+            response = requester.urlopen(endPoint, bytes(sendData, 'utf-8'))
+        else:
             request = urllib2.Request(endPoint, sendData)
             response = urllib2.urlopen(request)
 
@@ -58,17 +63,14 @@ def submitRequest(self, endPoint, sendData):
         responseData = json.loads(response.read())
 
         response.close()
-    except:
-        message = "Error trying to connect. Please check your internet connection."
+
+    except Exception as e:
+        message = "Error trying to connect. Please check your internet connection. Error message: " + str(e)
         print(message)
         gui.MessageDialog(message)
         return {'result': 'Error', 'message': message}
-    
+
     if True == verbose:
         print("*** Returned data: ", responseData)
-    
+
     return responseData
-    
-    
-    
-    
