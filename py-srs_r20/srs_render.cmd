@@ -33,6 +33,19 @@
 :: Save the current directory
 @pushd .
 
+'''
+    For testing access to the command line renderer.  Run this line to output to the testRender.txt file.
+    Check the contents of the file to see that the render completed ok.
+
+cd "%~8"
+echo "%~1" -render "%~3\%~4" -frame "%~5" "%~6" -oimage "%~8\%~4" > testRender.txt
+
+:: Go back to original directory
+@popd
+
+exit
+'''
+
 :: We need access to parameters 10, 11, 12 and 13 and we are finished with 1, 2, 3 and 4.
 :: We use shift to discard the first 4 and get access to them.
 shift
