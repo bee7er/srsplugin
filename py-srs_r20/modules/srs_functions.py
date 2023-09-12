@@ -197,21 +197,32 @@ def get_render_settings():
     # We must convert from the numeric output format
     # Define a dictionary that maps numeric values to file extensions
     format_to_extension = {
-        0: 'bmp',
-        1: 'png',
-        2: 'tga',
-        3: 'jpg',
-        4: 'iff',
         1100: 'tif',
+        1101: 'tga',
+        1102: 'bmp',
+        1103: 'iff',
+        1104: 'jpg',
+        1105: 'pict',
+        1106: 'psd',
+        1125: 'mp4',
+        1023671: 'png',
+        1073784596: 'mov',
         # Add more format-value-to-extension mappings as needed
     }
     # Use the dictionary to get the corresponding file extension
     output_format_value = int(renderData[c4d.RDATA_FORMAT]);
 
+    print("output_format_value=", output_format_value)
+
     if output_format_value in format_to_extension:
         output_extension = format_to_extension[output_format_value]
+
+        # print("output_extension=", output_extension)
+
     else:
-        output_extension = 'png'  # Handle unsupported or unknown values
+        output_extension = 'unknown'  # Handle unsupported or unknown values
+
+        # print("*** unknown extension value=", output_format_value)
 
     return {
         RANGE_FROM: int(renderData[c4d.RDATA_FRAMEFROM].Get() * renderData[c4d.RDATA_FRAMERATE]),

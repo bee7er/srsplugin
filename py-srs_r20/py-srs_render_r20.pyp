@@ -72,13 +72,10 @@ class RenderDlg(c4d.gui.GeDialog):
     customFrameRanges = ''
     rangeFrom = 0
     rangeTo = 0
+    outputFormat = ''
 
     overrideSettings = int(config.get(srs_functions.CONFIG_RENDER_SECTION, 'overrideSettings'))
     customFrameRanges = config.get(srs_functions.CONFIG_RENDER_SECTION, 'customFrameRanges')
-
-    # TODO add more output formats in the render settings
-    renderData = srs_functions.get_render_settings()
-    outputFormat = renderData[srs_functions.OUTPUT_FORMAT]
 
     # ===================================================================
     def CreateLayout(self):
@@ -112,11 +109,7 @@ class RenderDlg(c4d.gui.GeDialog):
         renderData = srs_functions.get_render_settings()
         self.rangeFrom = renderData[srs_functions.RANGE_FROM]
         self.rangeTo = renderData[srs_functions.RANGE_TO]
-
-        # Initialise the form fields from the config file
-        #self.overrideSettings = int(config.get(srs_functions.CONFIG_RENDER_SECTION, 'overrideSettings'))
-        #self.outputFormat = config.get(srs_functions.CONFIG_RENDER_SECTION, 'outputFormat')
-        #self.customFrameRanges = config.get(srs_functions.CONFIG_RENDER_SECTION, 'customFrameRanges')
+        self.outputFormat = renderData[srs_functions.OUTPUT_FORMAT]
 
         self.SetTitle("SRS Submit Render Request")
 

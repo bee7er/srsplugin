@@ -18,9 +18,6 @@
 # Delete the completion file if it exists
 rm -f "$2/actionCompleted.txt"
 
-# NB Since R21 you have to login to the command line every now and again:
-#       Commandline.exe g_licenseUsername=<your_user_name> g_licensePassword=<your_password>
-
 # Render the frames, and note how we create the completion file afterwards
 # nohup "$1" -render "$3/$4" -frame "$5" "$6" -oimage "$8/$4" -omultipass "$9/$4" "$7"; touch "$2/actionCompleted.txt" &
 nohup "$1" -render "$3/$4" -frame "$5" "$6" -oimage "$8/$4"; touch "$2/actionCompleted.txt" &
@@ -29,8 +26,12 @@ nohup "$1" -render "$3/$4" -frame "$5" "$6" -oimage "$8/$4"; touch "$2/actionCom
 # We use shift to discard the first 4 and get access to them.
 
 '''
-    For testing access to the command line renderer.  Run this line to output to the testRender.txt file.
-    Check the contents of the file to see that the render completed ok.
+    NB Since R21 you have to login to the command line.
+    Using command line options would be good:  Commandline g_licenseUsername=<your_user_name> g_licensePassword=<your_password>
+    You may need to do this more than once.
+    For testing access to the command line renderer run the commands below to output to the testRender.txt file.
+    Use the command that is generated in terminal.
+    Follow any instructions; you will need to respond to prompts for the first invocation of the command line render.
 
 cd "$8"
 echo "$1" -render "$3/$4" -frame "$5" "$6" -oimage "$8/$4" > testRender.txt
