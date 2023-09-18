@@ -1,0 +1,1 @@
+/Applications/MAXON/Cinema 4D R20/Commandline.app/Contents/MacOS/Commandline -nogui -render /Users/brianetheridge/Library/Preferences/MAXON/Cinema 4D R20_7DE41E5A/plugins/py-srs_plugin/projects/downloads/RedshiftTestBe.c4d -frame 6 8 -oimage /Users/brianetheridge/Library/Preferences/MAXON/Cinema 4D R20_7DE41E5A/plugins/py-srs_plugin/projects/frames/RedshiftTestBe.c4d
