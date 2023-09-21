@@ -58,6 +58,7 @@ def handle_render(c4dProjectDir, downloadPWADir, c4dProjectWithAssets, rangeFrom
         print("Processing c4dProjectWithAssets: ", downloadPWADir, '/', c4dProjectWithAssets, ' from: ', rangeFrom, ' to: ', rangeTo, ' outputFormat: ', outputFormat)
 
     """
+    ##########################################
     NB COMMENTED OUT THIS EXPERIMENTAL SECTION
 
     # Use subprocess to call the shell script
@@ -76,6 +77,7 @@ def handle_render(c4dProjectDir, downloadPWADir, c4dProjectWithAssets, rangeFrom
     except Exception as e:
         print(f"An error occurred: {e}")
 
+    ##########################################
     """
 
     try:

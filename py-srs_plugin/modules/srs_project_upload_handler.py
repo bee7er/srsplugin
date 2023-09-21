@@ -4,6 +4,7 @@ Author: Brian Etheridge
 
 """
 import c4d, os, time
+from c4d import documents
 import sys, subprocess
 import srs_functions
 
@@ -36,12 +37,25 @@ def handle_project_upload():
     # .....................................................
 
     if True == verbose:
-        print("*** Submitting project with assets upload script: ", HANDLER, ", with ", c4dProjectWithAssets, ", in ", c4dProjectWithAssetsDir)
+        print("*** Submitting project with assets upload script: ", HANDLER)
+        print("*** Using: ", c4dProjectWithAssets, ", in ", c4dProjectWithAssetsDir)
         print("*** Email: ", email)
         print("*** Token: ", apiToken)
         print("*** Handler: ", HANDLER)
 
     try:
+        # Save the project with assets, to make sure it is up to date
+        print("*** Saving project with assets to: ", c4dProjectWithAssetsDir)
+        missingAssets = []
+        assets = []
+        doc = documents.GetActiveDocument()
+        res = documents.SaveProject(doc, c4d.SAVEPROJECT_ASSETS | c4d.SAVEPROJECT_DONTTOUCHDOCUMENT | c4d.SAVEPROJECT_USEDOCUMENTNAMEASFILENAME, c4dProjectWithAssetsDir, assets, missingAssets)
+        if True == res:
+            print("*** Success saving project with assets")
+        else:
+            print("*** Error saving project with assets")
+        # print("Assets: ", ' '.join(map(str, assets)))
+        # print("Missing Assets: ", ' '.join(map(str, missingAssets)))
 
         p = subprocess.Popen([HANDLER, c4dProjectWithAssets, c4dProjectWithAssetsDir, srsDomain, email, apiToken], stdin=sys.stdin, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
