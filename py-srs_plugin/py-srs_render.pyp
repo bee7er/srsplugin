@@ -406,7 +406,7 @@ if __name__ == "__main__":
 
     # Retrieves the icon path
     directory, _ = os.path.split(__file__)
-    fn = os.path.join(directory, "res", "Icon.tif")
+    fn = os.path.join(directory, "res", "Icon_register.tif")
 
     # Creates a BaseBitmap
     bmp = c4d.bitmaps.BaseBitmap()

@@ -40,7 +40,7 @@
     Follow any instructions; you will need to respond to prompts for the first invocation of the command line render.
 
 cd "%~8"
-echo "%~1" -nogui -render "%~3\%~4" -frame "%~5" "%~6" -oimage "%~8\%~4" > testRender.txt
+echo "%~1" -nogui -render "%~3\%~4" -frame "%~5" "%~6" -oimage "%~8\%~4" > "%~2\testRender.txt"
 
 :: Go back to original directory
 @popd
