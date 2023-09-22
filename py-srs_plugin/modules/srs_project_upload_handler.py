@@ -26,7 +26,7 @@ c4dProjectWithAssets = config.get(srs_functions.CONFIG_SECTION, 'c4dProjectWithA
 c4dProjectWithAssetsDir = srs_functions.get_plugin_directory(
     os.path.join('projects', 'with_assets', config.get(srs_functions.CONFIG_SECTION, 'c4dProjectWithAssetsDir'))
     )
-srsDomain = config.get(srs_functions.CONFIG_SECTION, 'srsDomain')
+srsDomain = srs_functions.get_srs_domain()
 email = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, EMAIL)
 apiToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, APITOKEN)
 

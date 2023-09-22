@@ -47,7 +47,7 @@ verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
 srsApi = config.get(srs_functions.CONFIG_SECTION, 'srsApi')
 c4dProjectDir = srs_functions.get_plugin_directory('projects')
 downloadPWADir = srs_functions.get_plugin_directory(os.path.join('projects', 'downloads'))
-srsDomain = config.get(srs_functions.CONFIG_SECTION, 'srsDomain')
+srsDomain = srs_functions.get_srs_domain()
 
 # Config settings
 AVAILABILITY = "availability"

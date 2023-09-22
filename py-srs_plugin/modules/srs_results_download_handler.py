@@ -20,7 +20,7 @@ c4dProjectWithAssets = config.get(srs_functions.CONFIG_SECTION, 'c4dProjectWithA
 downloadPWADir = srs_functions.get_plugin_directory(os.path.join('projects', 'downloads'))
 outputToFramesDir = srs_functions.get_plugin_directory(os.path.join('projects', 'frames'))
 outputToPsdsDir = srs_functions.get_plugin_directory(os.path.join('projects', 'psds'))
-srsDomain = config.get(srs_functions.CONFIG_SECTION, 'srsDomain')
+srsDomain = srs_functions.get_srs_domain()
 email = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'email')
 apiToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'apiToken')
 

@@ -43,7 +43,7 @@ apiToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'apiToken')
 c4dCommandLineExecutable = config.get(srs_functions.CONFIG_SECTION, 'c4dCommandLineExecutable')
 outputToFramesDir = srs_functions.get_plugin_directory(os.path.join('projects', 'frames'))
 outputToPsdsDir = srs_functions.get_plugin_directory(os.path.join('projects', 'psds'))
-srsDomain = config.get(srs_functions.CONFIG_SECTION, 'srsDomain')
+srsDomain = srs_functions.get_srs_domain()
 
 # ===================================================================
 def handle_render(c4dProjectDir, downloadPWADir, c4dProjectWithAssets, rangeFrom, rangeTo, outputFormat, submittedByUserApiToken):

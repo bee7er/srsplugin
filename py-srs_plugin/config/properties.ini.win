@@ -1,7 +1,6 @@
 [CONFIG]
 debug = 0
 verbose = 0
-srsDomain = http://3n3.477.mywebsitetransfer.com
 srsApi = http://3n3.477.mywebsitetransfer.com/api1
 c4dCommandLineExecutable = C:\Program Files\Maxon Cinema 4D 2023\Commandline.exe
 c4dProjectWithAssetsDir = c4dproject

@@ -46,6 +46,19 @@ def get_plugin_directory(dir):
     return os.path.join(pluginDir, dir)
 
 # ===================================================================
+def get_srs_domain():
+# ===================================================================
+    try:
+        config = get_config_values()
+        # Get the API URL and derive the domain from that
+        srsApi = config.get(CONFIG_SECTION, 'srsApi')
+        apiDtls = srsApi.split('/')
+        return (apiDtls[0] + '//' + apiDtls[2])
+
+    except Exception as e:
+        print("Error parsing API URL: " + str(e))
+
+# ===================================================================
 def validate_config_values(config):
 # ===================================================================
     """
@@ -54,8 +67,8 @@ def validate_config_values(config):
     validationResult = []
 
     # Validate the CONFIG section
-    if "" == config.get(CONFIG_SECTION, 'srsDomain').strip():
-        validationResult.append("Property 'srsDomain' has not been set")
+    if "" == config.get(CONFIG_SECTION, 'srsApi').strip():
+        validationResult.append("Property 'srsApi' has not been set")
 
     if "" == config.get(CONFIG_SECTION, 'c4dCommandLineExecutable').strip():
         validationResult.append("Property 'c4dCommandLineExecutable' has not been set")
