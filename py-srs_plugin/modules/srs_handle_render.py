@@ -28,11 +28,6 @@ import srs_functions
 
 __root__ = os.path.dirname(os.path.dirname(__file__))
 
-if srs_functions.OS_MAC == srs_functions.get_platform():
-    HANDLER = __root__ + '/srs_render.sh'
-else:
-    HANDLER = __root__ + '\srs_render.cmd'
-
 config = srs_functions.get_config_values()
 debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
 verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
@@ -40,7 +35,6 @@ verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
 # Params
 email = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'email')
 apiToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'apiToken')
-c4dCommandLineExecutable = config.get(srs_functions.CONFIG_SECTION, 'c4dCommandLineExecutable')
 outputToFramesDir = srs_functions.get_plugin_directory(os.path.join('projects', 'frames'))
 outputToPsdsDir = srs_functions.get_plugin_directory(os.path.join('projects', 'psds'))
 srsDomain = srs_functions.get_srs_domain()
@@ -50,53 +44,25 @@ def handle_render(c4dProjectDir, downloadPWADir, c4dProjectWithAssets, rangeFrom
 # ===================================================================
     # Submits a background job to render one or more frames
     # .....................................................
-
     if True == verbose:
         print("*** Passing render script to handler: ", HANDLER, ", with ", c4dCommandLineExecutable)
 
     if True == verbose:
         print("Processing c4dProjectWithAssets: ", downloadPWADir, '/', c4dProjectWithAssets, ' from: ', rangeFrom, ' to: ', rangeTo, ' outputFormat: ', outputFormat)
 
-    """
-    ##########################################
-    NB COMMENTED OUT THIS EXPERIMENTAL SECTION
-
-    # Use subprocess to call the shell script
     try:
-        print("Running shell script")
-        subprocess.run(['bash', HANDLER, c4dCommandLineExecutable, c4dProjectDir, downloadPWADir, c4dProjectWithAssets, str(rangeFrom), str(rangeTo), outputFormat, outputToFramesDir, outputToPsdsDir, srsDomain, email, apiToken, submittedByUserApiToken], check=True)
+        __modules__ = os.path.dirname(__file__)
+        process_render = os.path.join(__modules__, "srs_process_render.py")
 
-        # Windows version
-        # subprocess.run(['cmd.exe', '/c', shell_script_path, param1, param2], check=True)
-
-        print("Shell script executed successfully")
-    except subprocess.CalledProcessError as e:
-        print(f"Error executing shell script: {e}")
-    except FileNotFoundError:
-        print(f"Shell script not found at {HANDLER}")
-    except Exception as e:
-        print(f"An error occurred: {e}")
-
-    ##########################################
-    """
-
-    try:
-        # We send the current user email address for validation and the submitted by token to
-        # find out which render id is being processed
-        p = subprocess.Popen([HANDLER, c4dCommandLineExecutable, c4dProjectDir, downloadPWADir, c4dProjectWithAssets, str(rangeFrom), str(rangeTo), outputFormat, outputToFramesDir, outputToPsdsDir, srsDomain, email, apiToken, submittedByUserApiToken])
-        p.communicate()
+        p = subprocess.run(["python3", process_render, c4dProjectDir, downloadPWADir, c4dProjectWithAssets, str(rangeFrom), str(rangeTo), outputFormat, submittedByUserApiToken], capture_output=True, text=True)
+        #print(p)
+        #print("Std out: ", p.stdout)
+        #print("Std err: ", p.stderr)
 
     except Exception as e:
         message = "Error trying to render. Error message: " + str(e)
         print(message)
-        gui.MessageDialog(message)
-
-    try:
-        gui.MessageDialog("Done rendering")
-
-    except Exception as e:
-        message = "Error trying to show gui dialogue. Error message: " + str(e)
-        print(message)
+        print(e.args)
 
     if True == verbose:
-        print("Render completed")
+        print("Render submitted")

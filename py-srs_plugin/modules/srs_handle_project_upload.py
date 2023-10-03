@@ -44,12 +44,19 @@ def handle_project_upload():
         print("*** Handler: ", HANDLER)
 
     try:
+        '''
+        # ##################
+        # This section doesn't fail, but neither does the project get saved
+        # It will create a new directory, but then puts nothing in it
+        # Need to find out from the forum WTF this is doing
+
         # Save the project with assets, to make sure it is up to date
         print("*** Saving project with assets to: ", c4dProjectWithAssetsDir)
         missingAssets = []
         assets = []
         doc = documents.GetActiveDocument()
-        res = documents.SaveProject(doc, c4d.SAVEPROJECT_ASSETS | c4d.SAVEPROJECT_DONTTOUCHDOCUMENT | c4d.SAVEPROJECT_USEDOCUMENTNAMEASFILENAME, c4dProjectWithAssetsDir, assets, missingAssets)
+
+        res = documents.SaveProject(doc, c4d.SAVEPROJECT_ASSETS | c4d.SAVEPROJECT_DONTTOUCHDOCUMENT | c4d.SAVEPROJECT_USEDOCUMENTNAMEASFILENAME | c4d.SAVEPROJECT_DONTFAILONMISSINGASSETS, c4dProjectWithAssetsDir, assets, missingAssets)
         if True == res:
             print("*** Success saving project with assets")
         else:
@@ -57,16 +64,21 @@ def handle_project_upload():
         # print("Assets: ", ' '.join(map(str, assets)))
         # print("Missing Assets: ", ' '.join(map(str, missingAssets)))
 
-        p = subprocess.Popen([HANDLER, c4dProjectWithAssets, c4dProjectWithAssetsDir, srsDomain, email, apiToken], stdin=sys.stdin, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        # ##################
+        '''
 
-        print(p.stderr.read())
-        print(p.stdout.read())
-        p.communicate()
+        __modules__ = os.path.dirname(__file__)
+        process_project_upload = os.path.join(__modules__, "srs_process_project_upload.py")
 
-        print('Upload handler completed without error')
-    except Exception as err:
-        print(err.args)
-        print('*** Upload handler encountered an error')
+        p = subprocess.run(["python3", process_project_upload, c4dProjectWithAssets, c4dProjectWithAssetsDir, srsDomain, email, apiToken], capture_output=True, text=True)
+        #print(p)
+        #print("Std out: ", p.stdout)
+        #print("Std err: ", p.stderr)
+
+    except Exception as e:
+        message = "Error trying to upload project. Error message: " + str(e)
+        print(message)
+        print(e.args)
 
     if True == verbose:
         print("Submission of project with assets file completed")

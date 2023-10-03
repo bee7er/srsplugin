@@ -16,7 +16,7 @@ if os.path.join(__root__, 'modules') not in sys.path: sys.path.insert(0, os.path
 import c4d
 from c4d import gui, bitmaps, utils
 # SRS module for various shared funcrtions
-import srs_functions, srs_connections, srs_project_download_handler, srs_results_download_handler, srs_render_handler
+import srs_functions, srs_connections, srs_handle_project_download, srs_handle_results_download, srs_handle_render
 
 __res__ = c4d.plugins.GeResource()
 __res__.Init(__root__)
@@ -250,7 +250,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
 
                 if 'Error' != responseData['result'] and AI_DO_RENDER == responseData[ACTIONINSTRUCTION]:
                     # Download the project with assets file
-                    result = srs_project_download_handler.handle_project_download(responseData['c4dProjectWithAssets'], responseData['submittedByUserApiToken'])
+                    result = srs_handle_project_download.handle_project_download(responseData['c4dProjectWithAssets'], responseData['submittedByUserApiToken'])
 
                     if 'Error' == result['result']:
                         print("Error in project download: ", responseData['message'])
@@ -260,7 +260,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
                     self.renderDetailId = responseData[RENDERDETAILID]
                     self.actionStatus = AS_RENDERING
                     # Kick off the render job
-                    srs_render_handler.handle_render(
+                    srs_handle_render.handle_render(
                         c4dProjectDir,
                         downloadPWADir,
                         responseData['c4dProjectWithAssets'],
@@ -308,7 +308,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
         if 'Error' != responseData['result']:
             if AI_DO_DOWNLOAD == responseData[ACTIONINSTRUCTION]:
                 # Download the rendered frames/psds
-                result = srs_results_download_handler.handle_results_download(responseData['frameDetails'])
+                result = srs_handle_results_download.handle_results_download(responseData['frameDetails'])
 
                 if 'OK' == result['result']:
                     gui.MessageDialog("Render download completed successfully")

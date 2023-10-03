@@ -3,7 +3,7 @@ Copyright: Etheridge Family Nov 2022
 Author: Brian Etheridge
 
 """
-import c4d, os, time, subprocess
+import os, time, subprocess
 import srs_functions
 
 __root__ = os.path.dirname(os.path.dirname(__file__))
@@ -29,11 +29,12 @@ def handle_results_download(frameDetails):
 # ===================================================================
     # Downloading the results files from master
     # ..........................................
-    code = 'Init'
     try:
         if True == verbose:
             print("*** Downloading frame ranges: ", frameDetails)
 
+        __modules__ = os.path.dirname(__file__)
+        process_results_download = os.path.join(__modules__, "srs_process_results_download.py")
 
         for frameDetail in frameDetails:
             if True == verbose:
@@ -41,15 +42,18 @@ def handle_results_download(frameDetails):
 
             print("Downloading: ", frameDetail, "\n")
 
-            p = subprocess.Popen([HANDLER, c4dProjectWithAssets, frameDetail, downloadPWADir, outputToFramesDir, outputToPsdsDir, srsDomain, apiToken])
-            p.communicate()
+            p = subprocess.run(["python3", process_results_download, c4dProjectWithAssets, frameDetail, downloadPWADir, outputToFramesDir, outputToPsdsDir, srsDomain, apiToken], capture_output=True, text=True)
+            #print(p)
+            #print("Std out: ", p.stdout)
+            #print("Sd err: ", p.stderr)
 
         if True == verbose:
             print("Download of results file completed")
 
         return {'result': "OK", 'message': "Download of results completed"}
 
-    except:
-        message = "Error trying to download results. Please check your internet connection."
+    except Exception as e:
+        message = "Error trying to download results. Error message: " + str(e)
         print(message)
+        print(e.args)
         return {'result': 'Error', 'message': message}
