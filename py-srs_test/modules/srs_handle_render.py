@@ -12,14 +12,14 @@ def handle_render():
         print("Submitting render")
 
         __modules__ = os.path.dirname(__file__)
-        process_render = os.path.join(__modules__, "srs_process_render.py")
 
-        projectDir = get_plugin_directory('projects')
         pluginDir = get_plugin_directory('')
+        projectDir = get_plugin_directory('projects')
 
         res = subprocess.run([
                 "python3",
-                process_render,
+                os.path.join(__modules__, "srs_process_render.py"),
+                '/Applications/Maxon Cinema 4D 2023/Commandline.app/Contents/MacOS/Commandline',
                 pluginDir,
                 projectDir,
                 str(0),
