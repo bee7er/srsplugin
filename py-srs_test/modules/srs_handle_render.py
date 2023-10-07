@@ -4,7 +4,7 @@ Manages the render of one or more frames
 import c4d, os, time
 import subprocess
 
-def handle_render():
+def handle_render(pythonInterpreter, commandLineExecutable):
 # ===================================================================
     # Submits a background job to render one or more frames
 
@@ -17,9 +17,9 @@ def handle_render():
         projectDir = get_plugin_directory('projects')
 
         res = subprocess.run([
-                "python3",
+                pythonInterpreter,
                 os.path.join(__modules__, "srs_process_render.py"),
-                '/Applications/Maxon Cinema 4D 2023/Commandline.app/Contents/MacOS/Commandline',
+                commandLineExecutable,
                 pluginDir,
                 projectDir,
                 str(0),

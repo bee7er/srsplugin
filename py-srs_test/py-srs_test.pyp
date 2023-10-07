@@ -12,6 +12,10 @@ import srs_handle_render
 __res__ = c4d.plugins.GeResource()
 __res__.Init(__root__)
 
+# Settings
+PYTHON_INTERPRETER = "python3"
+COMMANDLINE_EXECUTABLE = "/Applications/Maxon Cinema 4D 2023/Commandline.app/Contents/MacOS/Commandline"
+
 # TODO Unique ID can be obtained from www.plugincafe.com
 PLUGIN_ID = 1046234
 # Dialog elements
@@ -36,7 +40,7 @@ class TestDlg(c4d.gui.GeDialog):
 
         if messageId == c4d.DLG_OK:
             # Kick off the render job
-            srs_handle_render.handle_render()
+            srs_handle_render.handle_render(PYTHON_INTERPRETER, COMMANDLINE_EXECUTABLE)
 
         elif messageId == c4d.DLG_CANCEL:
             # Close the Dialog

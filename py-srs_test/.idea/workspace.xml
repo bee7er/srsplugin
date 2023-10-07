@@ -21,11 +21,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="srs_handle_render.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="srs_handle_render.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/modules/srs_handle_render.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.48879838">
-              <caret line="22" column="26" selection-start-line="22" selection-start-column="26" selection-end-line="22" selection-end-column="26" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="14" column="0" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -41,11 +41,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="py-srs_test.pyp" pinned="false" current-in-tab="false">
+      <file leaf-file-name="py-srs_test.pyp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/py-srs_test.pyp">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-21.185184">
-              <caret line="74" column="29" selection-start-line="74" selection-start-column="29" selection-end-line="74" selection-end-column="29" />
+            <state vertical-scroll-proportion="0.7881874">
+              <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -67,10 +67,10 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/py-srs_register.pyp" />
-        <option value="$PROJECT_DIR$/py-srs_test.pyp" />
         <option value="$PROJECT_DIR$/srs_render.sh" />
         <option value="$PROJECT_DIR$/modules/srs_process_render.py" />
         <option value="$PROJECT_DIR$/modules/srs_handle_render.py" />
+        <option value="$PROJECT_DIR$/py-srs_test.pyp" />
       </list>
     </option>
   </component>
@@ -335,10 +335,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/py-srs_test.pyp">
+    <entry file="file://$PROJECT_DIR$/modules/srs_handle_render.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-21.185184">
-          <caret line="74" column="29" selection-start-line="74" selection-start-column="29" selection-end-line="74" selection-end-column="29" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="14" column="0" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -351,10 +351,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/modules/srs_handle_render.py">
+    <entry file="file://$PROJECT_DIR$/py-srs_test.pyp">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.48879838">
-          <caret line="22" column="26" selection-start-line="22" selection-start-column="26" selection-end-line="22" selection-end-column="26" />
+        <state vertical-scroll-proportion="0.7881874">
+          <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
           <folding />
         </state>
       </provider>
