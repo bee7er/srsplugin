@@ -29,7 +29,11 @@ debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
 verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
 
 # ===================================================================
-def submitRequest(self, endPoint, sendData):
+def submitRequest(
+    self,
+    endPoint,
+    sendData
+    ):
 # ===================================================================
     # Submit a POST request to the master node
     # .....................................................

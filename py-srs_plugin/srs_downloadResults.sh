@@ -11,6 +11,17 @@
 echo "Downloading the frame result file"
 echo "Processing $1 frame: $2 to location: $4"
 
+'''
+Testibng this script
+srs_downloadResults.sh "RedshiftTestBe.c4d" \
+    "RedshiftTestBe0002.PNG" \
+    "/Users/brianetheridge/Library/Preferences/MAXON/Cinema 4D R20_7DE41E5A/plugins/projects/downloads" \
+    "/Users/brianetheridge/Library/Preferences/MAXON/Cinema 4D R20_7DE41E5A/plugins/projects/frames" \
+    "/Users/brianetheridge/Library/Preferences/MAXON/Cinema 4D R20_7DE41E5A/plugins/projects/psds" \
+    http://srsapi.test \
+    fl9ltqesXqPi4EkSj8M498ZBYYq3WOcCCZ1A9fDYQlbeNEmdzyyf2rGFpNR0gDGB7IswfX3pRSLuoDBF
+'''
+
 # Change to the target directory
 cd "$4"
 

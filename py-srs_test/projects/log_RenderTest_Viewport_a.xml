@@ -1,0 +1,51 @@
+<batchrender>
+  <environmentinfo>
+    <machineinfo>
+      <machinename>Brian&rsquor;s MacBook Pro</machinename>
+      <username>brianetheridge</username>
+      <processortype>GenuineIntel, stepping 1, model 5, instruction family 6</processortype>
+      <processorname>Intel Core i5-4308U CPU</processorname>
+      <processornumber>4</processornumber>
+      <ostype>OS X 64 BIT</ostype>
+      <osversion>macOS: Version 11.7.10 (Build 20G1427)</osversion>
+      <oglvendorname>Intel</oglvendorname>
+      <oglrendername>Intel Iris Graphics</oglrendername>
+      <oglversion>2.2</oglversion>
+    </machineinfo>
+    <c4dinfo>
+      <c4dversion>2023.2.2</c4dversion>
+      <c4dplugins>addons advanced_render alembic analytics archigrass assetbrowser bitmapfilter bpexchange browser bugslife_client c4d_emulation c4d_viewport_render ca ca2 cadexchange clothilde collada14 collada15 colorchoosergui compositing deltamush deployment dwg dwgobjects dynamics exchanges expressiontag fbx gltf goz hair i_skp interop interop_forger io_forger io_obj metrics mkmodeler mocca model mograph motioncam motiontracker nbo nbp newman nodeeditor2 objects pbd_simulations physx_hybrid projectassetinspector python redshift relaxuv scenemanager2 sculpt sculptbrushes shader sketch sky sla spacemouse substance teamrender thinking_particles tool_system_hybrid tpoperators usd uvviewport volumes xpressocore xtensions redshift4c4d </c4dplugins>
+    </c4dinfo>
+  </environmentinfo>
+  <fileinfo>
+    <filename>RenderTest.c4d</filename>
+    <filepath>/Users/brianetheridge/Library/Preferences/Maxon/Maxon Cinema 4D 2023_3BE69839/plugins/py-srs_test/projects</filepath>
+    <renderdatainfo>
+      <rendersettings>My Render Setting</rendersettings>
+      <take>Main</take>
+      <camera>Default Camera</camera>
+      <width>1280</width>
+      <height>720</height>
+      <filmaspect>1.778</filmaspect>
+      <pixelaspect>1</pixelaspect>
+      <fps>30</fps>
+      <from>0</from>
+      <to>0</to>
+      <steps>1</steps>
+      <saveinfo>
+        <imagepath>/Users/brianetheridge/Library/Preferences/Maxon/Maxon Cinema 4D 2023_3BE69839/plugins/py-srs_test/projects</imagepath>
+        <imagedepth>8</imagedepth>
+        <imageformat>TIF</imageformat>
+      </saveinfo>
+    </renderdatainfo>
+  </fileinfo>
+  <renderinfo>
+    <imageinfo frame="0">00:00:00 /Users/brianetheridge/Library/Preferences/Maxon/Maxon Cinema 4D 2023_3BE69839/plugins/py-srs_test/projects/RenderTest_Viewport_a.tif</imageinfo>
+  </renderinfo>
+  <batchinfo>
+    <added>Thursday, 12 October 2023, 11:04:40</added>
+    <started>Thursday, 12 October 2023, 11:04:40</started>
+    <rendertime>00:00:00</rendertime>
+    <result>Finished</result>
+  </batchinfo>
+</batchrender>

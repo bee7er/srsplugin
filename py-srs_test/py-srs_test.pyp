@@ -1,9 +1,12 @@
 """
 Kicks off testing a render submission
+
+@see https://www.dataquest.io/blog/python-subprocess/
+
 """
 
 import os, sys, c4d
-from c4d import gui, bitmaps, utils
+from c4d import gui, bitmaps, utils, documents
 # Import modules
 __root__ = os.path.dirname(__file__)
 if os.path.join(__root__, 'modules') not in sys.path: sys.path.insert(0, os.path.join(__root__, 'modules'))
@@ -40,13 +43,78 @@ class TestDlg(c4d.gui.GeDialog):
 
         if messageId == c4d.DLG_OK:
             # Kick off the render job
-            srs_handle_render.handle_render(PYTHON_INTERPRETER, COMMANDLINE_EXECUTABLE)
+            # srs_handle_render.handle_render(PYTHON_INTERPRETER, COMMANDLINE_EXECUTABLE)
+
+            print("Using BatchRender to handle a render request")
+
+            # Retrieves a list of all Cinema 4D files of this directory
+            # os.listdir base its encoding on the passed encoding of the directory
+            # so it's important to pass an unicode string.
+            c4dFiles = list()
+
+            projectsDir = self.get_plugin_directory('projects')
+
+            print("Loading projects from: ", projectsDir)
+
+            for file in os.listdir(projectsDir):
+                if file.endswith(".c4d"):
+                    c4dFiles.append(os.path.join(projectsDir, file))
+
+            if not c4dFiles:
+                raise RuntimeError("There is no Cinema 4D file in this directory.")
+
+            # Retrieves the batch render instance
+            br = c4d.documents.GetBatchRender()
+            if br is None:
+                raise RuntimeError("Failed to retrieve the batch render instance.")
+
+            # Iterates the list of Cinema 4D paths and adds them in the BatchRender
+            for file in c4dFiles:
+                print("Adding: ", br.GetElementCount(), " with: ", file)
+                res = br.AddFile(file, br.GetElementCount())
+                if True == res:
+                    print("Added successfully")
+                else:
+                    print("Add failed")
+
+            print("Added to get count: ", br.GetElementCount())
+
+            # Loops over the elements
+            for i in range(br.GetElementCount()):
+                # If the element is not finished, prints the path
+                if br.GetElementStatus(i) != c4d.RM_FINISHED:
+                    print(br.GetElement(i))
+                else:
+                    print("This one is finished: ", br.GetElement(i))
+
+            print("Completed BatchRender load")
+
+            # Opens the Batch Render
+            # br.Open()
+            # print("We Opened the batch renderer")
+
+            br.SetRendering(c4d.BR_START)
+            print("We kicked off the batch renderer")
 
         elif messageId == c4d.DLG_CANCEL:
             # Close the Dialog
             self.Close()
 
         return True
+
+
+    def get_plugin_directory(self, dir):
+    # ===================================================================
+        # Returns the full path to the plugin directory, or a named subdirectory
+        # pluginDir, _ = os.path.split(os.path.dirname(__file__))
+
+        # print("Plugin dir: ", pluginDir)
+        # print("Second dir: ", _)
+
+        if '' != dir:
+            return os.path.join(os.path.dirname(__file__), dir)
+
+        return os.path.dirname(__file__)
 
 class TestDlgCommand(c4d.plugins.CommandData):
 # ===================================================================

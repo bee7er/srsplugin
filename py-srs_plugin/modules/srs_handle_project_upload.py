@@ -56,6 +56,8 @@ def handle_project_upload():
         assets = []
         doc = documents.GetActiveDocument()
 
+**** USE SAVEDOCUMENT RATHER THAN SAVEPROJECT - see handle_render function
+
         res = documents.SaveProject(doc, c4d.SAVEPROJECT_ASSETS | c4d.SAVEPROJECT_DONTTOUCHDOCUMENT | c4d.SAVEPROJECT_USEDOCUMENTNAMEASFILENAME | c4d.SAVEPROJECT_DONTFAILONMISSINGASSETS, c4dProjectWithAssetsDir, assets, missingAssets)
         if True == res:
             print("*** Success saving project with assets")

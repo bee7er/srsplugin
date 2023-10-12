@@ -20,7 +20,10 @@ downloadPWADir = srs_functions.get_plugin_directory(os.path.join('projects', 'do
 srsDomain = srs_functions.get_srs_domain()
 
 # ===================================================================
-def handle_project_download(c4dProjectWithAssets, submittedByUserApiToken):
+def handle_project_download(
+    c4dProjectWithAssets,
+    submittedByUserApiToken
+    ):
 # ===================================================================
     # Downloading the project with assets file from master
     # .....................................................
@@ -48,4 +51,3 @@ def handle_project_download(c4dProjectWithAssets, submittedByUserApiToken):
         message = "Error trying to download. Error message: " + str(e)
         print(message)
         return {'result': 'Error', 'message': message}
-

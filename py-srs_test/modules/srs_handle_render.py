@@ -11,14 +11,13 @@ def handle_render(pythonInterpreter, commandLineExecutable):
     try:
         print("Submitting render")
 
-        __modules__ = os.path.dirname(__file__)
-
         pluginDir = get_plugin_directory('')
+        modulesDir = get_plugin_directory('modules')
         projectDir = get_plugin_directory('projects')
 
         res = subprocess.run([
                 pythonInterpreter,
-                os.path.join(__modules__, "srs_process_render.py"),
+                os.path.join(modulesDir, "srs_process_render.py"),
                 commandLineExecutable,
                 pluginDir,
                 projectDir,
@@ -38,7 +37,7 @@ def handle_render(pythonInterpreter, commandLineExecutable):
 
 def get_plugin_directory(dir):
 # ===================================================================
-    # Returns the full path to the plugin directory
+    # Returns the full path to the plugin directory, or a named subdirectory
     pluginDir, _ = os.path.split(os.path.dirname(__file__))
     if '' != dir:
         return os.path.join(pluginDir, dir)

@@ -139,6 +139,11 @@ class RegistrationDlg(c4d.gui.GeDialog):
         """
         # User click on Ok button
         if messageId == c4d.DLG_OK:
+
+            # Set the plugin ready to accept instructions
+            self.actionStatus = AS_READY
+            print("*** Ready as starting state")
+
             if True == verbose:
                 print("User clicked Ok")
 
@@ -250,7 +255,10 @@ class RegistrationDlg(c4d.gui.GeDialog):
 
                 if 'Error' != responseData['result'] and AI_DO_RENDER == responseData[ACTIONINSTRUCTION]:
                     # Download the project with assets file
-                    result = srs_handle_project_download.handle_project_download(responseData['c4dProjectWithAssets'], responseData['submittedByUserApiToken'])
+                    result = srs_handle_project_download.handle_project_download(
+                        responseData['c4dProjectWithAssets'],
+                        responseData['submittedByUserApiToken']
+                        )
 
                     if 'Error' == result['result']:
                         print("Error in project download: ", responseData['message'])
@@ -266,7 +274,6 @@ class RegistrationDlg(c4d.gui.GeDialog):
                         responseData['c4dProjectWithAssets'],
                         responseData['from'],
                         responseData['to'],
-                        responseData['outputFormat'],
                         responseData['submittedByUserApiToken'],
                         )
 
@@ -284,7 +291,12 @@ class RegistrationDlg(c4d.gui.GeDialog):
             ##    print("Error in rendering: ", responseData['message'])
             ##    return
 
-            # Check if the render has completed OK
+            # Check if the frame images are available
+            # Create a new module handle_upload_image
+            # Edit uploadImage.sh and .cmd to upload a single image
+            # The uploadImage shell should also delete the image once uploaded successfully
+            # Here we stay in rendering mode until the last image in the range has been created
+
             if True == os.path.exists(c4dProjectDir + "/actionCompleted.txt"):
                 if True == debug:
                     print("xxxxxxxxxxxxxxxxxxxx")

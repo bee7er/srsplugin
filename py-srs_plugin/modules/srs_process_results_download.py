@@ -21,13 +21,29 @@ verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
 input_params = sys.argv
 
 # ===================================================================
-def process_results_download(c4dProjectWithAssets=input_params[1], frameDetail=input_params[2], downloadPWADir=input_params[3], outputToFramesDir=input_params[4], outputToPsdsDir=input_params[5], srsDomain=input_params[6], apiToken=input_params[7]):
+def process_results_download(
+    c4dProjectWithAssets=input_params[1],
+    frameDetail=input_params[2],
+    downloadPWADir=input_params[3],
+    outputToFramesDir=input_params[4],
+    outputToPsdsDir=input_params[5],
+    srsDomain=input_params[6],
+    apiToken=input_params[7]
+    ):
 # ===================================================================
     # Downloading the results files from master
     # ..........................................
     code = 'Init'
     try:
-        p = subprocess.run([HANDLER, c4dProjectWithAssets, frameDetail, downloadPWADir, outputToFramesDir, outputToPsdsDir, srsDomain, apiToken], capture_output=True, text=True)
+        p = subprocess.run([
+            HANDLER,
+            c4dProjectWithAssets,
+            frameDetail,
+            downloadPWADir,
+            outputToFramesDir,
+            outputToPsdsDir,
+            srsDomain,
+            apiToken], capture_output=True, text=True)
         #print(p)
         #print("Std out: ", p.stdout)
         #print("Sd err: ", p.stderr)

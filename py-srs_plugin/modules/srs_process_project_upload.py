@@ -26,7 +26,13 @@ verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
 input_params = sys.argv
 
 # ===================================================================
-def process_project_upload(c4dProjectWithAssets=input_params[1], c4dProjectWithAssetsDir=input_params[2], srsDomain=input_params[3], email=input_params[4], apiToken=input_params[5]):
+def process_project_upload(
+    c4dProjectWithAssets=input_params[1],
+    c4dProjectWithAssetsDir=input_params[2],
+    srsDomain=input_params[3],
+    email=input_params[4],
+    apiToken=input_params[5]
+    ):
 # ===================================================================
     # Posting the project with assets file to master
     # .....................................................
@@ -39,7 +45,13 @@ def process_project_upload(c4dProjectWithAssets=input_params[1], c4dProjectWithA
         print("*** Handler: ", HANDLER)
 
     try:
-        p = subprocess.run([HANDLER, c4dProjectWithAssets, c4dProjectWithAssetsDir, srsDomain, email, apiToken], capture_output=True, text=True)
+        p = subprocess.run([
+            HANDLER,
+            c4dProjectWithAssets,
+            c4dProjectWithAssetsDir,
+            srsDomain,
+            email,
+            apiToken], capture_output=True, text=True)
         #print(p)
         #print("Std out: ", p.stdout)
         #print("Std err: ", p.stderr)
@@ -53,7 +65,6 @@ def process_project_upload(c4dProjectWithAssets=input_params[1], c4dProjectWithA
 
     if True == verbose:
         print("Submission of project with assets file completed")
-
 
 # Invoke the process render function
 if __name__=="__main__":

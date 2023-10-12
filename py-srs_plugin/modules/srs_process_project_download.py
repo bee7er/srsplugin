@@ -21,7 +21,12 @@ verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
 input_params = sys.argv
 
 # ===================================================================
-def process_project_download(c4dProjectWithAssets=input_params[1], downloadPWADir=input_params[2], srsDomain=input_params[3], submittedByUserApiToken=input_params[4]):
+def process_project_download(
+    c4dProjectWithAssets=input_params[1],
+    downloadPWADir=input_params[2],
+    srsDomain=input_params[3],
+    submittedByUserApiToken=input_params[4]
+    ):
 # ===================================================================
     # Downloading the project with assets file from master
     # .....................................................
@@ -32,7 +37,12 @@ def process_project_download(c4dProjectWithAssets=input_params[1], downloadPWADi
             print("*** Downloading project with assets dir to: ", c4dProjectWithAssets)
             print("*** Downloading project from user api token: ", submittedByUserApiToken)
 
-        p = subprocess.run([HANDLER, c4dProjectWithAssets, downloadPWADir, srsDomain, submittedByUserApiToken], capture_output=True, text=True)
+        p = subprocess.run([
+            HANDLER,
+            c4dProjectWithAssets,
+            downloadPWADir,
+            srsDomain,
+            submittedByUserApiToken], capture_output=True, text=True)
         #print(p)
         #print("Std out: ", p.stdout)
         #print("Std err: ", p.stderr)
