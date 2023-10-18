@@ -1,5 +1,5 @@
 """
-Copyright: Etheridge Family Nov 2022
+Copyright: Etheridge Family Oct 2023
 Author: Brian Etheridge
 
 """
@@ -10,9 +10,9 @@ import srs_functions
 __root__ = os.path.dirname(os.path.dirname(__file__))
 
 if srs_functions.OS_MAC == srs_functions.get_platform():
-    HANDLER = __root__ + '/srs_uploadProject.sh'
+    HANDLER = __root__ + '/srs_uploadImage.sh'
 else:
-    HANDLER = __root__ + '\srs_uploadProject.cmd'
+    HANDLER = __root__ + '\srs_uploadImage.cmd'
 
 # Config settings
 EMAIL = "email"
@@ -26,12 +26,13 @@ verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
 input_params = sys.argv
 
 # ===================================================================
-def process_project_upload(
-    c4dProjectWithAssets=input_params[1],
-    c4dProjectWithAssetsDir=input_params[2],
-    srsDomain=input_params[3],
-    email=input_params[4],
-    apiToken=input_params[5]
+def process_image_upload(
+    email=input_params[1],
+    apiToken=input_params[2],
+    fileToUpload=input_params[3],
+    submittedByUserApiToken=input_params[4],
+    framesDir=input_params[5],
+    srsDomain=input_params[6]
     ):
 # ===================================================================
     # Posting the project with assets file to master
@@ -39,19 +40,20 @@ def process_project_upload(
 
     if True == verbose:
         print("*** Submitting project with assets upload script: ", HANDLER)
-        print("*** Using: ", c4dProjectWithAssets, ", in ", c4dProjectWithAssetsDir)
-        print("*** Email: ", email)
-        print("*** Token: ", apiToken)
+        print("*** Using: ", email, ", and token ", apiToken)
+        print("*** File: ", fileToUpload)
+        print("*** Submitter: ", submittedByUserApiToken)
         print("*** Handler: ", HANDLER)
 
     try:
         p = subprocess.run([
             HANDLER,
-            c4dProjectWithAssets,
-            c4dProjectWithAssetsDir,
-            srsDomain,
             email,
-            apiToken], capture_output=True, text=True)
+            apiToken,
+            fileToUpload,
+            submittedByUserApiToken,
+            framesDir,
+            srsDomain], capture_output=True, text=True)
 
         if True == debug:
             print("Std out: ", p.stdout)
@@ -61,14 +63,13 @@ def process_project_upload(
         #    raise Exception("Std err: " + p.stderr)
 
     except Exception as e:
-        message = "Error trying to upload project. Error message: " + str(e)
+        message = "Error trying to upload image. Error message: " + str(e)
         print(message)
         print(e.args)
-        raise RuntimeError("*** Error processing project upload: " + message)
-
+        raise RuntimeError("*** Error processing image upload: " + message)
 
 # Invoke the process render function
 if __name__=="__main__":
-    process_project_upload()
+    process_image_upload()
 
-    print("COMPLETED: Project upload subprocess completed")
+    print("COMPLETED: Image upload subprocess completed")

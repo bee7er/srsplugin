@@ -31,6 +31,7 @@ def process_project_download(
     # Downloading the project with assets file from master
     # .....................................................
     try:
+        print("Here we go ********************")
         if True == verbose:
             print("*** Downloading handler: ", HANDLER)
             print("*** Downloading project with assets file to: ", downloadPWADir)
@@ -43,19 +44,19 @@ def process_project_download(
             downloadPWADir,
             srsDomain,
             submittedByUserApiToken], capture_output=True, text=True)
-        #print(p)
-        #print("Std out: ", p.stdout)
-        #print("Std err: ", p.stderr)
 
-        if True == verbose:
-            print("Download of project with assets file completed")
+        if True == debug:
+            print("Std out: ", p.stdout)
+            print("Std err: ", p.stderr)
 
-        return {'result': "OK", 'message': "Download of project with assets file completed"}
+        #if None != p.stderr:
+        #    raise Exception("Std err: " + p.stderr)
 
     except Exception as e:
         message = "Error trying to download. Error message: " + str(e)
         print(message)
-        return {'result': 'Error', 'message': message}
+        print(e.args)
+        raise RuntimeError("*** Error processing project download: " + message)
 
 # Invoke the process render function
 if __name__=="__main__":

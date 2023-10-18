@@ -5,7 +5,7 @@
 :: %4: submittedByUserApiToken
 
 :: Testing:
-:: srs_downloadProject.cmd RedshiftTestBe.c4d "C:\Users\Russ\AppData\Roaming\MAXON\Maxon Cinema 4D R21_64C2B3BD\plugins\projects\downloads" http://3n3.477.mywebsitetransfer.com
+:: srs_downloadProject.cmd RedshiftTestBe.c4d "C:\Users\Russ\AppData\Roaming\MAXON\Maxon Cinema 4D R21_64C2B3BD\plugins\projects\downloads" http://3n3.47.mywebsitetransfer.com
 
 @echo "Downloading the project with assets file"
 @echo "Project with assets name: %~1 and location: %~2"

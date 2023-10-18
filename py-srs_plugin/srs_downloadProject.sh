@@ -8,13 +8,8 @@
 echo "Downloading the project with assets file"
 echo "Project with assets name: $1 and location: $2"
 
-'''
-Testibng this script
-srs_downloadProject.sh "RedshiftTestBe.c4d" \
-    "/Users/brianetheridge/Library/Preferences/MAXON/Cinema 4D R20_7DE41E5A/plugins/projects/downloads" \
-    http://srsapi.test \
-    fl9ltqesXqPi4EkSj8M498ZBYYq3WOcCCZ1A9fDYQlbeNEmdzyyf2rGFpNR0gDGB7IswfX3pRSLuoDBF
-'''
+# Testing this script
+# srs_downloadProject.sh "RedshiftTestBe.c4d" "/Users/brianetheridge/Library/Preferences/MAXON/Cinema 4D R20_7DE41E5A/plugins/projects/downloads" http://srsapi.test fl9ltqesXqPi4EkSj8M498ZBYYq3WOcCCZ1A9fDYQlbeNEmdzyyf2rGFpNR0gDGB7IswfX3pRSLuoDBF
 
 # Change to the source directory
 cd "$2"

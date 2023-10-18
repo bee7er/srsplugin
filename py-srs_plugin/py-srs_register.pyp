@@ -15,8 +15,8 @@ if os.path.join(__root__, 'modules') not in sys.path: sys.path.insert(0, os.path
 
 import c4d
 from c4d import gui, bitmaps, utils
-# SRS module for various shared funcrtions
-import srs_functions, srs_connections, srs_handle_project_download, srs_handle_results_download, srs_handle_render
+# SRS module for various shared functions
+import srs_functions, srs_connections, srs_handle_project_download, srs_handle_image_upload, srs_handle_results_download, srs_handle_render
 
 __res__ = c4d.plugins.GeResource()
 __res__.Init(__root__)
@@ -70,6 +70,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
     statusBlock = None
     serverBlock = None
     counter = 0
+    renderingData = {}
 
     # ===================================================================
     def CreateLayout(self):
@@ -247,70 +248,105 @@ class RegistrationDlg(c4d.gui.GeDialog):
         Args:
             msg (c4d.BaseContainer): The timer message
         """
+        print("*** Action status: ", self.actionStatus)
+
         if AS_READY == self.actionStatus:
             if AVAILABLE == self.availability:
                 if True == debug:
                     print("*** Available")
-                responseData = srs_connections.submitRequest(self, (srsApi + "/available"), {EMAIL:self.email, APITOKEN:self.apiToken})
+                self.renderingData = srs_connections.submitRequest(self, (srsApi + "/available"), {EMAIL:self.email, APITOKEN:self.apiToken})
 
-                if 'Error' != responseData['result'] and AI_DO_RENDER == responseData[ACTIONINSTRUCTION]:
+                if 'Error' != self.renderingData['result'] and AI_DO_RENDER == self.renderingData[ACTIONINSTRUCTION]:
+
                     # Download the project with assets file
                     result = srs_handle_project_download.handle_project_download(
-                        responseData['c4dProjectWithAssets'],
-                        responseData['submittedByUserApiToken']
+                        self.renderingData['c4dProjectWithAssets'],
+                        self.renderingData['submittedByUserApiToken']
                         )
 
                     if 'Error' == result['result']:
-                        print("Error in project download: ", responseData['message'])
+                        print("Error in project download: ", self.renderingData['message'])
                         return
 
                     # Do render in the background
-                    self.renderDetailId = responseData[RENDERDETAILID]
+                    self.renderDetailId = self.renderingData[RENDERDETAILID]
                     self.actionStatus = AS_RENDERING
                     # Kick off the render job
                     srs_handle_render.handle_render(
                         c4dProjectDir,
                         downloadPWADir,
-                        responseData['c4dProjectWithAssets'],
-                        responseData['from'],
-                        responseData['to'],
-                        responseData['submittedByUserApiToken'],
+                        self.renderingData['c4dProjectWithAssets'],
+                        self.renderingData['from'],
+                        self.renderingData['to'],
+                        self.renderingData['submittedByUserApiToken'],
                         )
 
-                if 'Error' == responseData['result']:
-                    print("Error in available: ", responseData['message'])
+                if 'Error' == self.renderingData['result']:
+                    print("Error in available: ", self.renderingData['message'])
                     return
 
         elif AS_RENDERING == self.actionStatus:
             if True == debug:
                 print("*** Rendering")
 
-            # We do not need to keep telling the master that we are rendering
+            # We do not need to keep telling the master that we are rendering, so this bit is commented out
             ##responseData = srs_connections.submitRequest(self, (srsApi + "/rendering"), {EMAIL:self.email, APITOKEN:self.apiToken})
             ##if 'Error' == responseData['result']:
             ##    print("Error in rendering: ", responseData['message'])
             ##    return
 
             # Check if the frame images are available
-            # Create a new module handle_upload_image
-            # Edit uploadImage.sh and .cmd to upload a single image
-            # The uploadImage shell should also delete the image once uploaded successfully
-            # Here we stay in rendering mode until the last image in the range has been created
+            imageSavePath = srs_functions.get_plugin_directory(os.path.join('projects', 'frames'))
+            for file in os.listdir(imageSavePath):
 
-            if True == os.path.exists(c4dProjectDir + "/actionCompleted.txt"):
-                if True == debug:
-                    print("xxxxxxxxxxxxxxxxxxxx")
-                    print("*** Completed render")
-                    print("xxxxxxxxxxxxxxxxxxxx")
-                # Back to ready for this slave
-                self.actionStatus = AS_READY
+                if file.endswith(self.renderingData['outputFormat']):
+                    # Upload image to server
 
-                responseData = srs_connections.submitRequest(self, (srsApi + "/complete"),
-                        {EMAIL:self.email, RENDERDETAILID:self.renderDetailId, APITOKEN:self.apiToken}
-                    )
-                if 'Error' == responseData['result']:
-                    print("Error in complete: ", responseData['message'])
-                    return
+                    fileFullPath = os.path.join(imageSavePath, file)
+
+                    print("**** Uploading image. From email: ",
+                        self.email,
+                        ", apiToken: ",
+                        self.apiToken,
+                        ", file: ",
+                         fileFullPath,
+                        " and submmit atoken: ",
+                        self.renderingData['submittedByUserApiToken']
+                        )
+
+                    result = srs_handle_image_upload.handle_image_upload(
+                        fileFullPath,
+                        self.renderingData['submittedByUserApiToken']
+                        )
+
+                    if 'Error' == result['result']:
+                        print("Error in project download: ", self.renderingData['message'])
+                        return
+
+                    # Remove image from frames directory
+                    os.remove(fileFullPath)
+
+                if str(self.renderingData['to']) in file:
+                    print('******* Ok we have finished: ', str(self.renderingData['to']))
+
+                    if True == debug:
+                        print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+                        print("*** Completed rendering of this chunk")
+                        print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+                    # Back to ready for this slave
+                    self.actionStatus = AS_READY
+
+                    responseData = srs_connections.submitRequest(
+                            self,
+                            (srsApi + "/complete"),
+                            {EMAIL:self.email, RENDERDETAILID:self.renderDetailId, APITOKEN:self.apiToken}
+                        )
+                    if 'Error' == responseData['result']:
+                        print("Error in complete: ", responseData['message'])
+                        return
+
+                    # We are done
+                    break
 
         # We always send an AWAKE message to the master
         if True == debug:
@@ -319,7 +355,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
 
         if 'Error' != responseData['result']:
             if AI_DO_DOWNLOAD == responseData[ACTIONINSTRUCTION]:
-                # Download the rendered frames/psds
+                # Download the rendered frames
                 result = srs_handle_results_download.handle_results_download(responseData['frameDetails'])
 
                 if 'OK' == result['result']:
@@ -329,7 +365,12 @@ class RegistrationDlg(c4d.gui.GeDialog):
             elif AI_DO_DISPLAY_OUTSTANDING == responseData[ACTIONINSTRUCTION]:
                 # Details of outstanding renders have been returned
                 self.counter = self.counter + 1
-                self.statusBlock.SetText('<div style="text-align: right;margin-right: 15px;">Refresh count: ' + str(self.counter) + "</div>" + responseData['submissionsAndRenders']);
+                self.statusBlock.SetText(
+                    '<div style="text-align: right;margin-right: 15px;">Refresh count: ' +
+                    str(self.counter) +
+                    "</div>" +
+                    responseData['submissionsAndRenders']
+                    );
 
         if 'Error' == responseData['result']:
             print("Error in timer from API call: ", responseData['message'])

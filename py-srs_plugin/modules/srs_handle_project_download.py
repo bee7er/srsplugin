@@ -31,6 +31,8 @@ def handle_project_download(
         __modules__ = os.path.dirname(__file__)
         process_project_download = os.path.join(__modules__, "srs_process_project_download.py")
 
+        print("*** Downloading handler: ", HANDLER)
+
         if True == verbose:
             print("*** Downloading handler: ", HANDLER)
             print("*** Downloading project with assets file to: ", downloadPWADir)
@@ -38,16 +40,19 @@ def handle_project_download(
             print("*** Downloading project from user api token: ", submittedByUserApiToken)
 
         p = subprocess.run(["python3", process_project_download, c4dProjectWithAssets, downloadPWADir, srsDomain, submittedByUserApiToken], capture_output=True, text=True)
-        #print(p)
-        #print("Std out: ", p.stdout)
-        #print("Std err: ", p.stderr)
 
-        if True == verbose:
-            print("Download of project with assets file completed")
+        if True == debug:
+            print("Std out: ", p.stdout)
+            print("Std err: ", p.stderr)
+
+        #if None != p.stderr:
+        #    raise Exception("Std err: " + p.stderr)
 
         return {'result': "OK", 'message': "Download of project with assets file completed"}
 
     except Exception as e:
         message = "Error trying to download. Error message: " + str(e)
         print(message)
+        print(e.args)
+
         return {'result': 'Error', 'message': message}

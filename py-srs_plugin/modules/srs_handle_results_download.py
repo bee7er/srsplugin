@@ -17,9 +17,7 @@ config = srs_functions.get_config_values()
 debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
 verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
 c4dProjectWithAssets = config.get(srs_functions.CONFIG_SECTION, 'c4dProjectWithAssets')
-downloadPWADir = srs_functions.get_plugin_directory(os.path.join('projects', 'downloads'))
-outputToFramesDir = srs_functions.get_plugin_directory(os.path.join('projects', 'frames'))
-outputToPsdsDir = srs_functions.get_plugin_directory(os.path.join('projects', 'psds'))
+outputToDir = srs_functions.get_plugin_directory(os.path.join('projects', 'downloads', 'results'))
 srsDomain = srs_functions.get_srs_domain()
 email = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'email')
 apiToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'apiToken')
@@ -41,14 +39,14 @@ def handle_results_download(frameDetails):
                 print(frameDetail, "\n")
 
             print("Downloading: ", frameDetail, "\n")
+            print("Downloading to: ", outputToDir, "\n")
 
-            p = subprocess.run(["python3", process_results_download, c4dProjectWithAssets, frameDetail, downloadPWADir, outputToFramesDir, outputToPsdsDir, srsDomain, apiToken], capture_output=True, text=True)
-            #print(p)
-            #print("Std out: ", p.stdout)
-            #print("Sd err: ", p.stderr)
 
-        if True == verbose:
-            print("Download of results file completed")
+            p = subprocess.run(["python3", process_results_download, c4dProjectWithAssets, frameDetail, outputToDir, srsDomain, apiToken], capture_output=True, text=True)
+
+        if True == debug:
+            print("Std out: ", p.stdout)
+            print("Std err: ", p.stderr)
 
         return {'result': "OK", 'message': "Download of results completed"}
 
@@ -56,4 +54,5 @@ def handle_results_download(frameDetails):
         message = "Error trying to download results. Error message: " + str(e)
         print(message)
         print(e.args)
+
         return {'result': 'Error', 'message': message}

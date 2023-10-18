@@ -1,17 +1,12 @@
 """
 Copyright: Etheridge Family Nov 2022
 Author: Brian Etheridge
+
+PLEASE NOTE:  These utility functions need c4d.
+Put any that do not need c4d into srs_functions.py
+
 """
 import c4d, os, platform
-
-try:
-    # R2023
-    import configparser as configurator
-    print("Running 2023")
-except:
-    # Prior to R2023
-    import ConfigParser as configurator
-    print("Running prior version to 2023")
 
 __root__ = os.path.dirname(os.path.dirname(__file__))
 

@@ -73,6 +73,9 @@ def handle_render(
         savePath = srs_functions.get_plugin_directory(os.path.join('projects', 'frames', c4dProjectWithAssets))
         if True == debug:
             print("*** Setting save path to: ", savePath)
+
+        print("*** Setting save path to: ", savePath)
+
         renderData[c4d.RDATA_PATH] = savePath
 
         # Update the project with the new details
@@ -82,6 +85,9 @@ def handle_render(
         if True == res:
             if True == debug:
                 print("*** Success saving project with assets")
+
+            print("*** Success saving project with assets")
+
         else:
             raise RuntimeError("*** Error saving project with assets")
 
@@ -98,10 +104,13 @@ def handle_render(
         if True == debug:
             print("*** Render queue started")
 
+        print("*** Render queue started")
+
+        return {'result': "OK", 'message': "Render of image files completed"}
+
     except Exception as e:
         message = "Error trying to render. Error message: " + str(e)
         print(message)
         print(e.args)
 
-    if True == verbose:
-        print("Render submitted")
+        return {'result': 'Error', 'message': message}

@@ -15,7 +15,7 @@ if os.path.join(__root__, 'modules') not in sys.path: sys.path.insert(0, os.path
 import c4d
 from c4d import gui, bitmaps, utils
 # SRS module for various shared funcrtions
-import srs_functions, srs_handle_project_upload, srs_connections
+import srs_functions, srs_functions_c4d, srs_handle_project_upload, srs_connections
 
 __res__ = c4d.plugins.GeResource()
 __res__.Init(__root__)
@@ -52,7 +52,6 @@ RENDERID = "renderId"
 TO = "to"
 OUTPUTFORMAT = "outputFormat"
 OUTPUTFRAMES = "outputFrames"
-OUTPUTPSDS = "outputPsds"
 
 config = srs_functions.get_config_values()
 debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
@@ -104,7 +103,7 @@ class RenderDlg(c4d.gui.GeDialog):
             )
         self.c4dProjectWithAssets = config.get(srs_functions.CONFIG_SECTION, 'c4dProjectWithAssets')
 
-        renderData = srs_functions.get_render_settings()
+        renderData = srs_functions_c4d.get_render_settings()
         self.rangeFrom = renderData[srs_functions.RANGE_FROM]
         self.rangeTo = renderData[srs_functions.RANGE_TO]
         self.outputFormat = renderData[srs_functions.OUTPUT_FORMAT]
@@ -162,7 +161,7 @@ class RenderDlg(c4d.gui.GeDialog):
         # User click on Ok button
         if messageId == c4d.DLG_OK:
 
-            if '' == srs_functions.get_project():
+            if '' == srs_functions_c4d.get_project():
                 gui.MessageDialog("Please open your project file and ensure your project with assets file is up to date.")
                 return True
 
