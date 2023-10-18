@@ -38,8 +38,7 @@ def handle_results_download(frameDetails):
             if True == verbose:
                 print(frameDetail, "\n")
 
-            print("Downloading: ", frameDetail, "\n")
-            print("Downloading to: ", outputToDir, "\n")
+            print("******* Downloading IMAGE: ", frameDetail, "\n")
 
 
             p = subprocess.run(["python3", process_results_download, c4dProjectWithAssets, frameDetail, outputToDir, srsDomain, apiToken], capture_output=True, text=True)

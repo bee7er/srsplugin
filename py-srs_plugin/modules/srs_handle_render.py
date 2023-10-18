@@ -104,8 +104,6 @@ def handle_render(
         if True == debug:
             print("*** Render queue started")
 
-        print("*** Render queue started")
-
         return {'result': "OK", 'message': "Render of image files completed"}
 
     except Exception as e:
