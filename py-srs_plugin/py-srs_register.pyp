@@ -232,7 +232,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
             APITOKEN: self.apiToken,
             AVAILABILITY: self.availability,
         }
-        responseData = srs_connections.submitRequest(self, (srsApi + "/register"), sendData)
+        responseData = srs_connections.submitRequest((srsApi + "/register"), sendData)
         if 'Error' == responseData['result']:
             gui.MessageDialog("Error:\n" + responseData['message'])
             return False
@@ -254,7 +254,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
             if AVAILABLE == self.availability:
                 if True == debug:
                     print("*** Available")
-                self.renderingData = srs_connections.submitRequest(self, (srsApi + "/available"), {EMAIL:self.email, APITOKEN:self.apiToken})
+                self.renderingData = srs_connections.submitRequest((srsApi + "/available"), {EMAIL:self.email, APITOKEN:self.apiToken})
 
                 if 'Error' != self.renderingData['result'] and AI_DO_RENDER == self.renderingData[ACTIONINSTRUCTION]:
 
@@ -290,7 +290,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
                 print("*** Rendering")
 
             # We do not need to keep telling the master that we are rendering, so this bit is commented out
-            ##responseData = srs_connections.submitRequest(self, (srsApi + "/rendering"), {EMAIL:self.email, APITOKEN:self.apiToken})
+            ##responseData = srs_connections.submitRequest((srsApi + "/rendering"), {EMAIL:self.email, APITOKEN:self.apiToken})
             ##if 'Error' == responseData['result']:
             ##    print("Error in rendering: ", responseData['message'])
             ##    return
@@ -337,7 +337,6 @@ class RegistrationDlg(c4d.gui.GeDialog):
                     self.actionStatus = AS_READY
 
                     responseData = srs_connections.submitRequest(
-                            self,
                             (srsApi + "/complete"),
                             {EMAIL:self.email, RENDERDETAILID:self.renderDetailId, APITOKEN:self.apiToken}
                         )
@@ -351,7 +350,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
         # We always send an AWAKE message to the master
         if True == debug:
             print("*** Awake")
-        responseData = srs_connections.submitRequest(self, (srsApi + "/awake"), {EMAIL:self.email, APITOKEN:self.apiToken})
+        responseData = srs_connections.submitRequest((srsApi + "/awake"), {EMAIL:self.email, APITOKEN:self.apiToken})
 
         if 'Error' != responseData['result']:
             if AI_DO_DOWNLOAD == responseData[ACTIONINSTRUCTION]:

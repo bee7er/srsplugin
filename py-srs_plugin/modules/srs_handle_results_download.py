@@ -4,7 +4,7 @@ Author: Brian Etheridge
 
 """
 import os, time, subprocess
-import srs_functions
+import srs_functions, srs_connections
 
 __root__ = os.path.dirname(os.path.dirname(__file__))
 
@@ -19,8 +19,14 @@ verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
 c4dProjectWithAssets = config.get(srs_functions.CONFIG_SECTION, 'c4dProjectWithAssets')
 outputToDir = srs_functions.get_plugin_directory(os.path.join('projects', 'downloads', 'results'))
 srsDomain = srs_functions.get_srs_domain()
+srsApi = config.get(srs_functions.CONFIG_SECTION, 'srsApi')
 email = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'email')
 apiToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'apiToken')
+
+# Config settings
+EMAIL = "email"
+APITOKEN = "apiToken"
+FILENAME = "fileName"
 
 # ===================================================================
 def handle_results_download(frameDetails):
@@ -39,9 +45,15 @@ def handle_results_download(frameDetails):
                 print(frameDetail, "\n")
 
             print("******* Downloading IMAGE: ", frameDetail, "\n")
-
-
             p = subprocess.run(["python3", process_results_download, c4dProjectWithAssets, frameDetail, outputToDir, srsDomain, apiToken], capture_output=True, text=True)
+            print("******* Housekeeping IMAGE: ", frameDetail, "\n")
+            responseData = srs_connections.submitRequest(
+                    (srsApi + "/downloaded"),
+                    {EMAIL:email, APITOKEN:apiToken, FILENAME:frameDetail}
+                )
+            if 'Error' == responseData['result']:
+                print("Error in housekeeping: ", responseData['message'])
+                return
 
         if True == debug:
             print("Std out: ", p.stdout)

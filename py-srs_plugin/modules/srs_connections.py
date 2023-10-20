@@ -30,7 +30,6 @@ verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
 
 # ===================================================================
 def submitRequest(
-    self,
     endPoint,
     sendData
     ):

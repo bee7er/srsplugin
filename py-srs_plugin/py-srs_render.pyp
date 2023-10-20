@@ -193,7 +193,6 @@ class RenderDlg(c4d.gui.GeDialog):
 
                         # Get and log the current status for this slave
                         responseData = srs_connections.submitRequest(
-                            self,
                             (srsApi + "/status"),
                             {EMAIL:email, APITOKEN:apiToken}
                             )
@@ -320,7 +319,7 @@ class RenderDlg(c4d.gui.GeDialog):
         }
         if True == verbose:
             print("Sending data: ", sendData)
-        responseData = srs_connections.submitRequest(self, (srsApi + "/render"), sendData)
+        responseData = srs_connections.submitRequest((srsApi + "/render"), sendData)
         if 'Error' == responseData['result']:
             gui.MessageDialog("Error:\n" + responseData['message'])
             return False

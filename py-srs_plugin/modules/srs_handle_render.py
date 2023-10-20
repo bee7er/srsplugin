@@ -79,14 +79,12 @@ def handle_render(
         renderData[c4d.RDATA_PATH] = savePath
 
         # Update the project with the new details
-        projectDocument.InsertRenderData(renderData)
+        projectDocument.InsertRenderDataLast(renderData)
 
         res = documents.SaveDocument(projectDocument, projectDocumentPath, c4d.SAVEDOCUMENTFLAGS_CRASHSITUATION | c4d.SAVEDOCUMENTFLAGS_DONTADDTORECENTLIST, c4d.FORMAT_C4DEXPORT)
         if True == res:
             if True == debug:
                 print("*** Success saving project with assets")
-
-            print("*** Success saving project with assets")
 
         else:
             raise RuntimeError("*** Error saving project with assets")
