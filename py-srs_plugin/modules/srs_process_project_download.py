@@ -25,7 +25,8 @@ def process_project_download(
     c4dProjectWithAssets=input_params[1],
     downloadPWADir=input_params[2],
     srsDomain=input_params[3],
-    submittedByUserApiToken=input_params[4]
+    submittedByUserApiToken=input_params[4],
+    renderId=input_params[5]
     ):
 # ===================================================================
     # Downloading the project with assets file from master
@@ -38,12 +39,15 @@ def process_project_download(
             print("*** Downloading project with assets dir to: ", c4dProjectWithAssets)
             print("*** Downloading project from user api token: ", submittedByUserApiToken)
 
+        print("*** Downloading project for render Id: ", renderId)
+
         p = subprocess.run([
             HANDLER,
             c4dProjectWithAssets,
             downloadPWADir,
             srsDomain,
-            submittedByUserApiToken], capture_output=True, text=True)
+            submittedByUserApiToken,
+            renderId], capture_output=True, text=True)
 
         if True == debug:
             print("Std out: ", p.stdout)

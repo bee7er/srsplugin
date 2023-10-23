@@ -26,7 +26,8 @@ def process_results_download(
     frameDetail=input_params[2],
     outputToFramesDir=input_params[3],
     srsDomain=input_params[4],
-    apiToken=input_params[5]
+    apiToken=input_params[5],
+    renderId=input_params[6]
     ):
 # ===================================================================
     # Downloading the results files from master
@@ -38,7 +39,8 @@ def process_results_download(
             frameDetail,
             outputToFramesDir,
             srsDomain,
-            apiToken], capture_output=True, text=True)
+            apiToken,
+            renderId], capture_output=True, text=True)
 
         if True == debug:
             print("Std out: ", p.stdout)
@@ -48,7 +50,7 @@ def process_results_download(
         #    raise Exception("Std err: " + p.stderr)
 
     except Exception as e:
-        message = "Error trying to download results. Error message: " + str(e)
+        message = "Error trying to process download results. Error message: " + str(e)
         print(message)
         print(e.args)
         raise RuntimeError("*** Error processing results download: " + message)

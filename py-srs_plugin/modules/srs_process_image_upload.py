@@ -32,7 +32,8 @@ def process_image_upload(
     fileToUpload=input_params[3],
     submittedByUserApiToken=input_params[4],
     framesDir=input_params[5],
-    srsDomain=input_params[6]
+    srsDomain=input_params[6],
+    renderId=input_params[7]
     ):
 # ===================================================================
     # Posting the project with assets file to master
@@ -53,7 +54,8 @@ def process_image_upload(
             fileToUpload,
             submittedByUserApiToken,
             framesDir,
-            srsDomain], capture_output=True, text=True)
+            srsDomain,
+            renderId], capture_output=True, text=True)
 
         if True == debug:
             print("Std out: ", p.stdout)

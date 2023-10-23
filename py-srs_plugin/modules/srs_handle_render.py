@@ -45,7 +45,8 @@ def handle_render(
     c4dProjectWithAssets,
     rangeFrom,
     rangeTo,
-    submittedByUserApiToken
+    submittedByUserApiToken,
+    renderId
     ):
 # ===================================================================
     # Submits a render request for one or more frames to the BatchRender queue

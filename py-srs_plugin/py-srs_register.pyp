@@ -261,7 +261,8 @@ class RegistrationDlg(c4d.gui.GeDialog):
                     # Download the project with assets file
                     result = srs_handle_project_download.handle_project_download(
                         self.renderingData['c4dProjectWithAssets'],
-                        self.renderingData['submittedByUserApiToken']
+                        self.renderingData['submittedByUserApiToken'],
+                        self.renderingData['renderId']
                         )
 
                     if 'Error' == result['result']:
@@ -279,6 +280,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
                         self.renderingData['from'],
                         self.renderingData['to'],
                         self.renderingData['submittedByUserApiToken'],
+                        self.renderingData['renderId']
                         )
 
                 if 'Error' == self.renderingData['result']:
@@ -297,7 +299,11 @@ class RegistrationDlg(c4d.gui.GeDialog):
 
             # Check if the frame images are available
             imageSavePath = srs_functions.get_plugin_directory(os.path.join('projects', 'frames'))
-            for file in os.listdir(imageSavePath):
+            # It is essential to sort the list in alphabetical order to ensure we don't
+            # hit the end until all entries have been processed
+            fileList = os.listdir(imageSavePath);
+            fileList.sort();
+            for file in fileList:
 
                 if file.endswith(self.renderingData['outputFormat']):
                     # Upload image to server
@@ -316,7 +322,8 @@ class RegistrationDlg(c4d.gui.GeDialog):
 
                     result = srs_handle_image_upload.handle_image_upload(
                         fileFullPath,
-                        self.renderingData['submittedByUserApiToken']
+                        self.renderingData['submittedByUserApiToken'],
+                        self.renderingData['renderId']
                         )
 
                     if 'Error' == result['result']:
@@ -354,6 +361,9 @@ class RegistrationDlg(c4d.gui.GeDialog):
 
         if 'Error' != responseData['result']:
             if AI_DO_DOWNLOAD == responseData[ACTIONINSTRUCTION]:
+
+                print("***** LOOKOUT array details: ", responseData['frameDetails'])
+
                 # Download the rendered frames
                 result = srs_handle_results_download.handle_results_download(responseData['frameDetails'])
 

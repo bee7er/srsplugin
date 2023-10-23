@@ -20,7 +20,7 @@ email = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, "email")
 apiToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, "apiToken")
 
 # ===================================================================
-def handle_image_upload(fileToUpload, submittedByUserApiToken):
+def handle_image_upload(fileToUpload, submittedByUserApiToken, renderId):
 # ===================================================================
     try:
         __modules__ = os.path.dirname(__file__)
@@ -34,7 +34,8 @@ def handle_image_upload(fileToUpload, submittedByUserApiToken):
             fileToUpload,
             submittedByUserApiToken,
             framesDir,
-            srsDomain
+            srsDomain,
+            str(renderId)
             ], capture_output=True, text=True)
 
         if True == debug:

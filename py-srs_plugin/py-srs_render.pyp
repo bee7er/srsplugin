@@ -298,15 +298,6 @@ class RenderDlg(c4d.gui.GeDialog):
         if False == yesNo:
             return False
 
-        # Go ahead and submit the render request, starting with the uploading of the project with assets file
-        srs_handle_project_upload.handle_project_upload()
-
-        if True == verbose:
-            print("Submit project with assets to master")
-
-        if True == verbose:
-            print("Render request going to: ", srsApi)
-
         sendData = {
             EMAIL:config.get(srs_functions.CONFIG_REGISTRATION_SECTION, EMAIL),
             APITOKEN:config.get(srs_functions.CONFIG_REGISTRATION_SECTION, APITOKEN),
@@ -319,10 +310,17 @@ class RenderDlg(c4d.gui.GeDialog):
         }
         if True == verbose:
             print("Sending data: ", sendData)
+
         responseData = srs_connections.submitRequest((srsApi + "/render"), sendData)
         if 'Error' == responseData['result']:
             gui.MessageDialog("Error:\n" + responseData['message'])
             return False
+
+        # Upload the project with assets file
+        srs_handle_project_upload.handle_project_upload(responseData[RENDERID])
+
+        if True == verbose:
+            print("Submit project with assets to master")
 
         if True == verbose:
             print("Render request record id: ", responseData[RENDERID])

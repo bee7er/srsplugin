@@ -26,7 +26,7 @@ email = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, EMAIL)
 apiToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, APITOKEN)
 
 # ===================================================================
-def handle_project_upload():
+def handle_project_upload(renderId):
 # ===================================================================
     try:
         '''
@@ -70,7 +70,8 @@ def handle_project_upload():
             c4dProjectWithAssetsDir,
             srsDomain,
             email,
-            apiToken
+            apiToken,
+            str(renderId)
             ], capture_output=True, text=True)
 
         if True == debug:

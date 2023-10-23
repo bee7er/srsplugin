@@ -6,8 +6,9 @@
 :: %4 - submittedByUserApiToken
 :: %5 - framesDir
 :: %6 - srsDomain
+:: %7 - renderId
 
-curl -F email=%1 -F apiToken=%2 -F submittedByUserApiToken=%4 -F "upload=@%3" -H "Content-Type: multipart/form-data" %6/results
+curl -F email=%1 -F apiToken=%2 -F renderId=%7 -F submittedByUserApiToken=%4 -F "upload=@%3" -H "Content-Type: multipart/form-data" %6/results
 
 echo "Uploaded %3"
 

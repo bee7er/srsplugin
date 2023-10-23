@@ -27,6 +27,7 @@ apiToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'apiToken')
 EMAIL = "email"
 APITOKEN = "apiToken"
 FILENAME = "fileName"
+RENDERID = "renderId"
 
 # ===================================================================
 def handle_results_download(frameDetails):
@@ -40,20 +41,35 @@ def handle_results_download(frameDetails):
         __modules__ = os.path.dirname(__file__)
         process_results_download = os.path.join(__modules__, "srs_process_results_download.py")
 
-        for frameDetail in frameDetails:
-            if True == verbose:
-                print(frameDetail, "\n")
+        for renderId in frameDetails:
 
-            print("******* Downloading IMAGE: ", frameDetail, "\n")
-            p = subprocess.run(["python3", process_results_download, c4dProjectWithAssets, frameDetail, outputToDir, srsDomain, apiToken], capture_output=True, text=True)
-            print("******* Housekeeping IMAGE: ", frameDetail, "\n")
-            responseData = srs_connections.submitRequest(
-                    (srsApi + "/downloaded"),
-                    {EMAIL:email, APITOKEN:apiToken, FILENAME:frameDetail}
-                )
-            if 'Error' == responseData['result']:
-                print("Error in housekeeping: ", responseData['message'])
-                return
+            print("XXXXX renderId=", renderId)
+
+            for frameDetail in frameDetails[renderId]:
+
+                print("XXXXX frameDetail=", frameDetail)
+
+                if True == verbose:
+                    print(frameDetail, "\n")
+
+                print("******* Downloading IMAGE: ", frameDetail, "\n")
+
+                p = subprocess.run(["python3", process_results_download,
+                    c4dProjectWithAssets,
+                    frameDetail,
+                    outputToDir,
+                    srsDomain,
+                    apiToken,
+                    str(renderId)], capture_output=True, text=True)
+
+                print("******* Housekeeping IMAGE: ", frameDetail, "\n")
+                responseData = srs_connections.submitRequest(
+                        (srsApi + "/downloaded"),
+                        {EMAIL:email, APITOKEN:apiToken, RENDERID:renderId, FILENAME:frameDetail}
+                    )
+                if 'Error' == responseData['result']:
+                    print("Error in housekeeping: ", responseData['message'])
+                    return
 
         if True == debug:
             print("Std out: ", p.stdout)
@@ -62,7 +78,7 @@ def handle_results_download(frameDetails):
         return {'result': "OK", 'message': "Download of results completed"}
 
     except Exception as e:
-        message = "Error trying to download results. Error message: " + str(e)
+        message = "Error trying to handle download results. Error message: " + str(e)
         print(message)
         print(e.args)
 
