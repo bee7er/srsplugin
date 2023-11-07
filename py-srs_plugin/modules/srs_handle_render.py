@@ -60,7 +60,7 @@ def handle_render(
 
         # Load the project
         projectDocumentPath = os.path.join(downloadPWADir, c4dProjectWithAssets)
-        projectDocument = documents.LoadDocument(projectDocumentPath, c4d.SCENEFILTER_ONLY_RENDERDATA)
+        projectDocument = documents.LoadDocument(projectDocumentPath, c4d.SCENEFILTER_OBJECTS | c4d.SCENEFILTER_OBJECTS)
         if None != projectDocument:
             print('Successfully loaded projectDocument')
         else:
@@ -75,12 +75,10 @@ def handle_render(
         if True == debug:
             print("*** Setting save path to: ", savePath)
 
-        print("*** Setting save path to: ", savePath)
-
         renderData[c4d.RDATA_PATH] = savePath
 
         # Update the project with the new details
-        projectDocument.InsertRenderDataLast(renderData)
+        projectDocument.SetActiveRenderData(renderData)
 
         res = documents.SaveDocument(projectDocument, projectDocumentPath, c4d.SAVEDOCUMENTFLAGS_CRASHSITUATION | c4d.SAVEDOCUMENTFLAGS_DONTADDTORECENTLIST, c4d.FORMAT_C4DEXPORT)
         if True == res:
@@ -89,7 +87,7 @@ def handle_render(
 
         else:
             raise RuntimeError("*** Error saving project with assets")
-
+        
         # Retrieve the batch render instance
         br = c4d.documents.GetBatchRender()
         if br is None:

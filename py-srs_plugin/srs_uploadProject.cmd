@@ -6,9 +6,6 @@
 :: %5: apiToken
 :: %6: renderId
 
-:: Testing
-:: srs_uploadProject.cmd "RedshiftTestBe.c4d" "C:\Users\Russ\AppData\Roaming\MAXON\Maxon Cinema 4D R21_64C2B3BD\plugins\projects\with_assets\RedshiftTestBe.c4d" https://3n3.477.mywebsitetransfer.com
-
 @echo "Uploading the project with assets file to: %~3/projects"
 @echo "Project with assets name: %~1 and location: %~2"
 
@@ -20,10 +17,10 @@
 
 :: Zip up the project file before uploading it
 :: The -C option changes the working directory, so that we don't tar up the entire directory structure
-tar -zcvf %~1.gz --exclude=%~1.gz . -C "%~2"
+tar -zcvf "%~1.gz" --exclude=%~1.gz . -C "%~2"
 
 :: Now upload the zipped file to the master
-curl -F email=%~4 -F apiToken=%~5 -F renderId=%~6 -F "upload=@%~1.gz" -H "Content-Type: multipart/form-data" %~3/projects
+curl -F "upload=@%~1.gz" -H "Content-Type: multipart/form-data" -X POST "%~3/projects?email=%~4&apiToken=%~5&renderId=%~6"
 
 :: Go back to previous directory
 @popd

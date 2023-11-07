@@ -9,6 +9,7 @@ Description:
 """
 
 import os, sys, time
+import subprocess
 
 __root__ = os.path.dirname(__file__)
 if os.path.join(__root__, 'modules') not in sys.path: sys.path.insert(0, os.path.join(__root__, 'modules'))
@@ -17,6 +18,9 @@ import c4d
 from c4d import gui, bitmaps, utils
 # SRS module for various shared functions
 import srs_functions, srs_connections, srs_handle_project_download, srs_handle_image_upload, srs_handle_results_download, srs_handle_render
+# //////////////
+import test_process_project
+# //////////////
 
 __res__ = c4d.plugins.GeResource()
 __res__.Init(__root__)
@@ -148,6 +152,8 @@ class RegistrationDlg(c4d.gui.GeDialog):
             if True == verbose:
                 print("User clicked Ok")
 
+            # >>>>>>>>>> Place test section from test_process_project.py here
+
             validationResult = self.validate()
             if True == validationResult:
                 self.email = self.GetString(EDIT_EMAIL_TEXT)
@@ -194,6 +200,9 @@ class RegistrationDlg(c4d.gui.GeDialog):
 
             if True == debug:
                 print("*** Cancelled registration")
+
+            # End Timer function
+            self.SetTimer(0)
 
             # Close the Dialog
             self.Close()

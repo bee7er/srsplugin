@@ -8,8 +8,6 @@
 :: %6 - srsDomain
 :: %7 - renderId
 
-curl -F email=%1 -F apiToken=%2 -F renderId=%7 -F submittedByUserApiToken=%4 -F "upload=@%3" -H "Content-Type: multipart/form-data" %6/results
-
-echo "Uploaded %3"
+curl -F "upload=@%~3" -H "Content-Type: multipart/form-data" -X POST "%~6/results?email=%~1&apiToken=%~2&renderId=%~7&submittedByUserApiToken=%~4"
 
 exit

@@ -5,9 +5,6 @@
 :: %4: submittedByUserApiToken
 :: %5: renderId
 
-:: Testing:
-:: srs_downloadProject.cmd RedshiftTestBe.c4d "C:\Users\Russ\AppData\Roaming\MAXON\Maxon Cinema 4D R21_64C2B3BD\plugins\projects\downloads" http://3n3.47.mywebsitetransfer.com
-
 @echo "Downloading the project with assets file"
 @echo "Project with assets name: %~1 and location: %~2"
 
@@ -18,11 +15,10 @@
 @cd "%~2"
 
 :: Now download the zipped file from the master
-curl --output %~1.gz "%~3/uploads/%~4/projects/%~5/%~1.gz"
+curl --output "%~1.gz" "%~3/uploads/%~4/projects/%~5/%~1.gz"
 
 :: Unzip the project file before use
-:: tar -xf RedshiftTestBe.c4d.gz
-tar -xzf %~1.gz
+tar -xzf ".\%~1.gz"
 
 :: Go back to previous directory
 @popd
