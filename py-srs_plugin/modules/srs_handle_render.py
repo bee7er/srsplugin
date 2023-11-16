@@ -87,7 +87,7 @@ def handle_render(
 
         else:
             raise RuntimeError("*** Error saving project with assets")
-        
+
         # Retrieve the batch render instance
         br = c4d.documents.GetBatchRender()
         if br is None:

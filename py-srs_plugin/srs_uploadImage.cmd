@@ -10,4 +10,4 @@
 
 curl -F "upload=@%~3" -H "Content-Type: multipart/form-data" -X POST "%~6/results?email=%~1&apiToken=%~2&renderId=%~7&submittedByUserApiToken=%~4"
 
-exit
+@exit

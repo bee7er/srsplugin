@@ -371,7 +371,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
         if 'Error' != responseData['result']:
             if AI_DO_DOWNLOAD == responseData[ACTIONINSTRUCTION]:
 
-                print("***** LOOKOUT array details: ", responseData['frameDetails'])
+                print("***** LOOKOUT downloading array details: ", responseData['frameDetails'])
 
                 # Download the rendered frames
                 result = srs_handle_results_download.handle_results_download(responseData['frameDetails'])

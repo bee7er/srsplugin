@@ -43,16 +43,10 @@ def handle_results_download(frameDetails):
 
         for renderId in frameDetails:
 
-            print("XXXXX renderId=", renderId)
-
             for frameDetail in frameDetails[renderId]:
-
-                print("XXXXX frameDetail=", frameDetail)
 
                 if True == verbose:
                     print(frameDetail, "\n")
-
-                print("******* Downloading IMAGE: ", frameDetail, "\n")
 
                 p = subprocess.run(["python3", process_results_download,
                     c4dProjectWithAssets,
@@ -62,7 +56,7 @@ def handle_results_download(frameDetails):
                     apiToken,
                     str(renderId)], capture_output=True, text=True)
 
-                print("******* Housekeeping IMAGE: ", frameDetail, "\n")
+                print("******* Housekeeping 'downloaded' IMAGE on server: ", frameDetail, "\n")
                 responseData = srs_connections.submitRequest(
                         (srsApi + "/downloaded"),
                         {EMAIL:email, APITOKEN:apiToken, RENDERID:renderId, FILENAME:frameDetail}

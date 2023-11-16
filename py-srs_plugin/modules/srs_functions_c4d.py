@@ -74,11 +74,11 @@ def get_project():
 
     md = c4d.documents.GetActiveDocument()
     fp = c4d.documents.BaseDocument.GetDocumentPath(md)
-    c4dProject = ''
+    c4dProjectFullPath = ''
     if '' == fp:
         print("*** A project has not been opened")
     else:
-        c4dProject = fp + '/' + c4d.documents.BaseDocument.GetDocumentName(md)
-        print("Project opened is: ", c4dProject)
+        c4dProjectFullPath = fp + '/' + c4d.documents.BaseDocument.GetDocumentName(md)
+        print("Project opened is: ", c4dProjectFullPath)
 
-    return c4dProject
+    return c4dProjectFullPath
