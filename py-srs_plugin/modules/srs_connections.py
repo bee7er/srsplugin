@@ -6,14 +6,13 @@ Description: Handle HTTP connections
 
 """
 
-VERSION = "R2023"
+VERSION = "R2023+"
 try:
     import urllib.parse as parser
     import urllib.request as requester
-    print("Connecting with R2023")
 except:
     import urllib, urllib2
-    print("Connecting with R20")
+    print("Connecting with R20 syntax")
     VERSION = "R20"
 
 import srs_functions
@@ -37,7 +36,7 @@ def submitRequest(
     # Submit a POST request to the master node
     # .....................................................
 
-    if "R2023" == VERSION:
+    if "R2023+" == VERSION:
         sendData = parser.urlencode(sendData)
     else:
         sendData = urllib.urlencode(sendData)
@@ -47,7 +46,7 @@ def submitRequest(
 
     responseData = 'None'
     try:
-        if "R2023" == VERSION:
+        if "R2023+" == VERSION:
             response = requester.urlopen(endPoint, bytes(sendData, 'utf-8'))
         else:
             request = urllib2.Request(endPoint, sendData)

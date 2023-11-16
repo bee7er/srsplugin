@@ -54,16 +54,37 @@ def get_srs_domain():
         print("Error parsing API URL: " + str(e))
 
 # ===================================================================
-def validate_config_values(config):
+def validate_environment(config):
 # ===================================================================
     """
-        Validate the config values
+        Validate the config values and operating environment
     """
     validationResult = []
+
+    # Check the required directories are present.  If not create them.
+    projectsDir = get_plugin_directory(os.path.join('projects'))
+    if True != os.path.exists(projectsDir):
+        os.mkdir(projectsDir)
+    downloadsDir = get_plugin_directory(os.path.join('projects', 'downloads'))
+    if True != os.path.exists(downloadsDir):
+        os.mkdir(downloadsDir)
+    resultsDir = get_plugin_directory(os.path.join('projects', 'downloads', 'results'))
+    if True != os.path.exists(resultsDir):
+        os.mkdir(resultsDir)
+    framesDir = get_plugin_directory(os.path.join('projects', 'frames'))
+    if True != os.path.exists(framesDir):
+        os.mkdir(framesDir)
+    with_assetsDir = get_plugin_directory(os.path.join('projects', 'with_assets'))
+    if True != os.path.exists(with_assetsDir):
+        os.mkdir(with_assetsDir)
 
     # Validate the CONFIG section
     if "" == config.get(CONFIG_SECTION, 'srsApi').strip():
         validationResult.append("Property 'srsApi' has not been set")
+
+    '''
+
+    THIS SECTION COMMENTED OUT ATM
 
     pwaError = False
     projectWithAssetsDir = config.get(CONFIG_SECTION, 'c4dProjectWithAssetsDir').strip()
@@ -85,9 +106,8 @@ def validate_config_values(config):
     # If no error so far then check the project with assets file exists
     if False == pwaError:
         if True != os.path.exists(os.path.join(projectWithAssetsDir, projectWithAssets)):
-            validationResult.append(
-                "Properties 'c4dProjectWithAssetsDir' and 'c4dProjectWithAssets' do not locate the project with assets file.  File not found."
-                )
+            validationResult.append("Properties 'c4dProjectWithAssetsDir' and 'c4dProjectWithAssets' do not locate the project with assets file.  File not found.")
+    '''
 
     # Validate the REGISTRATION section
     if "" == config.get(CONFIG_REGISTRATION_SECTION, 'email').strip():
@@ -166,7 +186,6 @@ def analyse_frame_ranges(frameRangeStr):
         returnStr += sep + str(rangelet[0]) + '-' + str(rangelet[1])
         sep = ','
 
-    print('returnStr=', returnStr)
     return returnStr
 
 # Now use the config symbolic constants and access the appropriate .ini file

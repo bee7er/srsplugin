@@ -3,7 +3,7 @@ Copyright: Etheridge Family Nov 2022
 Author: Brian Etheridge
 
 PLEASE NOTE:  These utility functions need c4d.
-Put any that do not need c4d into srs_functions.py
+Put functions that do not need c4d into srs_functions.py
 
 """
 import c4d, os, platform
@@ -15,10 +15,6 @@ RANGE_TO = "RANGE_TO"
 RANGE_STEP = "RANGE_STEP"
 FRAME_RATE = "FRAME_RATE"
 OUTPUT_FORMAT = "OUTPUT_FORMAT"
-
-OS_MAC = 'mac'
-OS_UNKNOWN = 'unknown'
-OS_WINDOWS = 'windows'
 
 # ===================================================================
 def get_render_settings():
@@ -70,15 +66,48 @@ def get_render_settings():
 def get_project():
 # ===================================================================
     # Gets project path and name from the currently loaded project
-    # .....................................................
+    # ............................................................
 
     md = c4d.documents.GetActiveDocument()
-    fp = c4d.documents.BaseDocument.GetDocumentPath(md)
+    path = c4d.documents.BaseDocument.GetDocumentPath(md)
     c4dProjectFullPath = ''
-    if '' == fp:
+    if '' == path:
         print("*** A project has not been opened")
     else:
-        c4dProjectFullPath = fp + '/' + c4d.documents.BaseDocument.GetDocumentName(md)
+        c4dProjectFullPath = path + '/' + c4d.documents.BaseDocument.GetDocumentName(md)
         print("Project opened is: ", c4dProjectFullPath)
 
     return c4dProjectFullPath
+
+# ===================================================================
+def get_projectName():
+# ===================================================================
+    # Gets project name from the currently loaded project
+    # ...................................................
+
+    md = c4d.documents.GetActiveDocument()
+    if '' == md:
+        print("*** A project has not been opened")
+        return ''
+
+    projectName = c4d.documents.BaseDocument.GetDocumentName(md)
+    print("*** Project name is ", projectName)
+
+    return projectName
+
+# ===================================================================
+def get_projectPath():
+# ===================================================================
+    # Gets project path from the currently loaded project
+    # ...................................................
+
+    md = c4d.documents.GetActiveDocument()
+    path = c4d.documents.BaseDocument.GetDocumentPath(md)
+
+    if '' == path:
+        print("*** A project has not been opened")
+        return ''
+
+    print("*** Project path is ", path)
+
+    return path

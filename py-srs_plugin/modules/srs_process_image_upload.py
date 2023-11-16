@@ -58,8 +58,10 @@ def process_image_upload(
             renderId], capture_output=True, text=True)
 
         if True == debug:
-            print("Std out: ", p.stdout)
-            print("Std err: ", p.stderr)
+            if '' != p.stdout:
+                print("Std out: ", p.stdout)
+            if '' != p.stderr:
+                print("Std err: ", p.stderr)
 
         #if None != p.stderr:
         #    raise Exception("Std err: " + p.stderr)

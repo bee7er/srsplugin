@@ -14,6 +14,8 @@ if os.path.join(__root__, 'modules') not in sys.path: sys.path.insert(0, os.path
 
 import c4d
 from c4d import gui, bitmaps, utils
+from c4d import documents
+
 # SRS module for various shared funcrtions
 import srs_functions, srs_functions_c4d, srs_handle_project_upload, srs_connections
 
@@ -81,8 +83,8 @@ class RenderDlg(c4d.gui.GeDialog):
 
         # TODO Submissions aren't allowed if registration dialog is not open
 
-        # Validatde the configuration file
-        validationResult = srs_functions.validate_config_values(config)
+        # Validate the configuration file and the general environment
+        validationResult = srs_functions.validate_environment(config)
         if True == validationResult:
             if True == verbose:
                 print("Config values passed validation")
@@ -102,6 +104,42 @@ class RenderDlg(c4d.gui.GeDialog):
             os.path.join('projects', 'with_assets', config.get(srs_functions.CONFIG_SECTION, 'c4dProjectWithAssetsDir'))
             )
         self.c4dProjectWithAssets = config.get(srs_functions.CONFIG_SECTION, 'c4dProjectWithAssets')
+
+
+
+        # /////////////////////////////////
+
+        # TESTING THE SAVE WITH ASSETS
+
+        fp = srs_functions_c4d.get_project()
+        nm = srs_functions_c4d.get_projectName()
+        path = srs_functions_c4d.get_projectPath()
+        print("$$$$$$ Project fp: ", fp)
+        print("$$$$$$ Project name: ", nm)
+        print("$$$$$$ Project path: ", path)
+
+        savePath = srs_functions.get_plugin_directory(os.path.join('projects', 'with_assets', nm))
+        print("$$$$$$ Saving project with assets to: ", savePath)
+
+        projectDocument = documents.GetActiveDocument()
+        missingAssets = []
+        assets = []
+
+        res = documents.SaveDocument(
+            projectDocument,
+            savePath,
+            c4d.SAVEDOCUMENTFLAGS_CRASHSITUATION | c4d.SAVEDOCUMENTFLAGS_DONTADDTORECENTLIST,
+            c4d.FORMAT_C4DEXPORT
+            )
+        if True == res:
+            print("*** Success saving project with assets")
+        else:
+            raise RuntimeError("*** Error saving project with assets")
+
+        # /////////////////////////////////
+
+
+
 
         renderData = srs_functions_c4d.get_render_settings()
         self.rangeFrom = renderData[srs_functions.RANGE_FROM]
@@ -144,6 +182,31 @@ class RenderDlg(c4d.gui.GeDialog):
         self.GroupEnd()
 
         return True
+
+    # ===================================================================
+    def save_project_with_assets():
+    # ===================================================================
+        # Get the active document
+        doc = c4d.documents.GetActiveDocument()
+        if not doc:
+            return
+
+        # Get the current project path
+        project_path = doc.GetDocumentPath()
+        if not project_path:
+            return
+
+        # Set the file format options (change as needed)
+        save_options = c4d.SAVEPROJECTFLAGS_NONE
+        save_options |= c4d.SAVEPROJECTFLAGS_EXPORTOPTIONS
+        save_options |= c4d.SAVEPROJECTFLAGS_TEXTOPTIONS
+        save_options |= c4d.SAVEPROJECTFLAGS_MULTIPASSES
+
+        # Save the project with assets
+        if c4d.documents.SaveProject(doc, project_path, save_options):
+            print("Project saved successfully with assets.")
+        else:
+            print("Failed to save the project with assets.")
 
     # ===================================================================
     def Command(self, messageId, bc):

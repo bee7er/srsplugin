@@ -60,7 +60,7 @@ def handle_render(
 
         # Load the project
         projectDocumentPath = os.path.join(downloadPWADir, c4dProjectWithAssets)
-        projectDocument = documents.LoadDocument(projectDocumentPath, c4d.SCENEFILTER_OBJECTS | c4d.SCENEFILTER_OBJECTS)
+        projectDocument = documents.LoadDocument(projectDocumentPath, c4d.SCENEFILTER_OBJECTS | c4d.SCENEFILTER_MATERIALS)
         if None != projectDocument:
             print('Successfully loaded projectDocument')
         else:

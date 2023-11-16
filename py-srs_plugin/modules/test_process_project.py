@@ -19,8 +19,10 @@ Test section which can be put into py-srs_register.pyp to test the upload/downlo
                 "coiucoiuoiuoiuf983798df8d9879d",
                 "159"], capture_output=True, text=True)
 
-            print("Std out: ", p.stdout)
-            print("Std err: ", p.stderr)
+            if '' != p.stdout:
+                print("Std out: ", p.stdout)
+            if '' != p.stderr:
+                print("Std err: ", p.stderr)
 
             return False
             # //////////////////////////////////
@@ -68,8 +70,10 @@ def t_process_project_upload():
             str(159)
             ], capture_output=True, text=True)
 
-        print("Std out: ", p.stdout)
-        print("Std err: ", p.stderr)
+        if '' != p.stdout:
+            print("Std out: ", p.stdout)
+        if '' != p.stderr:
+            print("Std err: ", p.stderr)
 
         process_project = os.path.join(__root__, "test_downloadProject.sh")
 

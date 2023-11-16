@@ -75,8 +75,10 @@ def handle_project_upload(renderId):
             ], capture_output=True, text=True)
 
         if True == debug:
-            print("Std out: ", p.stdout)
-            print("Std err: ", p.stderr)
+            if '' != p.stdout:
+                print("Std out: ", p.stdout)
+            if '' != p.stderr:
+                print("Std err: ", p.stderr)
 
         return {'result': "OK", 'message': "Upload of project with assets file completed"}
 

@@ -66,8 +66,10 @@ def handle_results_download(frameDetails):
                     return
 
         if True == debug:
-            print("Std out: ", p.stdout)
-            print("Std err: ", p.stderr)
+            if '' != p.stdout:
+                print("Std out: ", p.stdout)
+            if '' != p.stderr:
+                print("Std err: ", p.stderr)
 
         return {'result': "OK", 'message': "Download of results completed"}
 

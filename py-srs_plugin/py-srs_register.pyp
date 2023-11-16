@@ -18,9 +18,6 @@ import c4d
 from c4d import gui, bitmaps, utils
 # SRS module for various shared functions
 import srs_functions, srs_connections, srs_handle_project_download, srs_handle_image_upload, srs_handle_results_download, srs_handle_render
-# //////////////
-import test_process_project
-# //////////////
 
 __res__ = c4d.plugins.GeResource()
 __res__.Init(__root__)
@@ -85,7 +82,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
 
         # Refresh the config values
         config = srs_functions.get_config_values()
-        validationResult = srs_functions.validate_config_values(config)
+        validationResult = srs_functions.validate_environment(config)
         if True == validationResult:
             if True == verbose:
                 print("Config values passed validation")
@@ -125,7 +122,12 @@ class RegistrationDlg(c4d.gui.GeDialog):
 
         self.GroupBegin(id=120000, flags=c4d.BFH_SCALEFIT, cols=1, rows=1)
         self.statusBlock=self.AddCustomGui(1000100, c4d.CUSTOMGUI_HTMLVIEWER, "", c4d.BFH_SCALEFIT|c4d.BFV_SCALEFIT, 300, 300, c4d.BaseContainer())
-        self.statusBlock.SetText('<div style="width:100%;height=:100%;">Local platform: <b>' + srs_functions.get_platform() + '</b></div><div style="width:100%;height=:100%;">Remote server: <b>' + srsDomain + '</b></div>')
+
+        statusText = '<div style="width:100%;height=:100%;">Local platform: <b>' + srs_functions.get_platform() + '</b></div>'
+        statusText += '<div style="width:100%;height=:100%;">Remote server: <b>' + srsDomain + '</b></div>'
+        if True == debug:
+            statusText += '<div style="width:100%;height=:100%;">Running debug: <b>YES</b></div>'
+        self.statusBlock.SetText(statusText)
         self.GroupEnd()
 
         return True
@@ -152,7 +154,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
             if True == verbose:
                 print("User clicked Ok")
 
-            # >>>>>>>>>> Place test section from test_process_project.py here
+            # >>>>>>>>>> Place test section from test_process_project.py here.  Also import that module above.
 
             validationResult = self.validate()
             if True == validationResult:
@@ -257,7 +259,8 @@ class RegistrationDlg(c4d.gui.GeDialog):
         Args:
             msg (c4d.BaseContainer): The timer message
         """
-        print("*** Action status: ", self.actionStatus)
+        if True == debug:
+            print("*** Action status: ", self.actionStatus)
 
         if AS_READY == self.actionStatus:
             if AVAILABLE == self.availability:
