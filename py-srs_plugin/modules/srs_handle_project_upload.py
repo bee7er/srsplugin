@@ -29,23 +29,15 @@ apiToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, APITOKEN)
 def handle_project_upload(renderId):
 # ===================================================================
     try:
-        '''
-        # ##################
-        # This section doesn't fail, but neither does the project get saved
-        # It will create a new directory, but then puts nothing in it
-        # Need to find out from the forum WTF this is doing
-
         # Save the project with assets, to make sure it is up to date
         print("*** Saving project with assets to: ", c4dProjectWithAssetsDir)
+
+        doc = documents.GetActiveDocument()
         missingAssets = []
         assets = []
-        doc = documents.GetActiveDocument()
-
-**** USE SAVEDOCUMENT RATHER THAN SAVEPROJECT - see handle_render function
-
         res = documents.SaveProject(
             doc,
-            c4d.SAVEPROJECT_ASSETS | c4d.SAVEPROJECT_DONTTOUCHDOCUMENT | c4d.SAVEPROJECT_USEDOCUMENTNAMEASFILENAME | c4d.SAVEPROJECT_DONTFAILONMISSINGASSETS,
+            c4d.SAVEPROJECT_ASSETS | c4d.SAVEPROJECT_SCENEFILE,
             c4dProjectWithAssetsDir,
             assets,
             missingAssets
@@ -53,12 +45,9 @@ def handle_project_upload(renderId):
         if True == res:
             print("*** Success saving project with assets")
         else:
-            print("*** Error saving project with assets")
-        # print("Assets: ", ' '.join(map(str, assets)))
-        # print("Missing Assets: ", ' '.join(map(str, missingAssets)))
-
-        # ##################
-        '''
+            message = "*** Error saving project with assets"
+            print(message)
+            return {'result': "Error", 'message': message}
 
         __modules__ = os.path.dirname(__file__)
         process_project_upload = os.path.join(__modules__, "srs_process_project_upload.py")

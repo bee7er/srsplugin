@@ -65,8 +65,8 @@ def get_render_settings():
 # ===================================================================
 def get_project():
 # ===================================================================
-    # Gets project path and name from the currently loaded project
-    # ............................................................
+    # Gets project full path and name from the currently loaded project
+    # .................................................................
 
     md = c4d.documents.GetActiveDocument()
     path = c4d.documents.BaseDocument.GetDocumentPath(md)
@@ -74,40 +74,7 @@ def get_project():
     if '' == path:
         print("*** A project has not been opened")
     else:
-        c4dProjectFullPath = path + '/' + c4d.documents.BaseDocument.GetDocumentName(md)
-        print("Project opened is: ", c4dProjectFullPath)
+        c4dProjectFullPath = os.path.join(path, c4d.documents.BaseDocument.GetDocumentName(md))
+        print("NB Project opened is: ", c4dProjectFullPath)
 
     return c4dProjectFullPath
-
-# ===================================================================
-def get_projectName():
-# ===================================================================
-    # Gets project name from the currently loaded project
-    # ...................................................
-
-    md = c4d.documents.GetActiveDocument()
-    if '' == md:
-        print("*** A project has not been opened")
-        return ''
-
-    projectName = c4d.documents.BaseDocument.GetDocumentName(md)
-    print("*** Project name is ", projectName)
-
-    return projectName
-
-# ===================================================================
-def get_projectPath():
-# ===================================================================
-    # Gets project path from the currently loaded project
-    # ...................................................
-
-    md = c4d.documents.GetActiveDocument()
-    path = c4d.documents.BaseDocument.GetDocumentPath(md)
-
-    if '' == path:
-        print("*** A project has not been opened")
-        return ''
-
-    print("*** Project path is ", path)
-
-    return path
