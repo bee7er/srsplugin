@@ -45,6 +45,8 @@ USESETTINGS = 2
 
 # Parameters
 CUSTOMFRAMERANGES = "customFrameRanges"
+C4DPROJECTWITHASSETS = "c4dProjectWithAssets"
+C4DPROJECTNAME = "c4dProjectName"
 EMAIL = "email"
 APITOKEN = "apiToken"
 FROM = "from"
@@ -66,6 +68,7 @@ class RenderDlg(c4d.gui.GeDialog):
 
     c4dProjectWithAssetsDir = ''
     c4dProjectWithAssets = ''
+    c4dProjectName = ''
 
     overrideSettings = 0
     customFrameRanges = ''
@@ -274,6 +277,8 @@ class RenderDlg(c4d.gui.GeDialog):
         """
         # Validate the custom ranges if we are overriding settings
 
+        self.c4dProjectName = srs_functions_c4d.get_projectName()
+
         print("self.overrideSettings=", self.overrideSettings)
         print("self.customFrameRanges=", self.customFrameRanges)
         print("self.rangeFrom=", self.rangeFrom)
@@ -307,7 +312,8 @@ class RenderDlg(c4d.gui.GeDialog):
             CUSTOMFRAMERANGES:self.customFrameRanges,
             FROM:self.rangeFrom,
             TO:self.rangeTo,
-            'c4dProjectWithAssets':self.c4dProjectWithAssets,
+            C4DPROJECTWITHASSETS:self.c4dProjectWithAssets,
+            C4DPROJECTNAME:self.c4dProjectName,
             OUTPUTFORMAT:self.outputFormat,
         }
         if True == verbose:

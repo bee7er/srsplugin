@@ -82,33 +82,6 @@ def validate_environment(config):
     if "" == config.get(CONFIG_SECTION, 'srsApi').strip():
         validationResult.append("Property 'srsApi' has not been set")
 
-    '''
-
-    THIS SECTION COMMENTED OUT ATM
-
-    pwaError = False
-    projectWithAssetsDir = config.get(CONFIG_SECTION, 'c4dProjectWithAssetsDir').strip()
-    if "" == projectWithAssetsDir:
-        pwaError = True
-        validationResult.append("Property 'c4dProjectWithAssetsDir' has not been set")
-    else:
-        # Redefine full path to PWA directory
-        projectWithAssetsDir = get_plugin_directory(os.path.join('projects', 'with_assets', projectWithAssetsDir))
-        if True != os.path.exists(projectWithAssetsDir):
-            pwaError = True
-            validationResult.append("Property 'c4dProjectWithAssetsDir', directory not found.")
-
-    projectWithAssets = config.get(CONFIG_SECTION, 'c4dProjectWithAssets').strip()
-    if "" == projectWithAssets:
-        pwaError = True
-        validationResult.append("Property 'c4dProjectWithAssets' has not been set")
-
-    # If no error so far then check the project with assets file exists
-    if False == pwaError:
-        if True != os.path.exists(os.path.join(projectWithAssetsDir, projectWithAssets)):
-            validationResult.append("Properties 'c4dProjectWithAssetsDir' and 'c4dProjectWithAssets' do not locate the project with assets file.  File not found.")
-    '''
-
     # Validate the REGISTRATION section
     if "" == config.get(CONFIG_REGISTRATION_SECTION, 'email').strip():
         validationResult.append("Property 'email' has not been set")

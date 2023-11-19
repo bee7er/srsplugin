@@ -43,6 +43,7 @@ def handle_render(
     c4dProjectDir,
     downloadPWADir,
     c4dProjectWithAssets,
+    c4dProjectName,
     rangeFrom,
     rangeTo,
     submittedByUserApiToken,
@@ -71,7 +72,7 @@ def handle_render(
         renderData[c4d.RDATA_FRAMEFROM] = c4d.BaseTime(rangeFrom, renderData[c4d.RDATA_FRAMERATE])
         renderData[c4d.RDATA_FRAMETO] = c4d.BaseTime(rangeTo, renderData[c4d.RDATA_FRAMERATE])
         # Set the save path
-        savePath = srs_functions.get_plugin_directory(os.path.join('projects', 'frames', c4dProjectWithAssets))
+        savePath = srs_functions.get_plugin_directory(os.path.join('projects', 'frames', c4dProjectName))
         if True == debug:
             print("*** Setting save path to: ", savePath)
 

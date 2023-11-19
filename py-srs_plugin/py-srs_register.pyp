@@ -289,6 +289,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
                         c4dProjectDir,
                         downloadPWADir,
                         self.renderingData['c4dProjectWithAssets'],
+                        self.renderingData['c4dProjectName'],
                         self.renderingData['from'],
                         self.renderingData['to'],
                         self.renderingData['submittedByUserApiToken'],
