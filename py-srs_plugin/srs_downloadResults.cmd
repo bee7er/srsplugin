@@ -16,7 +16,7 @@
 @cd "%~3"
 
 :: Now download the rendered file name from the master to target directory
-curl --output "./%~2" "%~4/uploads/%~5/renders/%~6/%~2"
+curl --output ".\%~2" "%~4/uploads/%~5/renders/%~6/%~2"
 
 :: Go back to previous directory
 @popd

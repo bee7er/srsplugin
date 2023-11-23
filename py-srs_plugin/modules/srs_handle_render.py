@@ -71,11 +71,11 @@ def handle_render(
         renderData = projectDocument.GetActiveRenderData()
         renderData[c4d.RDATA_FRAMEFROM] = c4d.BaseTime(rangeFrom, renderData[c4d.RDATA_FRAMERATE])
         renderData[c4d.RDATA_FRAMETO] = c4d.BaseTime(rangeTo, renderData[c4d.RDATA_FRAMERATE])
-        # Set the save path
+
+        # Set the save path, NB using the name of the original project not necessarily the 'with assets' name
         savePath = srs_functions.get_plugin_directory(os.path.join('projects', 'frames', c4dProjectName))
         if True == debug:
             print("*** Setting save path to: ", savePath)
-
         renderData[c4d.RDATA_PATH] = savePath
 
         # Update the project with the new details

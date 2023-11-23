@@ -45,7 +45,7 @@ def handle_project_upload(renderId):
         if True == res:
             print("*** Success saving project with assets")
         else:
-            message = "*** Error saving project with assets"
+            message = "*** Error saving project with assets to: " + c4dProjectWithAssetsDir
             print(message)
             return {'result': "Error", 'message': message}
 

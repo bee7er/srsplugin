@@ -16,7 +16,7 @@ cd "$2"
 # Zip up the project file before uploading it
 # The -C option changes the working directory, so that we don't tar up the entire directory structure
 
-tar -zcvf "$1.gz" --exclude="$1.gz" -C "$2" .
+tar -zcvf "$1.gz" --exclude="$1.gz" --exclude=.DS_Store -C "$2" .
 
 # Now upload the zipped file to the master
 curl -F "upload=@$1.gz" -H "Content-Type: multipart/form-data" -X POST "$3/projects?email=$4&apiToken=$5&renderId=$6"

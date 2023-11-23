@@ -20,6 +20,11 @@ OS_MAC = 'mac'
 OS_UNKNOWN = 'unknown'
 OS_WINDOWS = 'windows'
 
+CONFIG_SECTION = 'CONFIG'
+CONFIG_REGISTRATION_SECTION = 'REGISTRATION'
+CONFIG_RENDER_SECTION = 'RENDER'
+CONFIG_FILE = __root__ + '/config/properties.ini'
+
 # ===================================================================
 def get_config_values():
 # ===================================================================
@@ -161,12 +166,6 @@ def analyse_frame_ranges(frameRangeStr):
 
     return returnStr
 
-# Now use the config symbolic constants and access the appropriate .ini file
-
-CONFIG_SECTION = 'CONFIG'
-CONFIG_REGISTRATION_SECTION = 'REGISTRATION'
-CONFIG_RENDER_SECTION = 'RENDER'
-
 # ===================================================================
 def get_platform():
 # ===================================================================
@@ -184,13 +183,7 @@ def get_platform():
     elif "win" in os_platform:
         osName = OS_WINDOWS
     else:
-        # Unsupported platform
+        print("Error: unsupported platform: ", os_platform, ", may give unexpected behaviour.")
         osName = OS_UNKNOWN
 
     return osName
-
-CONFIG_FILE = __root__ + '/config/properties.ini'
-if OS_MAC == get_platform():
-    CONFIG_FILE = __root__ + '/config/properties.ini'
-else:
-    CONFIG_FILE = __root__ + '/config/properties.ini.win'
