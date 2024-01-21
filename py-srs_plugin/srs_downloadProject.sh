@@ -3,7 +3,7 @@
 # $1: the file name of the project with assets file
 # $2: the download location for that file
 # $3: srsDomain
-# $4: submittedByUserApiToken
+# $4: submittedByUserToken
 # $5: renderId
 
 echo "Downloading the project with assets file"

@@ -15,8 +15,9 @@ else:
     HANDLER = __root__ + '\srs_uploadImage.cmd'
 
 # Config settings
+TEAMTOKEN = "teamToken"
 EMAIL = "email"
-APITOKEN = "apiToken"
+USERTOKEN = "userToken"
 
 config = srs_functions.get_config_values()
 debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
@@ -28,12 +29,13 @@ input_params = sys.argv
 # ===================================================================
 def process_image_upload(
     email=input_params[1],
-    apiToken=input_params[2],
+    userToken=input_params[2],
     fileToUpload=input_params[3],
-    submittedByUserApiToken=input_params[4],
+    submittedByUserToken=input_params[4],
     framesDir=input_params[5],
     srsDomain=input_params[6],
-    renderId=input_params[7]
+    renderId=input_params[7],
+    teamToken=input_params[8]
     ):
 # ===================================================================
     # Posting the project with assets file to master
@@ -41,21 +43,22 @@ def process_image_upload(
 
     if True == verbose:
         print("*** Submitting project with assets upload script: ", HANDLER)
-        print("*** Using: ", email, ", and token ", apiToken)
+        print("*** Using: ", email, ", and token ", userToken)
         print("*** File: ", fileToUpload)
-        print("*** Submitter: ", submittedByUserApiToken)
+        print("*** Submitter: ", submittedByUserToken)
         print("*** Handler: ", HANDLER)
 
     try:
         p = subprocess.run([
             HANDLER,
             email,
-            apiToken,
+            userToken,
             fileToUpload,
-            submittedByUserApiToken,
+            submittedByUserToken,
             framesDir,
             srsDomain,
-            renderId], capture_output=True, text=True)
+            renderId,
+            teamToken], capture_output=True, text=True)
 
         if True == debug:
             if '' != p.stdout:

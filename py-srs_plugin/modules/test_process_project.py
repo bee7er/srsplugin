@@ -36,7 +36,7 @@ __root__ = os.path.dirname(os.path.dirname(__file__))
 
 # Config settings
 EMAIL = "email"
-APITOKEN = "apiToken"
+USERTOKEN = "userToken"
 
 config = srs_functions.get_config_values()
 debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))

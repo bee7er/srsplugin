@@ -25,10 +25,14 @@ __res__.Init(__root__)
 # TODO Unique ID can be obtained from www.plugincafe.com
 PLUGIN_ID = 1047985
 
-EMAIL_TEXT = 100011
-EDIT_EMAIL_TEXT = 100012
-COMBO_TEXT = 100013
-SELCOMBO_BUTTON = 100014
+TEAMTOKEN_TEXT = 100011
+EDIT_TEAMTOKEN_TEXT = 100012
+USERNAME_TEXT = 100013
+EDIT_USERNAME_TEXT = 100014
+COMBO_TEXT = 100015
+SELCOMBO_BUTTON = 100016
+NEWTEAM_BUTTON = 100017
+BLANK = 100018
 
 PLEASE_SELECT = 0
 AVAILABLE = 1
@@ -52,8 +56,10 @@ srsDomain = srs_functions.get_srs_domain()
 
 # Config settings
 AVAILABILITY = "availability"
+TEAMTOKEN = "teamToken"
 EMAIL = "email"
-APITOKEN = "apiToken"
+USERNAME = "userName"
+USERTOKEN = "userToken"
 
 # Parameters
 ACTIONINSTRUCTION = "actionInstruction"
@@ -65,8 +71,10 @@ class RegistrationDlg(c4d.gui.GeDialog):
 
     actionStatus = AS_READY
     renderDetailId = 0
+    teamToken = ""
     email = ""
-    apiToken = ""
+    userName = ""
+    userToken = ""
     availability = 0
     statusBlock = None
     serverBlock = None
@@ -98,16 +106,25 @@ class RegistrationDlg(c4d.gui.GeDialog):
             gui.MessageDialog("ERRORS IN CONFIGURATION FILE: Please correct the following issues: \n" + errorMessages)
 
         # Initialise the form fields from the config file
+        self.teamToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, TEAMTOKEN)
         self.email = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, EMAIL)
-        self.apiToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, APITOKEN)
+        self.userName = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, USERNAME)
+        self.userToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, USERTOKEN)
         self.availability = int(config.get(srs_functions.CONFIG_REGISTRATION_SECTION, AVAILABILITY))
         self.SetTitle("SRS Register Render Availability")
 
-        self.GroupBegin(id=110000, flags=c4d.BFH_SCALEFIT, cols=2, rows=4)
-        """ Email field """
-        self.AddStaticText(id=EMAIL_TEXT, flags=c4d.BFV_MASK, initw=145, name="Email: ", borderstyle=c4d.BORDER_NONE)
-        self.AddEditText(EDIT_EMAIL_TEXT, c4d.BFV_MASK, initw=240, inith=16, editflags=0)
-        self.SetString(EDIT_EMAIL_TEXT, self.email)
+        self.GroupBegin(id=110000, flags=c4d.BFH_SCALEFIT, cols=3, rows=4)
+        """ Team Token field """
+        self.AddStaticText(id=TEAMTOKEN_TEXT, flags=c4d.BFV_MASK, initw=145, name="Team Token: ", borderstyle=c4d.BORDER_NONE)
+        self.AddEditText(EDIT_TEAMTOKEN_TEXT, c4d.BFV_MASK, initw=240, inith=16, editflags=0)
+        self.SetString(EDIT_TEAMTOKEN_TEXT, self.teamToken)
+        self.AddButton(id=NEWTEAM_BUTTON, flags=c4d.BFH_RIGHT | c4d.BFV_CENTER, initw=100, inith=16, name="New Team")
+
+        """ User name field """
+        self.AddStaticText(id=USERNAME_TEXT, flags=c4d.BFV_MASK, initw=145, name="User name: ", borderstyle=c4d.BORDER_NONE)
+        self.AddEditText(EDIT_USERNAME_TEXT, c4d.BFV_MASK, initw=240, inith=16, editflags=0)
+        self.SetString(EDIT_USERNAME_TEXT, self.userName)
+        self.AddStaticText(id=BLANK, flags=c4d.BFV_MASK, initw=145, name="", borderstyle=c4d.BORDER_NONE)
 
         """ Availability field """
         self.AddStaticText(id=COMBO_TEXT, flags=c4d.BFV_MASK, initw=145, name="Availability: ", borderstyle=c4d.BORDER_NONE)
@@ -116,13 +133,13 @@ class RegistrationDlg(c4d.gui.GeDialog):
         self.AddChild(SELCOMBO_BUTTON, AVAILABLE, 'Available for renders')
         self.AddChild(SELCOMBO_BUTTON, UNAVAILABLE, 'Unavailable for renders')
         self.SetInt32(SELCOMBO_BUTTON, self.availability)
+        self.AddStaticText(id=BLANK, flags=c4d.BFV_MASK, initw=145, name="", borderstyle=c4d.BORDER_NONE)
 
         self.AddDlgGroup(c4d.DLG_OK | c4d.DLG_CANCEL)
         self.GroupEnd()
 
         self.GroupBegin(id=120000, flags=c4d.BFH_SCALEFIT, cols=1, rows=1)
         self.statusBlock=self.AddCustomGui(1000100, c4d.CUSTOMGUI_HTMLVIEWER, "", c4d.BFH_SCALEFIT|c4d.BFV_SCALEFIT, 300, 300, c4d.BaseContainer())
-
         statusText = '<div style="width:100%;height=:100%;">Local platform: <b>' + srs_functions.get_platform() + '</b></div>'
         statusText += '<div style="width:100%;height=:100%;">Remote server: <b>' + srsDomain + '</b></div>'
         if True == debug:
@@ -158,11 +175,12 @@ class RegistrationDlg(c4d.gui.GeDialog):
 
             validationResult = self.validate()
             if True == validationResult:
-                self.email = self.GetString(EDIT_EMAIL_TEXT)
+                self.teamToken = self.GetString(EDIT_TEAMTOKEN_TEXT)
+                self.userName = self.GetString(EDIT_USERNAME_TEXT)
                 self.availability = self.GetInt32(SELCOMBO_BUTTON)
                 # Save to the config file
                 srs_functions.update_config_values(
-                    srs_functions.CONFIG_REGISTRATION_SECTION, [(EMAIL, self.email), (AVAILABILITY,  str(self.availability))]
+                    srs_functions.CONFIG_REGISTRATION_SECTION, [(TEAMTOKEN, self.teamToken), (EMAIL, self.email), (USERNAME, self.userName), (AVAILABILITY,  str(self.availability))]
                     )
                 if True == verbose:
                     print("Form data passed validation")
@@ -210,6 +228,10 @@ class RegistrationDlg(c4d.gui.GeDialog):
             self.Close()
             return True
 
+        # User click on Cancel button
+        elif messageId == NEWTEAM_BUTTON:
+            gui.QuestionDialog("We create a new team")
+
         return True
 
     # ===================================================================
@@ -221,10 +243,14 @@ class RegistrationDlg(c4d.gui.GeDialog):
         validationResult = []
 
         # Preprocess form fields
-        self.SetString(EDIT_EMAIL_TEXT, self.GetString(EDIT_EMAIL_TEXT).replace("\\", ''))
+        self.SetString(EDIT_TEAMTOKEN_TEXT, self.GetString(EDIT_TEAMTOKEN_TEXT).replace("\\", ''))
+        self.SetString(EDIT_USERNAME_TEXT, self.GetString(EDIT_USERNAME_TEXT).replace("\\", ''))
 
-        if "" == self.GetString(EDIT_EMAIL_TEXT).strip():
-            validationResult.append("The Email field is required")
+        if "" == self.GetString(EDIT_TEAMTOKEN_TEXT).strip():
+            validationResult.append("The team token field is required")
+
+        if "" == self.GetString(EDIT_USERNAME_TEXT).strip():
+            validationResult.append("The user name field is required")
 
         if 0 == self.GetInt32(SELCOMBO_BUTTON):
             validationResult.append("The Availability field is required")
@@ -239,8 +265,10 @@ class RegistrationDlg(c4d.gui.GeDialog):
     # ===================================================================
 
         sendData = {
+            TEAMTOKEN: self.teamToken,
             EMAIL: self.email,
-            APITOKEN: self.apiToken,
+            USERNAME: self.userName,
+            USERTOKEN: self.userToken,
             AVAILABILITY: self.availability,
         }
         responseData = srs_connections.submitRequest((srsApi + "/register"), sendData)
@@ -266,14 +294,14 @@ class RegistrationDlg(c4d.gui.GeDialog):
             if AVAILABLE == self.availability:
                 if True == debug:
                     print("*** Available")
-                self.renderingData = srs_connections.submitRequest((srsApi + "/available"), {EMAIL:self.email, APITOKEN:self.apiToken})
+                self.renderingData = srs_connections.submitRequest((srsApi + "/available"), {TEAMTOKEN:self.teamToken, EMAIL:self.email, USERTOKEN:self.userToken})
 
                 if 'Error' != self.renderingData['result'] and AI_DO_RENDER == self.renderingData[ACTIONINSTRUCTION]:
 
                     # Download the project with assets file
                     result = srs_handle_project_download.handle_project_download(
                         self.renderingData['c4dProjectWithAssets'],
-                        self.renderingData['submittedByUserApiToken'],
+                        self.renderingData['submittedByUserToken'],
                         self.renderingData['renderId']
                         )
 
@@ -292,7 +320,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
                         self.renderingData['c4dProjectName'],
                         self.renderingData['from'],
                         self.renderingData['to'],
-                        self.renderingData['submittedByUserApiToken'],
+                        self.renderingData['submittedByUserToken'],
                         self.renderingData['renderId']
                         )
 
@@ -305,7 +333,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
                 print("*** Rendering")
 
             # We do not need to keep telling the master that we are rendering, so this bit is commented out
-            ##responseData = srs_connections.submitRequest((srsApi + "/rendering"), {EMAIL:self.email, APITOKEN:self.apiToken})
+            ##responseData = srs_connections.submitRequest((srsApi + "/rendering"), {TEAMTOKEN:self.teamToken, EMAIL:self.email, USERTOKEN:self.userToken})
             ##if 'Error' == responseData['result']:
             ##    print("Error in rendering: ", responseData['message'])
             ##    return
@@ -323,19 +351,21 @@ class RegistrationDlg(c4d.gui.GeDialog):
 
                     fileFullPath = os.path.join(imageSavePath, file)
 
-                    print("**** Uploading image. From email: ",
+                    print("**** Uploading image. From team: ",
+                        self.teamToken,
+                        ", email: ",
                         self.email,
-                        ", apiToken: ",
-                        self.apiToken,
+                        ", userToken: ",
+                        self.userToken,
                         ", file: ",
                          fileFullPath,
                         " and submmit atoken: ",
-                        self.renderingData['submittedByUserApiToken']
+                        self.renderingData['submittedByUserToken']
                         )
 
                     result = srs_handle_image_upload.handle_image_upload(
                         fileFullPath,
-                        self.renderingData['submittedByUserApiToken'],
+                        self.renderingData['submittedByUserToken'],
                         self.renderingData['renderId']
                         )
 
@@ -350,15 +380,15 @@ class RegistrationDlg(c4d.gui.GeDialog):
                     print('******* Ok we have finished: ', str(self.renderingData['to']))
 
                     if True == debug:
-                        print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+                        print(".....................................")
                         print("*** Completed rendering of this chunk")
-                        print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+                        print(".....................................")
                     # Back to ready for this slave
                     self.actionStatus = AS_READY
 
                     responseData = srs_connections.submitRequest(
                             (srsApi + "/complete"),
-                            {EMAIL:self.email, RENDERDETAILID:self.renderDetailId, APITOKEN:self.apiToken}
+                            {TEAMTOKEN:self.teamToken, EMAIL:self.email, RENDERDETAILID:self.renderDetailId, USERTOKEN:self.userToken}
                         )
                     if 'Error' == responseData['result']:
                         print("Error in complete: ", responseData['message'])
@@ -370,7 +400,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
         # We always send an AWAKE message to the master
         if True == debug:
             print("*** Awake")
-        responseData = srs_connections.submitRequest((srsApi + "/awake"), {EMAIL:self.email, APITOKEN:self.apiToken})
+        responseData = srs_connections.submitRequest((srsApi + "/awake"), {TEAMTOKEN:self.teamToken, EMAIL:self.email, USERTOKEN:self.userToken})
 
         if 'Error' != responseData['result']:
             if AI_DO_DOWNLOAD == responseData[ACTIONINSTRUCTION]:

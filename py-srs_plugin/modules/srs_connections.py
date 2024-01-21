@@ -46,11 +46,17 @@ def submitRequest(
 
     responseData = 'None'
     try:
+        print("*** 1 ")
+
         if "R2023+" == VERSION:
+            print("*** 1.1 ")
             response = requester.urlopen(endPoint, bytes(sendData, 'utf-8'))
+            print("*** 1.2 ")
         else:
             request = urllib2.Request(endPoint, sendData)
             response = urllib2.urlopen(request)
+
+        print("*** 2 ")
 
         error = False
         if 200 == response.code:
@@ -62,9 +68,15 @@ def submitRequest(
             print(error)
             return {'result': 'Error', 'message': error}
 
+        print("*** 3 ")
+
         responseData = json.loads(response.read())
 
+        print("*** 4 ")
+
         response.close()
+
+        print("*** 5 ")
 
     except Exception as e:
         message = "Error trying to connect. Please check your internet connection. Error message: " + str(e)
@@ -74,5 +86,7 @@ def submitRequest(
 
     if True == verbose:
         print("*** Returned data: ", responseData)
+
+    print("*** 6 ")
 
     return responseData

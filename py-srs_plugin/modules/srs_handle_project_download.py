@@ -22,7 +22,7 @@ srsDomain = srs_functions.get_srs_domain()
 # ===================================================================
 def handle_project_download(
     c4dProjectWithAssets,
-    submittedByUserApiToken,
+    submittedByUserUserToken,
     renderId
     ):
 # ===================================================================
@@ -38,13 +38,13 @@ def handle_project_download(
             print("*** Downloading handler: ", HANDLER)
             print("*** Downloading project with assets file to: ", downloadPWADir)
             print("*** Downloading project with assets dir to: ", c4dProjectWithAssets)
-            print("*** Downloading project from user api token: ", submittedByUserApiToken)
+            print("*** Downloading project from user api token: ", submittedByUserUserToken)
 
         p = subprocess.run(["python3", process_project_download,
             c4dProjectWithAssets,
             downloadPWADir,
             srsDomain,
-            submittedByUserApiToken,
+            submittedByUserUserToken,
             str(renderId)], capture_output=True, text=True)
 
         if True == debug:

@@ -25,7 +25,7 @@ def process_project_download(
     c4dProjectWithAssets=input_params[1],
     downloadPWADir=input_params[2],
     srsDomain=input_params[3],
-    submittedByUserApiToken=input_params[4],
+    submittedByUserToken=input_params[4],
     renderId=input_params[5]
     ):
 # ===================================================================
@@ -37,7 +37,7 @@ def process_project_download(
             print("*** Downloading handler: ", HANDLER)
             print("*** Downloading project with assets file to: ", downloadPWADir)
             print("*** Downloading project with assets dir to: ", c4dProjectWithAssets)
-            print("*** Downloading project from user api token: ", submittedByUserApiToken)
+            print("*** Downloading project from user api token: ", submittedByUserToken)
 
         print("*** Downloading project for render Id: ", renderId)
 
@@ -46,7 +46,7 @@ def process_project_download(
             c4dProjectWithAssets,
             downloadPWADir,
             srsDomain,
-            submittedByUserApiToken,
+            submittedByUserToken,
             renderId], capture_output=True, text=True)
 
         if True == debug:

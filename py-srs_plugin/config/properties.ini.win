@@ -6,8 +6,10 @@ c4dProjectWithAssetsDir = c4dproject
 c4dProjectWithAssets = c4dproject.c4d
 
 [REGISTRATION]
-email = betheridge@gmail.com
-apiToken = WxhtuADUQCA0LroDLF5OoFkPvXtQ9LEd8CosCnAvVcilB7ulxFqh5qiK1iMzmWrqCUwWzfSlNfSk1hRo
+teamToken = jfhdyetryetA
+email = WxhtuADUQCA0LroD@powerhouse.industries
+userName = charlie
+userToken = WxhtuADUQCA0LroD
 availability = 1
 
 [RENDER]

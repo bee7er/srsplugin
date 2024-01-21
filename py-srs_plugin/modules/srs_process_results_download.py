@@ -26,7 +26,7 @@ def process_results_download(
     frameDetail=input_params[2],
     outputToFramesDir=input_params[3],
     srsDomain=input_params[4],
-    apiToken=input_params[5],
+    userToken=input_params[5],
     renderId=input_params[6]
     ):
 # ===================================================================
@@ -39,7 +39,7 @@ def process_results_download(
             frameDetail,
             outputToFramesDir,
             srsDomain,
-            apiToken,
+            userToken,
             renderId], capture_output=True, text=True)
 
         if True == debug:

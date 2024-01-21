@@ -16,11 +16,12 @@ verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
 
 framesDir = srs_functions.get_plugin_directory(os.path.join('projects', 'frames'))
 srsDomain = srs_functions.get_srs_domain()
+teamToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, "teamToken")
 email = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, "email")
-apiToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, "apiToken")
+userToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, "userToken")
 
 # ===================================================================
-def handle_image_upload(fileToUpload, submittedByUserApiToken, renderId):
+def handle_image_upload(fileToUpload, submittedByUserUserToken, renderId):
 # ===================================================================
     try:
         __modules__ = os.path.dirname(__file__)
@@ -30,12 +31,13 @@ def handle_image_upload(fileToUpload, submittedByUserApiToken, renderId):
             "python3",
             process_image_upload,
             email,
-            apiToken,
+            userToken,
             fileToUpload,
-            submittedByUserApiToken,
+            submittedByUserUserToken,
             framesDir,
             srsDomain,
-            str(renderId)
+            str(renderId),
+            teamToken,
             ], capture_output=True, text=True)
 
         if True == debug:

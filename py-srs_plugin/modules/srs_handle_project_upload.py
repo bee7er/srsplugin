@@ -11,8 +11,9 @@ import srs_functions
 __root__ = os.path.dirname(os.path.dirname(__file__))
 
 # Config settings
+TEAMTOKEN = "teamToken"
 EMAIL = "email"
-APITOKEN = "apiToken"
+USERTOKEN = "userToken"
 
 config = srs_functions.get_config_values()
 debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
@@ -22,8 +23,9 @@ c4dProjectWithAssetsDir = srs_functions.get_plugin_directory(
     os.path.join('projects', 'with_assets', config.get(srs_functions.CONFIG_SECTION, 'c4dProjectWithAssetsDir'))
     )
 srsDomain = srs_functions.get_srs_domain()
+teamToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, TEAMTOKEN)
 email = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, EMAIL)
-apiToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, APITOKEN)
+userToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, USERTOKEN)
 
 # ===================================================================
 def handle_project_upload(renderId):
@@ -59,8 +61,9 @@ def handle_project_upload(renderId):
             c4dProjectWithAssetsDir,
             srsDomain,
             email,
-            apiToken,
-            str(renderId)
+            userToken,
+            str(renderId),
+            teamToken
             ], capture_output=True, text=True)
 
         if True == debug:

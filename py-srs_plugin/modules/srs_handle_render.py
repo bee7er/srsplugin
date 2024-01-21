@@ -34,8 +34,9 @@ debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
 verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
 
 # Params
+teamToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'teamToken')
 email = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'email')
-apiToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'apiToken')
+userToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'userToken')
 srsDomain = srs_functions.get_srs_domain()
 
 # ===================================================================
@@ -46,7 +47,7 @@ def handle_render(
     c4dProjectName,
     rangeFrom,
     rangeTo,
-    submittedByUserApiToken,
+    submittedByUserToken,
     renderId
     ):
 # ===================================================================

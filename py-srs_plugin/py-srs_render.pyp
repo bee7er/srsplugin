@@ -47,8 +47,9 @@ USESETTINGS = 2
 CUSTOMFRAMERANGES = "customFrameRanges"
 C4DPROJECTWITHASSETS = "c4dProjectWithAssets"
 C4DPROJECTNAME = "c4dProjectName"
+TEAMTOKEN = "teamToken"
 EMAIL = "email"
-APITOKEN = "apiToken"
+USERTOKEN = "userToken"
 FROM = "from"
 OVERRIDESETTINGS = "overrideSettings"
 RENDERDETAILID = "renderDetailId"
@@ -193,13 +194,14 @@ class RenderDlg(c4d.gui.GeDialog):
                     self.rangeFrom = 0
                     self.rangeTo = 0
                     if True == verbose:
+                        teamToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, TEAMTOKEN)
                         email = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, EMAIL)
-                        apiToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, APITOKEN)
+                        userToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, USERTOKEN)
 
                         # Get and log the current status for this slave
                         responseData = srs_connections.submitRequest(
                             (srsApi + "/status"),
-                            {EMAIL:email, APITOKEN:apiToken}
+                            {TEAMTOKEN:teamToken, EMAIL:email, USERTOKEN:userToken}
                             )
                         if 'Error' == responseData['result']:
                             gui.MessageDialog("Error:\n" + responseData['message'])
@@ -306,8 +308,9 @@ class RenderDlg(c4d.gui.GeDialog):
             return False
 
         sendData = {
+            TEAMTOKEN:config.get(srs_functions.CONFIG_REGISTRATION_SECTION, TEAMTOKEN),
             EMAIL:config.get(srs_functions.CONFIG_REGISTRATION_SECTION, EMAIL),
-            APITOKEN:config.get(srs_functions.CONFIG_REGISTRATION_SECTION, APITOKEN),
+            USERTOKEN:config.get(srs_functions.CONFIG_REGISTRATION_SECTION, USERTOKEN),
             OVERRIDESETTINGS:self.overrideSettings,
             CUSTOMFRAMERANGES:self.customFrameRanges,
             FROM:self.rangeFrom,

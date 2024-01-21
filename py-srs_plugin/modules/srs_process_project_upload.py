@@ -15,8 +15,9 @@ else:
     HANDLER = __root__ + '\srs_uploadProject.cmd'
 
 # Config settings
+TEAMTOKEN = "teamToken"
 EMAIL = "email"
-APITOKEN = "apiToken"
+USERTOKEN = "userToken"
 
 config = srs_functions.get_config_values()
 debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
@@ -31,8 +32,9 @@ def process_project_upload(
     c4dProjectWithAssetsDir=input_params[2],
     srsDomain=input_params[3],
     email=input_params[4],
-    apiToken=input_params[5],
-    renderId=input_params[6]
+    userToken=input_params[5],
+    renderId=input_params[6],
+    teamToken=input_params[7]
     ):
 # ===================================================================
     # Posting the project with assets file to master
@@ -42,7 +44,7 @@ def process_project_upload(
         print("*** Submitting project with assets upload script: ", HANDLER)
         print("*** Using: ", c4dProjectWithAssets, ", in ", c4dProjectWithAssetsDir)
         print("*** Email: ", email)
-        print("*** Token: ", apiToken)
+        print("*** Token: ", userToken)
         print("*** Handler: ", HANDLER)
 
     try:
@@ -52,8 +54,9 @@ def process_project_upload(
             c4dProjectWithAssetsDir,
             srsDomain,
             email,
-            apiToken,
-            renderId], capture_output=True, text=True)
+            userToken,
+            renderId,
+            teamToken], capture_output=True, text=True)
 
         if True == debug:
             if '' != p.stdout:

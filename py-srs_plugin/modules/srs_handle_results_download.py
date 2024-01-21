@@ -20,14 +20,16 @@ c4dProjectWithAssets = config.get(srs_functions.CONFIG_SECTION, 'c4dProjectWithA
 outputToDir = srs_functions.get_plugin_directory(os.path.join('projects', 'downloads', 'results'))
 srsDomain = srs_functions.get_srs_domain()
 srsApi = config.get(srs_functions.CONFIG_SECTION, 'srsApi')
+teamToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'teamToken')
 email = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'email')
-apiToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'apiToken')
+userToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'userToken')
 
 # Config settings
 EMAIL = "email"
-APITOKEN = "apiToken"
+USERTOKEN = "userToken"
 FILENAME = "fileName"
 RENDERID = "renderId"
+TEAMTOKEN = "teamToken"
 
 # ===================================================================
 def handle_results_download(frameDetails):
@@ -53,13 +55,13 @@ def handle_results_download(frameDetails):
                     frameDetail,
                     outputToDir,
                     srsDomain,
-                    apiToken,
+                    userToken,
                     str(renderId)], capture_output=True, text=True)
 
                 print("******* Housekeeping 'downloaded' IMAGE on server: ", frameDetail, "\n")
                 responseData = srs_connections.submitRequest(
                         (srsApi + "/downloaded"),
-                        {EMAIL:email, APITOKEN:apiToken, RENDERID:renderId, FILENAME:frameDetail}
+                        {TEAMTOKEN: teamToken, EMAIL:email, USERTOKEN:userToken, RENDERID:renderId, FILENAME:frameDetail}
                     )
                 if 'Error' == responseData['result']:
                     print("Error in housekeeping: ", responseData['message'])

@@ -4,7 +4,7 @@
 # $2 - the frame file name to download
 # $3 - the location for the frames
 # $4 - srsDomain
-# $5 - apiToken
+# $5 - userToken
 # $6 - renderId
 
 echo "Downloading the frame result file"

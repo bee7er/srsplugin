@@ -88,11 +88,14 @@ def validate_environment(config):
         validationResult.append("Property 'srsApi' has not been set")
 
     # Validate the REGISTRATION section
+    if "" == config.get(CONFIG_REGISTRATION_SECTION, 'teamToken').strip():
+        validationResult.append("Property 'teamToken' has not been set")
+
     if "" == config.get(CONFIG_REGISTRATION_SECTION, 'email').strip():
         validationResult.append("Property 'email' has not been set")
 
-    if "" == config.get(CONFIG_REGISTRATION_SECTION, 'apiToken').strip():
-        validationResult.append("Property 'apiToken' has not been set")
+    if "" == config.get(CONFIG_REGISTRATION_SECTION, 'userToken').strip():
+        validationResult.append("Property 'userToken' has not been set")
 
     if "" == config.get(CONFIG_REGISTRATION_SECTION, 'availability').strip():
         validationResult.append("Property 'availability' has not been set")
