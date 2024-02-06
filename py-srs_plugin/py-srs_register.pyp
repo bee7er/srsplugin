@@ -166,7 +166,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
 
             # Set the plugin ready to accept instructions
             self.actionStatus = AS_READY
-            print("*** Ready as starting state")
+            print("Ready as starting state")
 
             if True == verbose:
                 print("User clicked Ok")
@@ -220,7 +220,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
                     return False;
 
             if True == debug:
-                print("*** Cancelled registration")
+                print("Cancelled registration")
 
             # End Timer function
             self.SetTimer(0)
@@ -343,12 +343,12 @@ class RegistrationDlg(c4d.gui.GeDialog):
             msg (c4d.BaseContainer): The timer message
         """
         if True == debug:
-            print("*** Action status: ", self.actionStatus)
+            print("Action status: ", self.actionStatus)
 
         if AS_READY == self.actionStatus:
             if AVAILABLE == self.availability:
                 if True == debug:
-                    print("*** Available")
+                    print("Available")
                 self.renderingData = srs_connections.submitRequest((srsApi + "/available"), {TEAMTOKEN:self.teamToken, EMAIL:self.email, USERTOKEN:self.userToken})
 
                 if 'Error' != self.renderingData['result'] and AI_DO_RENDER == self.renderingData[ACTIONINSTRUCTION]:
@@ -385,7 +385,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
 
         elif AS_RENDERING == self.actionStatus:
             if True == debug:
-                print("*** Rendering")
+                print("Rendering")
 
             # We do not need to keep telling the master that we are rendering, so this bit is commented out
             ##responseData = srs_connections.submitRequest((srsApi + "/rendering"), {TEAMTOKEN:self.teamToken, EMAIL:self.email, USERTOKEN:self.userToken})
@@ -406,7 +406,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
 
                     fileFullPath = os.path.join(imageSavePath, file)
 
-                    print("**** Uploading image. From team: ",
+                    print("Uploading image. From team: ",
                         self.teamToken,
                         ", email: ",
                         self.email,
@@ -432,7 +432,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
                     os.remove(fileFullPath)
 
                 if str(self.renderingData['to']) in file:
-                    print('******* Ok we have finished: ', str(self.renderingData['to']))
+                    print('Ok we have finished: ', str(self.renderingData['to']))
 
                     if True == debug:
                         print(".....................................")
@@ -454,13 +454,11 @@ class RegistrationDlg(c4d.gui.GeDialog):
 
         # We always send an AWAKE message to the master
         if True == debug:
-            print("*** Awake")
+            print("Awake")
         responseData = srs_connections.submitRequest((srsApi + "/awake"), {TEAMTOKEN:self.teamToken, EMAIL:self.email, USERTOKEN:self.userToken})
 
         if 'Error' != responseData['result']:
             if AI_DO_DOWNLOAD == responseData[ACTIONINSTRUCTION]:
-
-                print("***** LOOKOUT downloading array details: ", responseData['frameDetails'])
 
                 # Download the rendered frames
                 result = srs_handle_results_download.handle_results_download(responseData['frameDetails'])

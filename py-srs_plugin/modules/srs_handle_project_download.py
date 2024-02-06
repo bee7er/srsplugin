@@ -32,13 +32,13 @@ def handle_project_download(
         __modules__ = os.path.dirname(__file__)
         process_project_download = os.path.join(__modules__, "srs_process_project_download.py")
 
-        print("*** Downloading handler: ", HANDLER, " with renderId: ", renderId)
+        print("Downloading handler: ", HANDLER, " with renderId: ", renderId)
 
         if True == verbose:
-            print("*** Downloading handler: ", HANDLER)
-            print("*** Downloading project with assets file to: ", downloadPWADir)
-            print("*** Downloading project with assets dir to: ", c4dProjectWithAssets)
-            print("*** Downloading project from user api token: ", submittedByUserUserToken)
+            print("Downloading handler: ", HANDLER)
+            print("Downloading project with assets file to: ", downloadPWADir)
+            print("Downloading project with assets dir to: ", c4dProjectWithAssets)
+            print("Downloading project from user api token: ", submittedByUserUserToken)
 
         p = subprocess.run(["python3", process_project_download,
             c4dProjectWithAssets,

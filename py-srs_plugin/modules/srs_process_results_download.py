@@ -55,7 +55,7 @@ def process_results_download(
         message = "Error trying to process download results. Error message: " + str(e)
         print(message)
         print(e.args)
-        raise RuntimeError("*** Error processing results download: " + message)
+        raise RuntimeError("Error processing results download: " + message)
 
 # Invoke the process render function
 if __name__=="__main__":

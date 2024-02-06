@@ -38,7 +38,7 @@ def handle_results_download(frameDetails):
     # ..........................................
     try:
         if True == verbose:
-            print("*** Downloading frame ranges: ", frameDetails)
+            print("Downloading frame ranges: ", frameDetails)
 
         __modules__ = os.path.dirname(__file__)
         process_results_download = os.path.join(__modules__, "srs_process_results_download.py")
@@ -58,7 +58,7 @@ def handle_results_download(frameDetails):
                     userToken,
                     str(renderId)], capture_output=True, text=True)
 
-                print("******* Housekeeping 'downloaded' IMAGE on server: ", frameDetail, "\n")
+                print("Housekeeping 'downloaded' IMAGE on server: ", frameDetail, "\n")
                 responseData = srs_connections.submitRequest(
                         (srsApi + "/downloaded"),
                         {TEAMTOKEN: teamToken, EMAIL:email, USERTOKEN:userToken, RENDERID:renderId, FILENAME:frameDetail}

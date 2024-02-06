@@ -181,7 +181,7 @@ class RenderDlg(c4d.gui.GeDialog):
                 if True == verbose:
                     print("Form data passed validation")
                 if True == debug:
-                    print("*** Render requested")
+                    print("Render requested")
                 # Save to the config file
                 srs_functions.update_config_values(srs_functions.CONFIG_RENDER_SECTION, [
                     ('overrideSettings', str(self.overrideSettings)),

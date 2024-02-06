@@ -42,11 +42,11 @@ def process_image_upload(
     # .....................................................
 
     if True == verbose:
-        print("*** Submitting project with assets upload script: ", HANDLER)
-        print("*** Using: ", email, ", and token ", userToken)
-        print("*** File: ", fileToUpload)
-        print("*** Submitter: ", submittedByUserToken)
-        print("*** Handler: ", HANDLER)
+        print("Submitting project with assets upload script: ", HANDLER)
+        print("Using: ", email, ", and token ", userToken)
+        print("File: ", fileToUpload)
+        print("Submitter: ", submittedByUserToken)
+        print("Handler: ", HANDLER)
 
     try:
         p = subprocess.run([
@@ -73,7 +73,7 @@ def process_image_upload(
         message = "Error trying to upload image. Error message: " + str(e)
         print(message)
         print(e.args)
-        raise RuntimeError("*** Error processing image upload: " + message)
+        raise RuntimeError("Error processing image upload: " + message)
 
 # Invoke the process render function
 if __name__=="__main__":

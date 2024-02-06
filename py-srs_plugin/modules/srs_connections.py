@@ -42,7 +42,7 @@ def submitRequest(
         sendData = urllib.urlencode(sendData)
 
     if True == verbose:
-        print("*** Submitting to ", endPoint, ", details: ", sendData)
+        print("Submitting to ", endPoint, ", details: ", sendData)
 
     responseData = 'None'
     try:
@@ -72,6 +72,6 @@ def submitRequest(
         return {'result': 'Error', 'message': message}
 
     if True == verbose:
-        print("*** Returned data: ", responseData)
+        print("Returned data: ", responseData)
 
     return responseData

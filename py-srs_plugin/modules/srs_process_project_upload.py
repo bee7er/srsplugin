@@ -41,11 +41,11 @@ def process_project_upload(
     # .....................................................
 
     if True == verbose:
-        print("*** Submitting project with assets upload script: ", HANDLER)
-        print("*** Using: ", c4dProjectWithAssets, ", in ", c4dProjectWithAssetsDir)
-        print("*** Email: ", email)
-        print("*** Token: ", userToken)
-        print("*** Handler: ", HANDLER)
+        print("Submitting project with assets upload script: ", HANDLER)
+        print("Using: ", c4dProjectWithAssets, ", in ", c4dProjectWithAssetsDir)
+        print("Email: ", email)
+        print("Token: ", userToken)
+        print("Handler: ", HANDLER)
 
     try:
         p = subprocess.run([
@@ -71,7 +71,7 @@ def process_project_upload(
         message = "Error trying to upload project. Error message: " + str(e)
         print(message)
         print(e.args)
-        raise RuntimeError("*** Error processing project upload: " + message)
+        raise RuntimeError("Error processing project upload: " + message)
 
 
 # Invoke the process render function

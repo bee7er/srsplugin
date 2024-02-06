@@ -76,7 +76,7 @@ def handle_render(
         # Set the save path, NB using the name of the original project not necessarily the 'with assets' name
         savePath = srs_functions.get_plugin_directory(os.path.join('projects', 'frames', c4dProjectName))
         if True == debug:
-            print("*** Setting save path to: ", savePath)
+            print("Setting save path to: ", savePath)
         renderData[c4d.RDATA_PATH] = savePath
 
         # Update the project with the new details
@@ -85,10 +85,10 @@ def handle_render(
         res = documents.SaveDocument(projectDocument, projectDocumentPath, c4d.SAVEDOCUMENTFLAGS_CRASHSITUATION | c4d.SAVEDOCUMENTFLAGS_DONTADDTORECENTLIST, c4d.FORMAT_C4DEXPORT)
         if True == res:
             if True == debug:
-                print("*** Success saving project with assets")
+                print("Success saving project with assets")
 
         else:
-            raise RuntimeError("*** Error saving project with assets")
+            raise RuntimeError("Error saving project with assets")
 
         # Retrieve the batch render instance
         br = c4d.documents.GetBatchRender()
@@ -101,7 +101,7 @@ def handle_render(
         # Start processing the render queue
         br.SetRendering(c4d.BR_START)
         if True == debug:
-            print("*** Render queue started")
+            print("Render queue started")
 
         return {'result': "OK", 'message': "Render of image files completed"}
 

@@ -98,7 +98,7 @@ def t_process_project_upload():
         message = "Error trying to upload project. Error message: " + str(e)
         print(message)
         print(e.args)
-        raise RuntimeError("*** Error processing project upload: " + message)
+        raise RuntimeError("Error processing project upload: " + message)
 
 
 # Invoke the process render function

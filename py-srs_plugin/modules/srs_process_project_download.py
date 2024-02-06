@@ -32,14 +32,13 @@ def process_project_download(
     # Downloading the project with assets file from master
     # .....................................................
     try:
-        print("Here we go ********************")
         if True == verbose:
-            print("*** Downloading handler: ", HANDLER)
-            print("*** Downloading project with assets file to: ", downloadPWADir)
-            print("*** Downloading project with assets dir to: ", c4dProjectWithAssets)
-            print("*** Downloading project from user api token: ", submittedByUserToken)
+            print("Downloading handler: ", HANDLER)
+            print("Downloading project with assets file to: ", downloadPWADir)
+            print("Downloading project with assets dir to: ", c4dProjectWithAssets)
+            print("Downloading project from user api token: ", submittedByUserToken)
 
-        print("*** Downloading project for render Id: ", renderId)
+        print("Downloading project for render Id: ", renderId)
 
         p = subprocess.run([
             HANDLER,
@@ -62,7 +61,7 @@ def process_project_download(
         message = "Error trying to download. Error message: " + str(e)
         print(message)
         print(e.args)
-        raise RuntimeError("*** Error processing project download: " + message)
+        raise RuntimeError("Error processing project download: " + message)
 
 # Invoke the process render function
 if __name__=="__main__":

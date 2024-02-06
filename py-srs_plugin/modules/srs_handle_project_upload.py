@@ -32,7 +32,7 @@ def handle_project_upload(renderId):
 # ===================================================================
     try:
         # Save the project with assets, to make sure it is up to date
-        print("*** Saving project with assets to: ", c4dProjectWithAssetsDir)
+        print("Saving project with assets to: ", c4dProjectWithAssetsDir)
 
         doc = documents.GetActiveDocument()
         missingAssets = []
@@ -45,9 +45,9 @@ def handle_project_upload(renderId):
             missingAssets
             )
         if True == res:
-            print("*** Success saving project with assets")
+            print("Success saving project with assets")
         else:
-            message = "*** Error saving project with assets to: " + c4dProjectWithAssetsDir
+            message = "Error saving project with assets to: " + c4dProjectWithAssetsDir
             print(message)
             return {'result': "Error", 'message': message}
 
