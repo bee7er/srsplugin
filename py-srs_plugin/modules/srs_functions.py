@@ -23,6 +23,8 @@ OS_WINDOWS = 'windows'
 CONFIG_SECTION = 'CONFIG'
 CONFIG_REGISTRATION_SECTION = 'REGISTRATION'
 CONFIG_RENDER_SECTION = 'RENDER'
+# TODO Is this going to work on WIN, should use the os separator
+# Use os.sep
 CONFIG_FILE = __root__ + '/config/properties.ini'
 
 # ===================================================================
@@ -52,6 +54,8 @@ def get_srs_domain():
         config = get_config_values()
         # Get the API URL and derive the domain from that
         srsApi = config.get(CONFIG_SECTION, 'srsApi')
+        # TODO Is this going to work on WIN, should use the os separator
+        # Use os.sep
         apiDtls = srsApi.split('/')
         return (apiDtls[0] + '//' + apiDtls[2])
 

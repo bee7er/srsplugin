@@ -180,7 +180,8 @@ class RegistrationDlg(c4d.gui.GeDialog):
                 self.availability = self.GetInt32(SELCOMBO_BUTTON)
                 # Save to the config file
                 srs_functions.update_config_values(
-                    srs_functions.CONFIG_REGISTRATION_SECTION, [(TEAMTOKEN, self.teamToken), (EMAIL, self.email), (USERNAME, self.userName), (AVAILABILITY,  str(self.availability))]
+                    srs_functions.CONFIG_REGISTRATION_SECTION,
+                    [(TEAMTOKEN, self.teamToken), (EMAIL, self.email), (USERNAME, self.userName), (AVAILABILITY,  str(self.availability))]
                     )
                 if True == verbose:
                     print("Form data passed validation")
@@ -230,7 +231,46 @@ class RegistrationDlg(c4d.gui.GeDialog):
 
         # User click on Cancel button
         elif messageId == NEWTEAM_BUTTON:
-            gui.QuestionDialog("We create a new team")
+            if True == verbose:
+                print("User clicked New Team")
+
+            validationResult = self.validate()
+            if True == validationResult:
+                self.teamToken = self.GetString(EDIT_TEAMTOKEN_TEXT)
+                self.userName = self.GetString(EDIT_USERNAME_TEXT)
+                self.availability = self.GetInt32(SELCOMBO_BUTTON)
+                # Save to the config file
+                srs_functions.update_config_values(
+                    srs_functions.CONFIG_REGISTRATION_SECTION,
+                    [(TEAMTOKEN, self.teamToken), (EMAIL, self.email), (USERNAME, self.userName), (AVAILABILITY,  str(self.availability))]
+                    )
+                if True == verbose:
+                    print("Form data passed validation")
+
+                # Create a new team with the API
+                teamToken = self.createNewTeam()
+                # Error, exit
+                if False == teamToken:
+                    return False
+
+                gui.MessageDialog("New team created")
+                self.teamToken = teamToken
+                srs_functions.update_config_values(
+                    srs_functions.CONFIG_REGISTRATION_SECTION,
+                    [(TEAMTOKEN, self.teamToken)]
+                    )
+                self.SetString(EDIT_TEAMTOKEN_TEXT, self.teamToken)
+
+            else:
+                if True == verbose:
+                    print("Form data failed validation")
+
+                errorMessages = sep = ""
+                for error in validationResult:
+                    errorMessages += sep + error
+                    sep = "\n"
+
+                gui.MessageDialog("ERROR: Please correct the following issues: \n" + errorMessages)
 
         return True
 
@@ -277,6 +317,21 @@ class RegistrationDlg(c4d.gui.GeDialog):
             return False
 
         return True
+
+    # ===================================================================
+    def createNewTeam(self):
+    # ===================================================================
+
+        sendData = {
+            EMAIL: self.email,
+            USERTOKEN: self.userToken
+        }
+        responseData = srs_connections.submitRequest((srsApi + "/new_team"), sendData)
+        if 'Error' == responseData['result']:
+            gui.MessageDialog("Error:\n" + responseData['message'])
+            return False
+
+        return responseData['newTeamToken'];
 
     # ===================================================================
     def Timer(self, msg):
