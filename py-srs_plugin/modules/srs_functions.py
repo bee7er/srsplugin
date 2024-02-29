@@ -23,6 +23,8 @@ OS_WINDOWS = 'windows'
 CONFIG_SECTION = 'CONFIG'
 CONFIG_REGISTRATION_SECTION = 'REGISTRATION'
 CONFIG_RENDER_SECTION = 'RENDER'
+PREVIOUSTEAMSCOUNT = 'previousTeamsCount'
+PREVIOUSTEAMTOKENS = 'previousTeamTokens'
 # TODO Is this going to work on WIN, should use the os separator
 # Use os.sep
 CONFIG_FILE = __root__ + '/config/properties.ini'
@@ -140,8 +142,6 @@ def analyse_frame_ranges(frameRangeStr):
     config = get_config_values()
     verbose = config.get(CONFIG_SECTION, 'verbose')
 
-    verbose = True
-
     # Remove all spaces
     frameRangeLst = frameRangeStr.replace(' ', '').split(',')
     returnStr = ''
@@ -172,6 +172,28 @@ def analyse_frame_ranges(frameRangeStr):
         sep = ','
 
     return returnStr
+
+# ===================================================================
+def buildPreviousTeamsList(currentTeamToken):
+# ===================================================================
+    # Add the team to the list, but drop off the earliest team after
+    # a configured limit.
+    # .....................................................
+
+    config = get_config_values()
+    previousTeamsCount = config.get(CONFIG_SECTION, PREVIOUSTEAMSCOUNT)
+    previousTeamTokens = config.get(CONFIG_REGISTRATION_SECTION, PREVIOUSTEAMTOKENS)
+
+    # We are going to add to the end of the list
+    tokenLst = previousTeamTokens.split(',')
+    tokenLst.append(currentTeamToken)
+    lstLen = len(tokenLst)
+    while (lstLen > int(previousTeamsCount)):
+        # Remove the oldest element
+        tokenLst.pop(0)
+        lstLen -= 1
+
+    return ",".join(tokenLst)
 
 # ===================================================================
 def get_platform():

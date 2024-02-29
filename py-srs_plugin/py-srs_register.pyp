@@ -56,8 +56,9 @@ srsDomain = srs_functions.get_srs_domain()
 
 # Config settings
 AVAILABILITY = "availability"
-TEAMTOKEN = "teamToken"
 EMAIL = "email"
+TEAMTOKEN = "teamToken"
+PREVIOUSTEAMTOKENS = "previousTeamTokens"
 USERNAME = "userName"
 USERTOKEN = "userToken"
 
@@ -236,6 +237,9 @@ class RegistrationDlg(c4d.gui.GeDialog):
 
             validationResult = self.validate()
             if True == validationResult:
+                if True == verbose:
+                    print("Form data passed validation")
+
                 self.teamToken = self.GetString(EDIT_TEAMTOKEN_TEXT)
                 self.userName = self.GetString(EDIT_USERNAME_TEXT)
                 self.availability = self.GetInt32(SELCOMBO_BUTTON)
@@ -244,8 +248,12 @@ class RegistrationDlg(c4d.gui.GeDialog):
                     srs_functions.CONFIG_REGISTRATION_SECTION,
                     [(TEAMTOKEN, self.teamToken), (EMAIL, self.email), (USERNAME, self.userName), (AVAILABILITY,  str(self.availability))]
                     )
+
+                # Add the previous team to the list of previous teams list
+                newTokens = srs_functions.buildPreviousTeamsList(self.teamToken)
                 if True == verbose:
-                    print("Form data passed validation")
+                    print('New saved tokens: ' + newTokens)
+                srs_functions.update_config_values(srs_functions.CONFIG_REGISTRATION_SECTION,[(PREVIOUSTEAMTOKENS, newTokens)])
 
                 # Create a new team with the API
                 teamToken = self.createNewTeam()
@@ -255,10 +263,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
 
                 gui.MessageDialog("New team created")
                 self.teamToken = teamToken
-                srs_functions.update_config_values(
-                    srs_functions.CONFIG_REGISTRATION_SECTION,
-                    [(TEAMTOKEN, self.teamToken)]
-                    )
+                srs_functions.update_config_values(srs_functions.CONFIG_REGISTRATION_SECTION,[(TEAMTOKEN, self.teamToken)])
                 self.SetString(EDIT_TEAMTOKEN_TEXT, self.teamToken)
 
             else:
