@@ -1,7 +1,7 @@
 [CONFIG]
 debug = 0
 verbose = 0
-previousTeamsCount = 10
+previousTeamsMax = 10
 srsApi = http://3n3.477.mywebsitetransfer.com/api1
 c4dProjectWithAssetsDir = c4dproject
 c4dProjectWithAssets = c4dproject.c4d

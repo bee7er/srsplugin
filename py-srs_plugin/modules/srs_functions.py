@@ -23,7 +23,7 @@ OS_WINDOWS = 'windows'
 CONFIG_SECTION = 'CONFIG'
 CONFIG_REGISTRATION_SECTION = 'REGISTRATION'
 CONFIG_RENDER_SECTION = 'RENDER'
-PREVIOUSTEAMSCOUNT = 'previousTeamsCount'
+PREVIOUSTEAMSMAX = 'previousTeamsMax'
 PREVIOUSTEAMTOKENS = 'previousTeamTokens'
 # TODO Is this going to work on WIN, should use the os separator
 # Use os.sep
@@ -181,19 +181,32 @@ def buildPreviousTeamsList(currentTeamToken):
     # .....................................................
 
     config = get_config_values()
-    previousTeamsCount = config.get(CONFIG_SECTION, PREVIOUSTEAMSCOUNT)
-    previousTeamTokens = config.get(CONFIG_REGISTRATION_SECTION, PREVIOUSTEAMTOKENS)
+    previousTeamsMax = int(config.get(CONFIG_SECTION, PREVIOUSTEAMSMAX))
+    previousTeamTokens = config.get(CONFIG_REGISTRATION_SECTION, PREVIOUSTEAMTOKENS).strip()
 
     # We are going to add to the end of the list
-    tokenLst = previousTeamTokens.split(',')
+    tokenLst = []
+    if '' != previousTeamTokens:
+        tokenLst = previousTeamTokens.split(',')
+
     tokenLst.append(currentTeamToken)
     lstLen = len(tokenLst)
-    while (lstLen > int(previousTeamsCount)):
+    # We do not keep more than the count, it is a configurable maximum
+    while (lstLen > previousTeamsMax):
         # Remove the oldest element
         tokenLst.pop(0)
         lstLen -= 1
 
-    return ",".join(tokenLst)
+    # Only join up the list entries if there is more than one
+    newLstStr = ''
+    if len(tokenLst) > 1:
+        sep = ","
+        newLstStr = sep.join(tokenLst)
+    else:
+        newLstStr = tokenLst[0]
+
+    return newLstStr
+
 
 # ===================================================================
 def get_platform():
