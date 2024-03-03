@@ -25,6 +25,9 @@ CONFIG_REGISTRATION_SECTION = 'REGISTRATION'
 CONFIG_RENDER_SECTION = 'RENDER'
 PREVIOUSTEAMSMAX = 'previousTeamsMax'
 PREVIOUSTEAMTOKENS = 'previousTeamTokens'
+C4D_PROJECT_WITH_ASSETS = 'c4dProjectWithAssets'
+C4D_PROJECT_WITH_ASSETS_DIR = 'c4dProjectWithAssetsDir'
+
 # TODO Is this going to work on WIN, should use the os separator
 # Use os.sep
 CONFIG_FILE = __root__ + '/config/properties.ini'

@@ -6,7 +6,8 @@ PLEASE NOTE:  These utility functions need c4d.
 Put functions that do not need c4d into srs_functions.py
 
 """
-import c4d, os, platform
+import c4d, os, platform, srs_functions
+from c4d import documents
 
 __root__ = os.path.dirname(os.path.dirname(__file__))
 
@@ -94,3 +95,64 @@ def get_projectName():
     print("Project name is ", projectName)
 
     return projectName
+
+# ===================================================================
+def saveProjectWithAssets():
+# ===================================================================
+    # Saves the project with assets to the nominated directory
+    # ........................................................
+    try:
+        config = srs_functions.get_config_values()
+        debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
+
+        c4dProjectWithAssets = get_projectName()
+        if '' == c4dProjectWithAssets:
+            message = "A project has not yet been opened"
+            print(message)
+            return message
+        if -1 == c4dProjectWithAssets.find('.c4d'):
+            # Add the file extension, because when we save the file it will be created with a c4d extension
+            c4dProjectWithAssets += '.c4d'
+
+        # Directory is the same name as the project, without the extension
+        c4dProjectWithAssetsDir = c4dProjectWithAssets.rsplit(".", 1)[0]
+        c4dProjectWithAssetsDirFullPath = srs_functions.get_plugin_directory(os.path.join('projects', 'with_assets', c4dProjectWithAssetsDir))
+
+        if True == debug:
+            print("Saving project with assets " + c4dProjectWithAssets + ' to ' + c4dProjectWithAssetsDir)
+
+        doc = documents.GetActiveDocument()
+        missingAssets = []
+        assets = []
+        res = documents.SaveProject(
+            doc,
+            c4d.SAVEPROJECT_ASSETS | c4d.SAVEPROJECT_SCENEFILE,
+            c4dProjectWithAssetsDirFullPath,
+            assets,
+            missingAssets
+            )
+        if True == res:
+            if True == debug:
+                print("Project with assets " + c4dProjectWithAssets + ' saved successfully to ' + c4dProjectWithAssetsDir)
+            # Save project details to the config file
+            srs_functions.update_config_values(
+                srs_functions.CONFIG_SECTION,
+                [(srs_functions.C4D_PROJECT_WITH_ASSETS_DIR, c4dProjectWithAssetsDir), (srs_functions.C4D_PROJECT_WITH_ASSETS, c4dProjectWithAssets)]
+                )
+
+            if True == debug:
+                print("Project details updated in config file")
+
+            return True
+
+        else:
+            message = "Error saving project with assets to: " + c4dProjectWithAssetsDir
+            print(message)
+            return message
+
+    except Exception as e:
+        message = "Error trying to save project with assets. Error message: " + str(e)
+        print(message)
+        print(e.args)
+
+        return message

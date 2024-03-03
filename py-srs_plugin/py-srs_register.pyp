@@ -17,7 +17,9 @@ if os.path.join(__root__, 'modules') not in sys.path: sys.path.insert(0, os.path
 import c4d
 from c4d import gui, bitmaps, utils
 # SRS module for various shared functions
-import srs_functions, srs_connections, srs_handle_project_download, srs_handle_image_upload, srs_handle_results_download, srs_handle_render
+import srs_functions, srs_connections, srs_handle_project_download, srs_handle_image_upload
+import srs_handle_results_download, srs_handle_render
+import srs_functions_c4d
 
 __res__ = c4d.plugins.GeResource()
 __res__.Init(__root__)
@@ -32,7 +34,8 @@ EDIT_USERNAME_TEXT = 100014
 COMBO_TEXT = 100015
 SELCOMBO_BUTTON = 100016
 NEWTEAM_BUTTON = 100017
-BLANK = 100018
+SAVE_PROJECT_BUTTON = 100018
+BLANK = 100019
 
 PLEASE_SELECT = 0
 AVAILABLE = 1
@@ -136,7 +139,10 @@ class RegistrationDlg(c4d.gui.GeDialog):
         self.SetInt32(SELCOMBO_BUTTON, self.availability)
         self.AddStaticText(id=BLANK, flags=c4d.BFV_MASK, initw=145, name="", borderstyle=c4d.BORDER_NONE)
 
-        self.AddDlgGroup(c4d.DLG_OK | c4d.DLG_CANCEL)
+        """ Button fields """
+        self.AddButton(id=c4d.DLG_CANCEL, flags=c4d.BFH_LEFT | c4d.BFV_CENTER, initw=100, inith=16, name="Cancel")
+        self.AddButton(id=SAVE_PROJECT_BUTTON, flags=c4d.BFH_LEFT | c4d.BFV_CENTER, initw=210, inith=16, name="Save Project with Assets")
+        self.AddButton(id=c4d.DLG_OK, flags=c4d.BFH_LEFT | c4d.BFV_CENTER, initw=100, inith=16, name="Register")
         self.GroupEnd()
 
         self.GroupBegin(id=120000, flags=c4d.BFH_SCALEFIT, cols=1, rows=1)
@@ -212,25 +218,6 @@ class RegistrationDlg(c4d.gui.GeDialog):
             return True
 
         # User click on Cancel button
-        elif messageId == c4d.DLG_CANCEL:
-            if AS_RENDERING == self.actionStatus:
-                yesNo = gui.QuestionDialog("You are currently rendering in the background.\nAre you sure you want to exit?")
-                if False == yesNo:
-                    if True == verbose:
-                        print("Not cancelling after all")
-                    return False;
-
-            if True == debug:
-                print("Cancelled registration")
-
-            # End Timer function
-            self.SetTimer(0)
-
-            # Close the Dialog
-            self.Close()
-            return True
-
-        # User click on Cancel button
         elif messageId == NEWTEAM_BUTTON:
             if True == verbose:
                 print("User clicked New Team")
@@ -276,6 +263,37 @@ class RegistrationDlg(c4d.gui.GeDialog):
                     sep = "\n"
 
                 gui.MessageDialog("ERROR: Please correct the following issues: \n" + errorMessages)
+
+
+        # User click on Cancel button
+        elif messageId == SAVE_PROJECT_BUTTON:
+
+            message = srs_functions_c4d.saveProjectWithAssets()
+            if True != message:
+                gui.MessageDialog("Something went wrong saving the project: " + str(message))
+                return False
+
+            return True
+
+
+        # User click on Cancel button
+        elif messageId == c4d.DLG_CANCEL:
+            if AS_RENDERING == self.actionStatus:
+                yesNo = gui.QuestionDialog("You are currently rendering in the background.\nAre you sure you want to exit?")
+                if False == yesNo:
+                    if True == verbose:
+                        print("Not cancelling after all")
+                    return False;
+
+            if True == debug:
+                print("Cancelled registration")
+
+            # End Timer function
+            self.SetTimer(0)
+
+            # Close the Dialog
+            self.Close()
+            return True
 
         return True
 
