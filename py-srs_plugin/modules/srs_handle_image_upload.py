@@ -10,20 +10,20 @@ import srs_functions
 
 __root__ = os.path.dirname(os.path.dirname(__file__))
 
-config = srs_functions.get_config_values()
-debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
-verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
-
-framesDir = srs_functions.get_plugin_directory(os.path.join('projects', 'frames'))
-srsDomain = srs_functions.get_srs_domain()
-teamToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, "teamToken")
-email = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, "email")
-userToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, "userToken")
-
 # ===================================================================
 def handle_image_upload(fileToUpload, submittedByUserUserToken, renderId):
 # ===================================================================
     try:
+        config = srs_functions.get_config_values()
+        debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
+        verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
+
+        framesDir = srs_functions.get_plugin_directory(os.path.join('projects', 'frames'))
+        srsDomain = srs_functions.get_srs_domain()
+        teamToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, "teamToken")
+        email = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, "email")
+        userToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, "userToken")
+
         __modules__ = os.path.dirname(__file__)
         process_image_upload = os.path.join(__modules__, "srs_process_image_upload.py")
 

@@ -15,30 +15,33 @@ TEAMTOKEN = "teamToken"
 EMAIL = "email"
 USERTOKEN = "userToken"
 
-config = srs_functions.get_config_values()
-debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
-verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
-c4dProjectWithAssets = config.get(srs_functions.CONFIG_SECTION, 'c4dProjectWithAssets')
-c4dProjectWithAssetsDir = srs_functions.get_plugin_directory(
-    os.path.join('projects', 'with_assets', config.get(srs_functions.CONFIG_SECTION, 'c4dProjectWithAssetsDir'))
-    )
-srsDomain = srs_functions.get_srs_domain()
-teamToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, TEAMTOKEN)
-email = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, EMAIL)
-userToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, USERTOKEN)
-
 # ===================================================================
 def handle_project_upload(renderId):
 # ===================================================================
     try:
+        print("*** In handle_project_upload Project with assets")
+
         # Save the project with assets, to make sure it is up to date
         result = srs_functions_c4d.saveProjectWithAssets()
         if True == result:
             print("Success saving project with assets")
         else:
-            message = "Error saving project with assets to: " + c4dProjectWithAssetsDir
+            message = "Error saving project with assets"
             print(message)
             return {'result': "Error", 'message': message}
+
+        # Now refresh config values in case they changed in the save
+        config = srs_functions.get_config_values()
+        debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
+        verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
+        c4dProjectWithAssets = config.get(srs_functions.CONFIG_SECTION, 'c4dProjectWithAssets')
+        c4dProjectWithAssetsDir = srs_functions.get_plugin_directory(
+            os.path.join('projects', 'with_assets', config.get(srs_functions.CONFIG_SECTION, 'c4dProjectWithAssetsDir'))
+            )
+        srsDomain = srs_functions.get_srs_domain()
+        teamToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, TEAMTOKEN)
+        email = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, EMAIL)
+        userToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, USERTOKEN)
 
         __modules__ = os.path.dirname(__file__)
         process_project_upload = os.path.join(__modules__, "srs_process_project_upload.py")

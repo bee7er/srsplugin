@@ -23,10 +23,6 @@ import json
 ERROR = "Error"
 OK = "OK"
 
-config = srs_functions.get_config_values()
-debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
-verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
-
 # ===================================================================
 def submitRequest(
     endPoint,
@@ -35,6 +31,10 @@ def submitRequest(
 # ===================================================================
     # Submit a POST request to the master node
     # .....................................................
+
+    config = srs_functions.get_config_values()
+    debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
+    verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
 
     if "R2023+" == VERSION:
         sendData = parser.urlencode(sendData)

@@ -13,12 +13,6 @@ if srs_functions.OS_MAC == srs_functions.get_platform():
 else:
     HANDLER = __root__ + '\srs_downloadProject.cmd'
 
-config = srs_functions.get_config_values()
-debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
-verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
-downloadPWADir = srs_functions.get_plugin_directory(os.path.join('projects', 'downloads'))
-srsDomain = srs_functions.get_srs_domain()
-
 # ===================================================================
 def handle_project_download(
     c4dProjectWithAssets,
@@ -29,6 +23,12 @@ def handle_project_download(
     # Downloading the project with assets file from master
     # .....................................................
     try:
+        config = srs_functions.get_config_values()
+        debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
+        verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
+        downloadPWADir = srs_functions.get_plugin_directory(os.path.join('projects', 'downloads'))
+        srsDomain = srs_functions.get_srs_domain()
+
         __modules__ = os.path.dirname(__file__)
         process_project_download = os.path.join(__modules__, "srs_process_project_download.py")
 

@@ -29,16 +29,6 @@ import srs_functions
 
 __root__ = os.path.dirname(os.path.dirname(__file__))
 
-config = srs_functions.get_config_values()
-debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
-verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
-
-# Params
-teamToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'teamToken')
-email = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'email')
-userToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'userToken')
-srsDomain = srs_functions.get_srs_domain()
-
 # ===================================================================
 def handle_render(
     c4dProjectDir,
@@ -53,6 +43,15 @@ def handle_render(
 # ===================================================================
     # Submits a render request for one or more frames to the BatchRender queue
     # ........................................................................
+    config = srs_functions.get_config_values()
+    debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
+    verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
+
+    # Params
+    teamToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'teamToken')
+    email = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'email')
+    userToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'userToken')
+    srsDomain = srs_functions.get_srs_domain()
 
     if True == verbose:
         print("Processing c4dProjectWithAssets: ", downloadPWADir, '/', c4dProjectWithAssets, ' from: ', rangeFrom, ' to: ', rangeTo)

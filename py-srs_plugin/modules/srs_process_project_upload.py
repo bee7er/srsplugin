@@ -19,10 +19,6 @@ TEAMTOKEN = "teamToken"
 EMAIL = "email"
 USERTOKEN = "userToken"
 
-config = srs_functions.get_config_values()
-debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
-verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
-
 # Params
 input_params = sys.argv
 
@@ -40,14 +36,18 @@ def process_project_upload(
     # Posting the project with assets file to master
     # .....................................................
 
-    if True == verbose:
-        print("Submitting project with assets upload script: ", HANDLER)
-        print("Using: ", c4dProjectWithAssets, ", in ", c4dProjectWithAssetsDir)
-        print("Email: ", email)
-        print("Token: ", userToken)
-        print("Handler: ", HANDLER)
-
     try:
+        config = srs_functions.get_config_values()
+        debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
+        verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
+
+        if True == verbose:
+            print("Submitting project with assets upload script: ", HANDLER)
+            print("Using: ", c4dProjectWithAssets, ", in ", c4dProjectWithAssetsDir)
+            print("Email: ", email)
+            print("Token: ", userToken)
+            print("Handler: ", HANDLER)
+
         p = subprocess.run([
             HANDLER,
             c4dProjectWithAssets,

@@ -13,17 +13,6 @@ if srs_functions.OS_MAC == srs_functions.get_platform():
 else:
     HANDLER = __root__ + '\srs_downloadResults.cmd'
 
-config = srs_functions.get_config_values()
-debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
-verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
-c4dProjectWithAssets = config.get(srs_functions.CONFIG_SECTION, 'c4dProjectWithAssets')
-outputToDir = srs_functions.get_plugin_directory(os.path.join('projects', 'downloads', 'results'))
-srsDomain = srs_functions.get_srs_domain()
-srsApi = config.get(srs_functions.CONFIG_SECTION, 'srsApi')
-teamToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'teamToken')
-email = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'email')
-userToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'userToken')
-
 # Config settings
 EMAIL = "email"
 USERTOKEN = "userToken"
@@ -37,6 +26,18 @@ def handle_results_download(frameDetails):
     # Downloading the results files from master
     # ..........................................
     try:
+
+        config = srs_functions.get_config_values()
+        debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
+        verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
+        c4dProjectWithAssets = config.get(srs_functions.CONFIG_SECTION, 'c4dProjectWithAssets')
+        outputToDir = srs_functions.get_plugin_directory(os.path.join('projects', 'downloads', 'results'))
+        srsDomain = srs_functions.get_srs_domain()
+        srsApi = config.get(srs_functions.CONFIG_SECTION, 'srsApi')
+        teamToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'teamToken')
+        email = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'email')
+        userToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'userToken')
+
         if True == debug:
             print("Downloading frame ranges: ", frameDetails, " to ", outputToDir)
 

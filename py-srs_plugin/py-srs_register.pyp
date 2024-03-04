@@ -92,8 +92,12 @@ class RegistrationDlg(c4d.gui.GeDialog):
             Called when Cinema 4D creates the dialog
         """
 
+        # Check that the user details are set, create if they are not
+        self.checkUserDetails()
+
         # Refresh the config values
         config = srs_functions.get_config_values()
+
         validationResult = srs_functions.validate_environment(config)
         if True == validationResult:
             if True == verbose:
@@ -213,7 +217,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
                     errorMessages += sep + error
                     sep = "\n"
 
-                gui.MessageDialog("ERROR: Please correct the following issues: \n" + errorMessages)
+                gui.MessageDialog("ERROR IN SUBMISSION: Please correct the following issues: \n" + errorMessages)
 
             return True
 
@@ -222,48 +226,33 @@ class RegistrationDlg(c4d.gui.GeDialog):
             if True == verbose:
                 print("User clicked New Team")
 
-            validationResult = self.validate()
-            if True == validationResult:
-                if True == verbose:
-                    print("Form data passed validation")
+            self.teamToken = self.GetString(EDIT_TEAMTOKEN_TEXT)
+            self.userName = self.GetString(EDIT_USERNAME_TEXT)
+            self.availability = self.GetInt32(SELCOMBO_BUTTON)
+            # Save to the config file
+            srs_functions.update_config_values(
+                srs_functions.CONFIG_REGISTRATION_SECTION,
+                [(TEAMTOKEN, self.teamToken), (EMAIL, self.email), (USERNAME, self.userName), (AVAILABILITY,  str(self.availability))]
+                )
 
-                self.teamToken = self.GetString(EDIT_TEAMTOKEN_TEXT)
-                self.userName = self.GetString(EDIT_USERNAME_TEXT)
-                self.availability = self.GetInt32(SELCOMBO_BUTTON)
-                # Save to the config file
-                srs_functions.update_config_values(
-                    srs_functions.CONFIG_REGISTRATION_SECTION,
-                    [(TEAMTOKEN, self.teamToken), (EMAIL, self.email), (USERNAME, self.userName), (AVAILABILITY,  str(self.availability))]
-                    )
-
+            if '' != self.teamToken.strip():
                 # Add the previous team to the list of previous teams list
                 newTokens = srs_functions.buildPreviousTeamsList(self.teamToken)
                 if True == verbose:
-                    print('New saved tokens: ' + newTokens)
+                    print('New saved team tokens: ' + newTokens)
                 srs_functions.update_config_values(srs_functions.CONFIG_REGISTRATION_SECTION,[(PREVIOUSTEAMTOKENS, newTokens)])
 
-                # Create a new team with the API
-                teamToken = self.createNewTeam()
-                # Error, exit
-                if False == teamToken:
-                    return False
+            # Create a new team with the API
+            teamToken = self.createNewTeam()
+            if False == teamToken:
+                gui.MessageDialog("Error creating new team")
+                return False
 
-                gui.MessageDialog("New team created")
+            else:
                 self.teamToken = teamToken
                 srs_functions.update_config_values(srs_functions.CONFIG_REGISTRATION_SECTION,[(TEAMTOKEN, self.teamToken)])
                 self.SetString(EDIT_TEAMTOKEN_TEXT, self.teamToken)
-
-            else:
-                if True == verbose:
-                    print("Form data failed validation")
-
-                errorMessages = sep = ""
-                for error in validationResult:
-                    errorMessages += sep + error
-                    sep = "\n"
-
-                gui.MessageDialog("ERROR: Please correct the following issues: \n" + errorMessages)
-
+                print("New team created: " + teamToken)
 
         # User click on Cancel button
         elif messageId == SAVE_PROJECT_BUTTON:
@@ -297,6 +286,42 @@ class RegistrationDlg(c4d.gui.GeDialog):
             return True
 
         return True
+
+    # ===================================================================
+    def checkUserDetails(self):
+    # ===================================================================
+        """
+            Ensure user and project details are set, creating a new user if necessary
+        """
+        email = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'email').strip()
+        userToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'userToken').strip()
+        if "" == email or "" == userToken:
+            # Create a new user and update the config details
+            sendData = {}
+            responseData = srs_connections.submitRequest((srsApi + "/new_user"), sendData)
+            if 'Error' == responseData['result']:
+                gui.MessageDialog("Error creating new user:\n" + responseData['message'])
+                return False
+
+            # Save to the config file
+            srs_functions.update_config_values(
+                srs_functions.CONFIG_REGISTRATION_SECTION,
+                [(EMAIL, responseData['email']), (USERTOKEN, responseData['userToken']), (USERNAME, responseData['userName']), (AVAILABILITY,  str(AVAILABLE))]
+                )
+
+            print("New user created: " + responseData['userToken'])
+
+        c4dProjectWithAssets = config.get(srs_functions.CONFIG_SECTION, 'c4dProjectWithAssets')
+        c4dProjectWithAssetsDir = config.get(srs_functions.CONFIG_SECTION, 'c4dProjectWithAssetsDir')
+        if "" == c4dProjectWithAssets or "" == c4dProjectWithAssetsDir:
+
+            result = srs_functions_c4d.saveProjectWithAssets()
+            if True == result:
+                gui.MessageDialog("Register plugin. Project with assets saved and configuration details updated")
+            else:
+                gui.MessageDialog("Register plugin. Something went wrong saving the project: " + str(result))
+
+        return
 
     # ===================================================================
     def validate(self):
@@ -337,7 +362,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
         }
         responseData = srs_connections.submitRequest((srsApi + "/register"), sendData)
         if 'Error' == responseData['result']:
-            gui.MessageDialog("Error:\n" + responseData['message'])
+            gui.MessageDialog("Error registering:\n" + responseData['message'])
             return False
 
         return True
@@ -352,7 +377,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
         }
         responseData = srs_connections.submitRequest((srsApi + "/new_team"), sendData)
         if 'Error' == responseData['result']:
-            gui.MessageDialog("Error:\n" + responseData['message'])
+            gui.MessageDialog("Error creating new team:\n" + responseData['message'])
             return False
 
         return responseData['newTeamToken'];

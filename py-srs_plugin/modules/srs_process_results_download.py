@@ -13,10 +13,6 @@ if srs_functions.OS_MAC == srs_functions.get_platform():
 else:
     HANDLER = __root__ + '\srs_downloadResults.cmd'
 
-config = srs_functions.get_config_values()
-debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
-verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
-
 # Params
 input_params = sys.argv
 
@@ -33,6 +29,10 @@ def process_results_download(
     # Downloading the results files from master
     # ..........................................
     try:
+        config = srs_functions.get_config_values()
+        debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
+        verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
+
         p = subprocess.run([
             HANDLER,
             c4dProjectWithAssets,

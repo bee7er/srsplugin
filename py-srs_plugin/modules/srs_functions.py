@@ -97,9 +97,6 @@ def validate_environment(config):
         validationResult.append("Property 'srsApi' has not been set")
 
     # Validate the REGISTRATION section
-    if "" == config.get(CONFIG_REGISTRATION_SECTION, 'teamToken').strip():
-        validationResult.append("Property 'teamToken' has not been set")
-
     if "" == config.get(CONFIG_REGISTRATION_SECTION, 'email').strip():
         validationResult.append("Property 'email' has not been set")
 
@@ -108,6 +105,12 @@ def validate_environment(config):
 
     if "" == config.get(CONFIG_REGISTRATION_SECTION, 'availability').strip():
         validationResult.append("Property 'availability' has not been set")
+
+    if "" == config.get(CONFIG_REGISTRATION_SECTION, 'teamToken').strip():
+        message = "\nProperty 'teamToken' has not been set\n"
+        message += "Obtain the team token from your team organiser\n"
+        message += "Or click New Team to start a new team\n"
+        validationResult.append(message)
 
     if 0 == len(validationResult):
         return True

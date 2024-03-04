@@ -85,7 +85,8 @@ class RenderDlg(c4d.gui.GeDialog):
     # ===================================================================
         """ Called when Cinema 4D creates the dialog """
 
-        # TODO Submissions aren't allowed if registration dialog is not open
+        # Refresh the config values
+        config = srs_functions.get_config_values()
 
         # Validate the configuration file and the general environment
         validationResult = srs_functions.validate_environment(config)
@@ -101,7 +102,7 @@ class RenderDlg(c4d.gui.GeDialog):
                 errorMessages += sep + error
                 sep = "\n"
 
-            gui.MessageDialog("ERRORS IN CONFIGURATION FILE: Please correct the following issues: \n" + errorMessages)
+            gui.MessageDialog("ERRORS IN CONFIGURATION ENVIRONMENT FILE: Please correct the following issues: \n" + errorMessages)
 
         # Get the project with assets path and name
         self.c4dProjectWithAssetsDir = srs_functions.get_plugin_directory(
@@ -163,6 +164,8 @@ class RenderDlg(c4d.gui.GeDialog):
         Returns:
             bool: False on error else True.
         """
+        # Refresh the config values
+        config = srs_functions.get_config_values()
 
         # User click on Ok button
         if messageId == c4d.DLG_OK:
@@ -224,7 +227,7 @@ class RenderDlg(c4d.gui.GeDialog):
                     errorMessages += sep + error
                     sep = "\n"
 
-                gui.MessageDialog("ERROR: Please correct the following issues: \n" + errorMessages)
+                gui.MessageDialog("ERROR IN FORM DATA: Please correct the following issues: \n" + errorMessages)
 
             return True
 
@@ -278,6 +281,9 @@ class RenderDlg(c4d.gui.GeDialog):
         Submit the render request to the master node
         """
         # Validate the custom ranges if we are overriding settings
+
+        # Refresh the config values
+        config = srs_functions.get_config_values()
 
         self.c4dProjectName = srs_functions_c4d.get_projectName()
 

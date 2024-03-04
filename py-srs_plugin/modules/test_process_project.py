@@ -38,10 +38,6 @@ __root__ = os.path.dirname(os.path.dirname(__file__))
 EMAIL = "email"
 USERTOKEN = "userToken"
 
-config = srs_functions.get_config_values()
-debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
-verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
-
 # Params
 input_params = sys.argv
 
@@ -52,6 +48,10 @@ def t_process_project_upload():
     # .....................................................
 
     try:
+        config = srs_functions.get_config_values()
+        debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
+        verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
+
         # ///////////////////////////////
         __root__ = os.path.dirname(os.path.dirname(__file__))
         process_project = os.path.join(__root__, "test_uploadProject.sh")
