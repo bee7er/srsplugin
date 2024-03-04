@@ -141,7 +141,7 @@ def saveProjectWithAssets():
                 )
 
             if True == debug:
-                print("Project details updated in config file")
+                print("Plugin configuration details updated")
 
             return True
 

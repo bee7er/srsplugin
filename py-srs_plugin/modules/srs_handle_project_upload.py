@@ -6,7 +6,7 @@ Author: Brian Etheridge
 import c4d, os, time
 from c4d import documents
 import sys, subprocess
-import srs_functions
+import srs_functions, srs_functions_c4d
 
 __root__ = os.path.dirname(os.path.dirname(__file__))
 
@@ -32,19 +32,8 @@ def handle_project_upload(renderId):
 # ===================================================================
     try:
         # Save the project with assets, to make sure it is up to date
-        print("Saving project with assets to: ", c4dProjectWithAssetsDir)
-
-        doc = documents.GetActiveDocument()
-        missingAssets = []
-        assets = []
-        res = documents.SaveProject(
-            doc,
-            c4d.SAVEPROJECT_ASSETS | c4d.SAVEPROJECT_SCENEFILE,
-            c4dProjectWithAssetsDir,
-            assets,
-            missingAssets
-            )
-        if True == res:
+        result = srs_functions_c4d.saveProjectWithAssets()
+        if True == result:
             print("Success saving project with assets")
         else:
             message = "Error saving project with assets to: " + c4dProjectWithAssetsDir

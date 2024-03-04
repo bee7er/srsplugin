@@ -268,10 +268,11 @@ class RegistrationDlg(c4d.gui.GeDialog):
         # User click on Cancel button
         elif messageId == SAVE_PROJECT_BUTTON:
 
-            message = srs_functions_c4d.saveProjectWithAssets()
-            if True != message:
-                gui.MessageDialog("Something went wrong saving the project: " + str(message))
-                return False
+            result = srs_functions_c4d.saveProjectWithAssets()
+            if True == result:
+                gui.MessageDialog("Project with assets saved and configuration details updated")
+            else:
+                gui.MessageDialog("Something went wrong saving the project: " + str(result))
 
             return True
 

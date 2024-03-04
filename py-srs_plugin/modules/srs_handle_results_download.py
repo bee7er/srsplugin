@@ -37,8 +37,8 @@ def handle_results_download(frameDetails):
     # Downloading the results files from master
     # ..........................................
     try:
-        if True == verbose:
-            print("Downloading frame ranges: ", frameDetails)
+        if True == debug:
+            print("Downloading frame ranges: ", frameDetails, " to ", outputToDir)
 
         __modules__ = os.path.dirname(__file__)
         process_results_download = os.path.join(__modules__, "srs_process_results_download.py")
