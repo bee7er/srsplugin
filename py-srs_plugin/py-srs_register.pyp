@@ -84,6 +84,8 @@ class RegistrationDlg(c4d.gui.GeDialog):
     serverBlock = None
     counter = 0
     renderingData = {}
+    
+    srs_functions.validate_directories(config)
 
     # ===================================================================
     def CreateLayout(self):
@@ -98,7 +100,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
         # Refresh the config values
         config = srs_functions.get_config_values()
 
-        validationResult = srs_functions.validate_environment(config)
+        validationResult = srs_functions.validate_config(config)
         if True == validationResult:
             if True == verbose:
                 print("Config values passed validation")

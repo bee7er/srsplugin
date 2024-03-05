@@ -68,12 +68,11 @@ def get_srs_domain():
         print("Error parsing API URL: " + str(e))
 
 # ===================================================================
-def validate_environment(config):
+def validate_directories(config):
 # ===================================================================
     """
-        Validate the config values and operating environment
+        Validate the project directories and create them if not present
     """
-    validationResult = []
 
     # Check the required directories are present.  If not create them.
     projectsDir = get_plugin_directory(os.path.join('projects'))
@@ -91,6 +90,16 @@ def validate_environment(config):
     with_assetsDir = get_plugin_directory(os.path.join('projects', 'with_assets'))
     if True != os.path.exists(with_assetsDir):
         os.mkdir(with_assetsDir)
+
+    return
+
+# ===================================================================
+def validate_config(config):
+# ===================================================================
+    """
+        Validate the config values and operating environment
+    """
+    validationResult = []
 
     # Validate the CONFIG section
     if "" == config.get(CONFIG_SECTION, 'srsApi').strip():

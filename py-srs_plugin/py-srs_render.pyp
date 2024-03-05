@@ -77,7 +77,13 @@ class RenderDlg(c4d.gui.GeDialog):
     rangeTo = 0
     outputFormat = ''
 
-    overrideSettings = int(config.get(srs_functions.CONFIG_RENDER_SECTION, 'overrideSettings'))
+    srs_functions.validate_directories(config)
+
+    overrideSettings = config.get(srs_functions.CONFIG_RENDER_SECTION, 'overrideSettings')
+    if '' == overrideSettings:
+        overrideSettings = OVERRIDE
+    overrideSettings = int(overrideSettings)
+
     customFrameRanges = config.get(srs_functions.CONFIG_RENDER_SECTION, 'customFrameRanges')
 
     # ===================================================================
@@ -88,8 +94,7 @@ class RenderDlg(c4d.gui.GeDialog):
         # Refresh the config values
         config = srs_functions.get_config_values()
 
-        # Validate the configuration file and the general environment
-        validationResult = srs_functions.validate_environment(config)
+        validationResult = srs_functions.validate_config(config)
         if True == validationResult:
             if True == verbose:
                 print("Config values passed validation")
