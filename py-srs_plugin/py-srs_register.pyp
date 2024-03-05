@@ -84,7 +84,7 @@ class RegistrationDlg(c4d.gui.GeDialog):
     serverBlock = None
     counter = 0
     renderingData = {}
-    
+
     srs_functions.validate_directories(config)
 
     # ===================================================================

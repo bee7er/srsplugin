@@ -3,17 +3,18 @@ debug = 0
 verbose = 0
 previousTeamsMax = 10
 srsApi = http://3n3.477.mywebsitetransfer.com/api1
-c4dProjectWithAssetsDir = c4dproject
-c4dProjectWithAssets = c4dproject.c4d
+c4dProjectWithAssetsDir =
+c4dProjectWithAssets =
 
 [REGISTRATION]
-previousTeamTokens = jfhdyetryetA
-teamToken = jfhdyetryetA
-email = WxhtuADUQCA0LroD@powerhouse.industries
-userName = charlie
-userToken = WxhtuADUQCA0LroD
-availability = 1
+previousTeamTokens =
+teamToken =
+email =
+userName =
+userToken =
+availability =
 
 [RENDER]
-overrideSettings = 1
-customFrameRanges = 1-6
+overrideSettings =
+customFrameRanges =
+outputFormat =
