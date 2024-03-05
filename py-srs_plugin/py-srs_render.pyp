@@ -107,7 +107,9 @@ class RenderDlg(c4d.gui.GeDialog):
                 errorMessages += sep + error
                 sep = "\n"
 
-            gui.MessageDialog("ERRORS IN CONFIGURATION ENVIRONMENT FILE: Please correct the following issues: \n" + errorMessages)
+            message = "Please close the render plugin and open the registration plugin, which will normally fix configuration issues.\n\n"
+            message += "ERRORS IN CONFIGURATION ENVIRONMENT FILE: Please correct the following issues: \n" + errorMessages
+            gui.MessageDialog(message)
 
         # Get the project with assets path and name
         self.c4dProjectWithAssetsDir = srs_functions.get_plugin_directory(
