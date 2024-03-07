@@ -1,5 +1,5 @@
 """
-Copyright: Etheridge Family Nov 2022
+Copyright: Etheridge 2024
 Author: Brian Etheridge
 
 PLEASE NOTE:  These utility functions need c4d.

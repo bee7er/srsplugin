@@ -1,5 +1,5 @@
 """
-Copyright: Etheridge Family Nov 2022
+Copyright: Etheridge 2024
 Author: Brian Etheridge
 
 Description:
@@ -120,7 +120,11 @@ class RegistrationDlg(c4d.gui.GeDialog):
         self.email = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, EMAIL)
         self.userName = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, USERNAME)
         self.userToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, USERTOKEN)
-        self.availability = int(config.get(srs_functions.CONFIG_REGISTRATION_SECTION, AVAILABILITY))
+        # Allow for null string availability
+        availability = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, AVAILABILITY)
+        if '' == availability:
+            availability = AVAILABLE
+        self.availability = int(availability)
         self.SetTitle("SRS Register Render Availability")
 
         self.GroupBegin(id=110000, flags=c4d.BFH_SCALEFIT, cols=3, rows=4)
@@ -146,8 +150,8 @@ class RegistrationDlg(c4d.gui.GeDialog):
         self.AddStaticText(id=BLANK, flags=c4d.BFV_MASK, initw=145, name="", borderstyle=c4d.BORDER_NONE)
 
         """ Button fields """
-        self.AddButton(id=c4d.DLG_CANCEL, flags=c4d.BFH_LEFT | c4d.BFV_CENTER, initw=100, inith=16, name="Cancel")
-        self.AddButton(id=SAVE_PROJECT_BUTTON, flags=c4d.BFH_LEFT | c4d.BFV_CENTER, initw=210, inith=16, name="Save Project with Assets")
+        self.AddButton(id=c4d.DLG_CANCEL, flags=c4d.BFH_RIGHT | c4d.BFV_CENTER, initw=100, inith=16, name="Cancel")
+        self.AddButton(id=SAVE_PROJECT_BUTTON, flags=c4d.BFH_RIGHT | c4d.BFV_CENTER, initw=200, inith=16, name="Save Project with Assets")
         self.AddButton(id=c4d.DLG_OK, flags=c4d.BFH_LEFT | c4d.BFV_CENTER, initw=100, inith=16, name="Register")
         self.GroupEnd()
 
@@ -578,29 +582,33 @@ class RegistrationDlgCommand(c4d.plugins.CommandData):
 # main
 # ===================================================================
 if __name__ == "__main__":
-    if True == verbose:
-        print("Setting up SRS Register Plugin")
+    try:
+        print("* Setting up SRS Register Version 1")
 
-    # Retrieves the icon path
-    directory, _ = os.path.split(__file__)
-    fn = os.path.join(directory, "res", "Icon_render.tif")
+        # Retrieves the icon path
+        directory, _ = os.path.split(__file__)
+        fn = os.path.join(directory, "res", "Icon_render.tif")
 
-    # Creates a BaseBitmap
-    bmp = c4d.bitmaps.BaseBitmap()
-    if bmp is None:
-        raise MemoryError("Failed to create a BaseBitmap.")
+        # Creates a BaseBitmap
+        bmp = c4d.bitmaps.BaseBitmap()
+        if bmp is None:
+            raise MemoryError("Failed to create a BaseBitmap.")
 
-    # Init the BaseBitmap with the icon
-    if bmp.InitWith(fn)[0] != c4d.IMAGERESULT_OK:
-        raise MemoryError("Failed to initialise the BaseBitmap.")
+        # Init the BaseBitmap with the icon
+        if bmp.InitWith(fn)[0] != c4d.IMAGERESULT_OK:
+            raise MemoryError("Failed to initialise the BaseBitmap.")
 
-    # Registers the plugin
-    c4d.plugins.RegisterCommandPlugin(id=PLUGIN_ID,
-                                      str="SRS Register Availability for Renders",
-                                      info=0,
-                                      help="Register your availability with SRS",
-                                      dat=RegistrationDlgCommand(),
-                                      icon=bmp)
+        # Registers the plugin
+        c4d.plugins.RegisterCommandPlugin(id=PLUGIN_ID,
+                                          str="SRS Register Availability for Renders",
+                                          info=0,
+                                          help="Register your availability with SRS",
+                                          dat=RegistrationDlgCommand(),
+                                          icon=bmp)
 
-    if True == debug:
-        print("SRS Register Plugin set up ok")
+        print("* SRS Register set up ok")
+
+    except Exception as e:
+        message = "* Error on SRS Register set up: " + str(e)
+        print(message)
+        gui.MessageDialog(message)

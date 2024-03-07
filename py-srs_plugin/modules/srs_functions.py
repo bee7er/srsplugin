@@ -1,5 +1,5 @@
 """
-Copyright: Etheridge Family Nov 2022
+Copyright: Etheridge 2024
 Author: Brian Etheridge
 
 PLEASE NOTE:  These utility functions do not need c4d.
@@ -28,9 +28,7 @@ PREVIOUSTEAMTOKENS = 'previousTeamTokens'
 C4D_PROJECT_WITH_ASSETS = 'c4dProjectWithAssets'
 C4D_PROJECT_WITH_ASSETS_DIR = 'c4dProjectWithAssetsDir'
 
-# TODO Is this going to work on WIN, should use the os separator
-# Use os.sep
-CONFIG_FILE = __root__ + '/config/properties.ini'
+CONFIG_FILE = os.path.join(__root__, 'config', 'properties.ini')
 
 # ===================================================================
 def get_config_values():
@@ -59,10 +57,12 @@ def get_srs_domain():
         config = get_config_values()
         # Get the API URL and derive the domain from that
         srsApi = config.get(CONFIG_SECTION, 'srsApi')
-        # TODO Is this going to work on WIN, should use the os separator
-        # Use os.sep
+        # Web addresses all use forward slash, not OS dependent
+        # Here we effectively remove any trailing slashes and API version details
         apiDtls = srsApi.split('/')
-        return (apiDtls[0] + '//' + apiDtls[2])
+        domain = (apiDtls[0] + '//' + apiDtls[2])
+
+        return domain
 
     except Exception as e:
         print("Error parsing API URL: " + str(e))

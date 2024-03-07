@@ -1,5 +1,5 @@
 """
-Copyright: Etheridge Family Nov 2022
+Copyright: Etheridge 2024
 Author: Brian Etheridge
 
 Test section which can be put into py-srs_register.pyp to test the upload/download of the project zip

@@ -1,5 +1,5 @@
 """
-Copyright: Etheridge Family Nov 2022
+Copyright: Etheridge 2024
 Author: Brian Etheridge
 
 Description:
@@ -78,7 +78,7 @@ class RenderDlg(c4d.gui.GeDialog):
     outputFormat = ''
 
     srs_functions.validate_directories(config)
-
+    # Allow for null string overrideSettings
     overrideSettings = config.get(srs_functions.CONFIG_RENDER_SECTION, 'overrideSettings')
     if '' == overrideSettings:
         overrideSettings = OVERRIDE
@@ -424,29 +424,33 @@ class RenderDlgCommand(c4d.plugins.CommandData):
 # main
 # ===================================================================
 if __name__ == "__main__":
-    if True == verbose:
-        print("Setting up SRS Render Request Plugin")
+    try:
+        print("* Setting up SRS Render Request Version 1")
 
-    # Retrieves the icon path
-    directory, _ = os.path.split(__file__)
-    fn = os.path.join(directory, "res", "Icon_register.tif")
+        # Retrieves the icon path
+        directory, _ = os.path.split(__file__)
+        fn = os.path.join(directory, "res", "Icon_register.tif")
 
-    # Creates a BaseBitmap
-    bmp = c4d.bitmaps.BaseBitmap()
-    if bmp is None:
-        raise MemoryError("Failed to create a BaseBitmap.")
+        # Creates a BaseBitmap
+        bmp = c4d.bitmaps.BaseBitmap()
+        if bmp is None:
+            raise MemoryError("Failed to create a BaseBitmap.")
 
-    # Init the BaseBitmap with the icon
-    if bmp.InitWith(fn)[0] != c4d.IMAGERESULT_OK:
-        raise MemoryError("Failed to initialise the BaseBitmap.")
+        # Init the BaseBitmap with the icon
+        if bmp.InitWith(fn)[0] != c4d.IMAGERESULT_OK:
+            raise MemoryError("Failed to initialise the BaseBitmap.")
 
-    # Registers the plugin
-    c4d.plugins.RegisterCommandPlugin(id=PLUGIN_ID,
-                                      str="SRS Submit Render Request",
-                                      info=0,
-                                      help="Submit render request",
-                                      dat=RenderDlgCommand(),
-                                      icon=bmp)
+        # Registers the plugin
+        c4d.plugins.RegisterCommandPlugin(id=PLUGIN_ID,
+                                          str="SRS Submit Render Request",
+                                          info=0,
+                                          help="Submit render request",
+                                          dat=RenderDlgCommand(),
+                                          icon=bmp)
 
-    if True == verbose:
-        print("SRS Render Request Plugin set up ok")
+        print("* SRS Render Request set up ok")
+
+    except Exception as e:
+        message = "* Error on SRS Render Request set up: " + str(e)
+        print(message)
+        gui.MessageDialog(message)
