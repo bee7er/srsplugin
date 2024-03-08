@@ -81,9 +81,6 @@ def validate_directories(config):
     downloadsDir = get_plugin_directory(os.path.join('projects', 'downloads'))
     if True != os.path.exists(downloadsDir):
         os.mkdir(downloadsDir)
-    resultsDir = get_plugin_directory(os.path.join('projects', 'downloads', 'results'))
-    if True != os.path.exists(resultsDir):
-        os.mkdir(resultsDir)
     framesDir = get_plugin_directory(os.path.join('projects', 'frames'))
     if True != os.path.exists(framesDir):
         os.mkdir(framesDir)

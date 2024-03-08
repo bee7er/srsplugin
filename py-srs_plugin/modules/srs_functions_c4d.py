@@ -156,3 +156,19 @@ def saveProjectWithAssets():
         print(e.args)
 
         return message
+
+# ===================================================================
+def get_ResultsOutputDirectory():
+# ===================================================================
+    # Gets the directory from the project settings
+    # ............................................
+    doc = documents.GetActiveDocument()
+    activeRenderData = doc.GetActiveRenderData()
+    if None == activeRenderData:
+        raise RuntimeError("Failed to retrieve the active render data")
+    # Check to see if we have a save path defined
+    if "" == activeRenderData[c4d.RDATA_PATH]:
+        raise RuntimeError("No save path has been defined")
+
+    # Note the craziness way we have to resolve tokens embedded in the active render data
+    return c4d.modules.tokensystem.StringConvertTokens(activeRenderData[c4d.RDATA_PATH], rpData={'_doc': doc, '_rData': activeRenderData})

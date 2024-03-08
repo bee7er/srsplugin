@@ -4,7 +4,7 @@ Author: Brian Etheridge
 
 """
 import os, time, subprocess
-import srs_functions, srs_connections
+import srs_functions, srs_functions_c4d, srs_connections
 
 __root__ = os.path.dirname(os.path.dirname(__file__))
 
@@ -31,12 +31,14 @@ def handle_results_download(frameDetails):
         debug = bool(int(config.get(srs_functions.CONFIG_SECTION, 'debug')))
         verbose = bool(int(config.get(srs_functions.CONFIG_SECTION, 'verbose')))
         c4dProjectWithAssets = config.get(srs_functions.CONFIG_SECTION, 'c4dProjectWithAssets')
-        outputToDir = srs_functions.get_plugin_directory(os.path.join('projects', 'downloads', 'results'))
         srsDomain = srs_functions.get_srs_domain()
         srsApi = config.get(srs_functions.CONFIG_SECTION, 'srsApi')
         teamToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'teamToken')
         email = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'email')
         userToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'userToken')
+
+        # We use the project save path to download the resulting frames
+        outputToDir = srs_functions_c4d.get_ResultsOutputDirectory()
 
         if True == debug:
             print("Downloading frame ranges: ", frameDetails, " to ", outputToDir)

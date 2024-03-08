@@ -299,6 +299,8 @@ class RegistrationDlg(c4d.gui.GeDialog):
         """
             Ensure user and project details are set, creating a new user if necessary
         """
+        # Refresh the config values
+        config = srs_functions.get_config_values()
         email = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'email').strip()
         userToken = config.get(srs_functions.CONFIG_REGISTRATION_SECTION, 'userToken').strip()
         if "" == email or "" == userToken:
