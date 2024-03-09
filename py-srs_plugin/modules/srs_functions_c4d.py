@@ -170,5 +170,10 @@ def get_ResultsOutputDirectory():
     if "" == activeRenderData[c4d.RDATA_PATH]:
         raise RuntimeError("No save path has been defined")
 
-    # Note the craziness way we have to resolve tokens embedded in the active render data
-    return c4d.modules.tokensystem.StringConvertTokens(activeRenderData[c4d.RDATA_PATH], rpData={'_doc': doc, '_rData': activeRenderData})
+    # Note how to resolve tokens in the render data
+    savePath = c4d.modules.tokensystem.StringConvertTokens(activeRenderData[c4d.RDATA_PATH], rpData={'_doc': doc, '_rData': activeRenderData})
+    # Check the save path exists
+    if True != os.path.exists(savePath):
+        os.mkdir(savePath)
+
+    return savePath
